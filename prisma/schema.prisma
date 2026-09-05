@@ -196,6 +196,7 @@ model User {
   consents              Consent[]
   notifications         Notification[]
   auditLogs             AuditLog[]
+  trainingProgress      TrainingProgress[]
 
   @@map("users")
 }
@@ -214,6 +215,7 @@ model Season {
   coreValues         CoreValue[]
   matches            Match[]
   consents           Consent[]
+  trainingModules    TrainingModule[]
 
   @@map("seasons")
 }
@@ -563,6 +565,32 @@ model Notification {
 
   @@index([userId, readAt])
   @@map("notifications")
+}
+
+model TrainingModule {
+  id          String  @id @default(uuid()) @db.Uuid
+  seasonId    String  @map("season_id") @db.Uuid
+  season      Season  @relation(fields: [seasonId], references: [id])
+  title       String
+  description String?
+  sortOrder   Int     @default(0) @map("sort_order")
+  required    Boolean @default(true)
+
+  progress TrainingProgress[]
+
+  @@map("training_modules")
+}
+
+model TrainingProgress {
+  id       String        @id @default(uuid()) @db.Uuid
+  moduleId String        @map("module_id") @db.Uuid
+  module   TrainingModule @relation(fields: [moduleId], references: [id])
+  userId   String        @map("user_id") @db.Uuid
+  user     User          @relation(fields: [userId], references: [id])
+  completedAt DateTime    @default(now()) @map("completed_at")
+
+  @@unique([moduleId, userId])
+  @@map("training_progress")
 }
 
 model AuditLog {

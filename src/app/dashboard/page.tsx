@@ -71,9 +71,15 @@ export default function DashboardPage() {
         Dashboard của bạn
       </h1>
 
-      <div className="flex gap-3 mb-6">
+      <div className="flex flex-wrap gap-3 mb-6">
         <Link href="/workspace">
           <Button variant="secondary">🌱 Không gian đồng hành</Button>
+        </Link>
+        <Link href="/training">
+          <Button variant="secondary">🎓 Đào tạo</Button>
+        </Link>
+        <Link href="/profile">
+          <Button variant="secondary">👤 Hồ sơ</Button>
         </Link>
         <Link href="/coordinator">
           <Button variant="secondary">🎯 Bảng điều phối (ĐPV)</Button>

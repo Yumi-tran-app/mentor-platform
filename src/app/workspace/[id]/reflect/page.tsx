@@ -6,10 +6,10 @@ import Link from "next/link";
 import { Card, Button } from "@/components/ui";
 
 const MOODS = [
-  ["good", "😊 Tốt"],
-  ["neutral", "😐 Bình thường"],
-  ["uneasy", "😟 Băn khoăn"],
-  ["support_needed", "🆘 Cần hỗ trợ"],
+  { id: "good", icon: "💚", label: "Đang kết nối tốt", color: "#E6F4EA", border: "#22C55E", ring: "rgba(34,197,94,.3)" },
+  { id: "neutral", icon: "🔵", label: "Đang tìm nhịp phù hợp", color: "#F4F8FE", border: "#3B82F6", ring: "rgba(59,130,246,.3)" },
+  { id: "uneasy", icon: "🟡", label: "Có điều gì đó chưa ổn", color: "#FEF9E7", border: "#F2A93B", ring: "rgba(242,169,59,.3)" },
+  { id: "support_needed", icon: "🔴", label: "Cần hỗ trợ", color: "#FFF5F4", border: "#FF6859", ring: "rgba(255,104,89,.3)" },
 ] as const;
 
 export default function ReflectionPage() {
@@ -90,23 +90,26 @@ export default function ReflectionPage() {
                 Cảm nhận của bạn
               </h2>
               <div className="space-y-2">
-                {MOODS.map(([value, label]) => (
+                {MOODS.map((m) => (
                   <label
-                    key={value}
-                    className="flex items-center gap-3 p-3 rounded-lg border cursor-pointer"
+                    key={m.id}
+                    className="flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition"
                     style={{
-                      borderColor: mood === value ? "#15B5B0" : "#E5E0D5",
-                      background: mood === value ? "#F2F9F4" : "#fff",
+                      borderColor: mood === m.id ? m.border : "#E5E0D5",
+                      background: mood === m.id ? m.color : "#fff",
+                      ...(mood === m.id ? { boxShadow: `0 0 0 3px ${m.ring}` } : {}),
                     }}
                   >
+                    <span className="text-xl">{m.icon}</span>
                     <input
                       type="radio"
                       name="mood"
-                      checked={mood === value}
-                      onChange={() => setMood(value)}
+                      className="sr-only"
+                      checked={mood === m.id}
+                      onChange={() => setMood(m.id)}
                     />
-                    <span className="text-sm" style={{ color: "#2C335D" }}>
-                      {label}
+                    <span className="text-sm font-medium" style={{ color: "#2C335D" }}>
+                      {m.label}
                     </span>
                   </label>
                 ))}

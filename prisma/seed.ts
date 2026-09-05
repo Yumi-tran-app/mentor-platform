@@ -14,9 +14,9 @@ async function main() {
   });
 
   const coreValues = [
-    { code: "respect", title: "Tôn trọng", description: "Tôn trọng lẫn nhau" },
-    { code: "commitment", title: "Cam kết", description: "Cam kết đồng hành" },
-    { code: "openness", title: "Cởi mở", description: "Cởi mở chia sẻ" },
+    { code: "respect", title: "Tôn trọng & Lắng nghe thật", description: "Không phán xét, đặt mình vào vị trí của người kia trước khi đưa ra ý kiến." },
+    { code: "commitment", title: "Cam kết & Trách nhiệm", description: "Giữ đúng lịch hẹn, đồng hành trọn vẹn hành trình đã nhận, không bỏ ngang." },
+    { code: "openness", title: "Cởi mở & Trung thực", description: "Chia sẻ thật, sẵn sàng lắng nghe góp ý và học hỏi từ người đồng hành." },
   ];
 
   for (const [i, v] of coreValues.entries()) {
