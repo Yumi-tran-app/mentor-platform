@@ -134,6 +134,9 @@ export default function MatchDetailPage() {
           <Link href={`/workspace/${matchId}/reflect`}>
             <Button variant="secondary">Phản tư</Button>
           </Link>
+          <Link href={`/workspace/${matchId}/journey`}>
+            <Button variant="secondary">Nhật ký</Button>
+          </Link>
           <Link href={`/workspace/${matchId}/support`}>
             <Button variant="danger">Cần hỗ trợ</Button>
           </Link>

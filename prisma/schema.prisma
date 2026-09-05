@@ -199,6 +199,7 @@ model User {
   trainingProgress      TrainingProgress[]
   messages              Message[]
   meetingEvents         MeetingEvent[]
+  journeyEntries        JourneyEntry[]
 
   @@map("users")
 }
@@ -407,6 +408,7 @@ model Match {
   supportRequests    SupportRequest[]
   messages           Message[]
   meetingEvents      MeetingEvent[]
+  journeyEntries     JourneyEntry[]
 
   @@index([seasonId, status])
   @@index([mentorApplicationId])
@@ -624,6 +626,29 @@ model MeetingEvent {
 
   @@index([matchId, startsAt])
   @@map("meeting_events")
+}
+
+enum JourneyCategory {
+  met
+  explored
+  realized
+  changed
+  tried
+  next
+}
+
+model JourneyEntry {
+  id        String          @id @default(uuid()) @db.Uuid
+  matchId   String          @map("match_id") @db.Uuid
+  match     Match           @relation(fields: [matchId], references: [id])
+  authorUserId String        @map("author_user_id") @db.Uuid
+  author    User            @relation(fields: [authorUserId], references: [id])
+  category  JourneyCategory
+  content   String
+  createdAt DateTime        @default(now()) @map("created_at")
+
+  @@index([matchId, category])
+  @@map("journey_entries")
 }
 
 model AuditLog {
