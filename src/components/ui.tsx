@@ -3,8 +3,11 @@
 import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useCurrentUser, isStaff } from "@/lib/use-current-user";
 
-const NAV_ITEMS = [
+type NavItem = { href: string; icon: string; label: string; staffOnly?: boolean };
+
+const NAV_ITEMS: NavItem[] = [
   { href: "/dashboard", icon: "🏠", label: "Trang chủ" },
   { href: "/discover", icon: "🔍", label: "Khám phá mentor" },
   { href: "/workspace", icon: "🌱", label: "Không gian đồng hành" },
@@ -12,7 +15,7 @@ const NAV_ITEMS = [
   { href: "/calendar", icon: "📅", label: "Lịch gặp" },
   { href: "/training", icon: "🎓", label: "Đào tạo" },
   { href: "/profile", icon: "👤", label: "Hồ sơ" },
-  { href: "/coordinator", icon: "🎯", label: "Điều phối (ĐPV)" },
+  { href: "/coordinator", icon: "🎯", label: "Điều phối (ĐPV)", staffOnly: true },
 ];
 
 export function AppShell({
@@ -23,6 +26,11 @@ export function AppShell({
   title?: string;
 }) {
   const pathname = usePathname();
+  const user = useCurrentUser();
+
+  const visibleItems = NAV_ITEMS.filter(
+    (item) => !item.staffOnly || isStaff(user?.role)
+  );
 
   return (
     <div className="min-h-screen flex" style={{ background: "#FFF3E6" }}>
@@ -31,14 +39,18 @@ export function AppShell({
         className="w-64 shrink-0 min-h-screen flex flex-col"
         style={{ background: "#093774", color: "#fff" }}
       >
-        <div className="px-5 py-6 border-b" style={{ borderColor: "rgba(255,255,255,.1)" }}>
-          <Link href="/dashboard" className="text-lg font-bold block">
+        <div
+          className="px-5 py-6 border-b"
+          style={{ borderColor: "rgba(255,255,255,.1)" }}
+        >
+          <Link href="/dashboard" className="text-lg font-bold block hover:opacity-80">
             Mentor Platform
           </Link>
         </div>
         <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-          {NAV_ITEMS.map((item) => {
-            const active = pathname === item.href || pathname.startsWith(item.href + "/");
+          {visibleItems.map((item) => {
+            const active =
+              pathname === item.href || pathname.startsWith(item.href + "/");
             return (
               <Link
                 key={item.href}
@@ -61,6 +73,11 @@ export function AppShell({
         >
           <UserButton afterSignOutUrl="/" />
           <div className="flex-1 min-w-0">
+            {user && (
+              <p className="text-xs truncate" style={{ color: "rgba(255,255,255,.7)" }}>
+                {user.fullName}
+              </p>
+            )}
             <Link
               href="/notifications"
               className="text-sm block hover:opacity-80"
@@ -78,9 +95,18 @@ export function AppShell({
           className="flex items-center justify-between px-6 py-4 border-b"
           style={{ background: "#fff", borderColor: "#F5F2EC" }}
         >
-          <h2 className="text-lg font-bold" style={{ color: "#093774" }}>
-            {title ?? ""}
-          </h2>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/dashboard"
+              className="text-sm font-semibold px-3 py-1.5 rounded-full transition hover:opacity-80"
+              style={{ background: "#FFF3E6", color: "#093774" }}
+            >
+              ← Trang chủ
+            </Link>
+            <h2 className="text-lg font-bold" style={{ color: "#093774" }}>
+              {title ?? ""}
+            </h2>
+          </div>
         </header>
         <main className="flex-1 px-6 py-8">{children}</main>
       </div>
