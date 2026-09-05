@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-navy: #093774;
+  --brand-coral: #ff6859;
+  --brand-growth: #15b5b0;
+  --brand-cream: #fff3e6;
+  --brand-dark: #2c335d;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: "Be Vietnam Pro", system-ui, -apple-system, sans-serif;
+  background: #fff3e6;
+  color: #2c335d;
+}
+
+* {
+  box-sizing: border-box;
+}
