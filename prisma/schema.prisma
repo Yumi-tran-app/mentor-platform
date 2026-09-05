@@ -197,6 +197,8 @@ model User {
   notifications         Notification[]
   auditLogs             AuditLog[]
   trainingProgress      TrainingProgress[]
+  messages              Message[]
+  meetingEvents         MeetingEvent[]
 
   @@map("users")
 }
@@ -403,6 +405,8 @@ model Match {
   mentoringLogs      MentoringLog[]
   monthlyReflections MonthlyReflection[]
   supportRequests    SupportRequest[]
+  messages           Message[]
+  meetingEvents      MeetingEvent[]
 
   @@index([seasonId, status])
   @@index([mentorApplicationId])
@@ -591,6 +595,35 @@ model TrainingProgress {
 
   @@unique([moduleId, userId])
   @@map("training_progress")
+}
+
+model Message {
+  id        String   @id @default(uuid()) @db.Uuid
+  matchId   String   @map("match_id") @db.Uuid
+  match     Match    @relation(fields: [matchId], references: [id])
+  senderUserId String @map("sender_user_id") @db.Uuid
+  sender    User     @relation(fields: [senderUserId], references: [id])
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([matchId, createdAt])
+  @@map("messages")
+}
+
+model MeetingEvent {
+  id        String    @id @default(uuid()) @db.Uuid
+  matchId   String    @map("match_id") @db.Uuid
+  match     Match     @relation(fields: [matchId], references: [id])
+  title     String
+  startsAt  DateTime  @map("starts_at")
+  endsAt    DateTime? @map("ends_at")
+  location  String?
+  createdByUserId String @map("created_by_user_id") @db.Uuid
+  createdBy User     @relation(fields: [createdByUserId], references: [id])
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  @@index([matchId, startsAt])
+  @@map("meeting_events")
 }
 
 model AuditLog {
