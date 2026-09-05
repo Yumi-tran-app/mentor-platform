@@ -108,9 +108,9 @@ export default function Home() {
         </h2>
         <div className="flex flex-wrap justify-center gap-4 mt-8">
           {[
-            ["🤝", "Tôn trọng", "Mỗi quan hệ đồng hành đều bắt đầu từ sự tôn trọng lẫn nhau"],
-            ["⏳", "Cam kết", "Cam kết là nền tảng để lộ trình 9 tháng đi đến đích"],
-            ["🌱", "Cởi mở", "Chia sẻ thật, lắng nghe thật để cùng trưởng thành"],
+            ["📌", "Tôn trọng & Lắng nghe thật", "Không phán xét, đặt mình vào vị trí của người kia trước khi đưa ra ý kiến."],
+            ["🤝", "Cam kết & Trách nhiệm", "Giữ đúng lịch hẹn, đồng hành trọn vẹn hành trình đã nhận, không bỏ ngang."],
+            ["🌱", "Cởi mở & Trung thực", "Chia sẻ thật, sẵn sàng lắng nghe góp ý và học hỏi từ người đồng hành."],
           ].map(([icon, title, desc]) => (
             <div key={title} className="rounded-2xl p-8 shadow-sm border max-w-xs" style={{ background: "#fff", borderColor: "#F5F2EC" }}>
               <div className="text-4xl mb-3">{icon}</div>
