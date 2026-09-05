@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, Fragment } from "react";
 import { AppShell, Card, Button } from "@/components/ui";
+import { TRAINING_CONTENT } from "@/lib/training-content";
 
 type Module = { id: string; title: string; description: string | null; required: boolean };
 
@@ -10,6 +11,7 @@ export default function TrainingPage() {
   const [completed, setCompleted] = useState<string[]>([]);
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
 
   const load = useCallback(async () => {
     const res = await fetch("/api/training").then((r) => r.json());
@@ -51,7 +53,6 @@ export default function TrainingPage() {
         </span>
       </div>
 
-      {/* Progress bar */}
       <div className="w-full h-3 rounded-full mb-8" style={{ background: "#F5F2EC" }}>
         <div
           className="h-3 rounded-full transition-all"
@@ -69,10 +70,15 @@ export default function TrainingPage() {
         <div className="space-y-3">
           {modules.map((m, idx) => {
             const done = completed.includes(m.id);
+            const content = TRAINING_CONTENT[idx];
+            const opened = openIdx === idx;
             return (
               <Card key={m.id}>
                 <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-start gap-3">
+                  <button
+                    onClick={() => setOpenIdx(opened ? null : idx)}
+                    className="flex items-start gap-3 text-left flex-1"
+                  >
                     <div
                       className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0"
                       style={{ background: done ? "#15B5B0" : "#94A3B8" }}
@@ -99,8 +105,11 @@ export default function TrainingPage() {
                           {m.description}
                         </p>
                       )}
+                      <span className="text-xs mt-1 inline-block" style={{ color: "#15B5B0" }}>
+                        {opened ? "▲ Thu gọn" : "▼ Xem nội dung"}
+                      </span>
                     </div>
-                  </div>
+                  </button>
                   {!done ? (
                     <Button variant="secondary" onClick={() => markDone(m.id)}>
                       Hoàn thành
@@ -111,6 +120,37 @@ export default function TrainingPage() {
                     </span>
                   )}
                 </div>
+
+                {/* Nội dung chi tiết */}
+                {opened && content && (
+                  <div
+                    className="mt-4 pt-4 border-t"
+                    style={{ borderColor: "#F5F2EC" }}
+                  >
+                    <p className="text-sm italic mb-4" style={{ color: "#2C335D" }}>
+                      {content.summary}
+                    </p>
+                    {content.slides.map((slide, si) => (
+                      <div key={si} className="mb-4">
+                        <p className="text-sm font-bold mb-2" style={{ color: "#093774" }}>
+                          {si + 1}. {slide.title}
+                        </p>
+                        <ul className="space-y-1.5">
+                          {slide.bullets.map((b, bi) => (
+                            <li
+                              key={bi}
+                              className="flex gap-2 text-sm"
+                              style={{ color: "#2C335D" }}
+                            >
+                              <span style={{ color: "#15B5B0" }}>•</span>
+                              <span>{b}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </Card>
             );
           })}

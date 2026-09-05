@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AppShell, Card, Badge, Button } from "@/components/ui";
-
 type Application = {
   id: string;
   status: string;
@@ -66,34 +65,13 @@ export default function DashboardPage() {
   }
 
   return (
-    <AppShell title="Dashboard">
-      <h1 className="text-2xl font-bold mb-6" style={{ color: "#093774" }}>
-        Dashboard của bạn
+    <AppShell title="Trang chủ">
+      <h1 className="text-2xl font-bold mb-2" style={{ color: "#093774" }}>
+        Xin chào 👋
       </h1>
-
-      <div className="flex flex-wrap gap-3 mb-6">
-        <Link href="/discover">
-          <Button variant="secondary">🔍 Khám phá mentor</Button>
-        </Link>
-        <Link href="/workspace">
-          <Button variant="secondary">🌱 Không gian đồng hành</Button>
-        </Link>
-        <Link href="/messages">
-          <Button variant="secondary">💬 Tin nhắn</Button>
-        </Link>
-        <Link href="/calendar">
-          <Button variant="secondary">📅 Lịch gặp</Button>
-        </Link>
-        <Link href="/training">
-          <Button variant="secondary">🎓 Đào tạo</Button>
-        </Link>
-        <Link href="/profile">
-          <Button variant="secondary">👤 Hồ sơ</Button>
-        </Link>
-        <Link href="/coordinator">
-          <Button variant="secondary">🎯 Bảng điều phối (ĐPV)</Button>
-        </Link>
-      </div>
+      <p className="text-sm mb-6" style={{ color: "#94A3B8" }}>
+        Theo dõi trạng thái đơn đăng ký và các hoạt động của bạn.
+      </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>

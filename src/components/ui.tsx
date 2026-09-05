@@ -1,5 +1,19 @@
+"use client";
+
 import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const NAV_ITEMS = [
+  { href: "/dashboard", icon: "🏠", label: "Trang chủ" },
+  { href: "/discover", icon: "🔍", label: "Khám phá mentor" },
+  { href: "/workspace", icon: "🌱", label: "Không gian đồng hành" },
+  { href: "/messages", icon: "💬", label: "Tin nhắn" },
+  { href: "/calendar", icon: "📅", label: "Lịch gặp" },
+  { href: "/training", icon: "🎓", label: "Đào tạo" },
+  { href: "/profile", icon: "👤", label: "Hồ sơ" },
+  { href: "/coordinator", icon: "🎯", label: "Điều phối (ĐPV)" },
+];
 
 export function AppShell({
   children,
@@ -8,28 +22,68 @@ export function AppShell({
   children: React.ReactNode;
   title?: string;
 }) {
+  const pathname = usePathname();
+
   return (
-    <div className="min-h-screen" style={{ background: "#FFF3E6" }}>
-      <header
-        className="flex items-center justify-between px-6 py-4"
+    <div className="min-h-screen flex" style={{ background: "#FFF3E6" }}>
+      {/* SIDEBAR */}
+      <aside
+        className="w-64 shrink-0 min-h-screen flex flex-col"
         style={{ background: "#093774", color: "#fff" }}
       >
-        <Link href="/dashboard" className="text-lg font-bold">
-          Mentor Platform
-        </Link>
-        <div className="flex items-center gap-4">
-          <span className="text-sm opacity-80">{title ?? ""}</span>
-          <Link
-            href="/notifications"
-            title="Thông báo"
-            style={{ color: "#fff", fontSize: 20 }}
-          >
-            🔔
+        <div className="px-5 py-6 border-b" style={{ borderColor: "rgba(255,255,255,.1)" }}>
+          <Link href="/dashboard" className="text-lg font-bold block">
+            Mentor Platform
           </Link>
-          <UserButton afterSignOutUrl="/" />
         </div>
-      </header>
-      <main className="max-w-5xl mx-auto px-6 py-8">{children}</main>
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+          {NAV_ITEMS.map((item) => {
+            const active = pathname === item.href || pathname.startsWith(item.href + "/");
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition"
+                style={{
+                  background: active ? "rgba(255,255,255,.15)" : "transparent",
+                  color: "#fff",
+                }}
+              >
+                <span className="text-base">{item.icon}</span>
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+        <div
+          className="px-5 py-4 border-t flex items-center gap-3"
+          style={{ borderColor: "rgba(255,255,255,.1)" }}
+        >
+          <UserButton afterSignOutUrl="/" />
+          <div className="flex-1 min-w-0">
+            <Link
+              href="/notifications"
+              className="text-sm block hover:opacity-80"
+              title="Thông báo"
+            >
+              🔔 Thông báo
+            </Link>
+          </div>
+        </div>
+      </aside>
+
+      {/* MAIN */}
+      <div className="flex-1 flex flex-col min-w-0">
+        <header
+          className="flex items-center justify-between px-6 py-4 border-b"
+          style={{ background: "#fff", borderColor: "#F5F2EC" }}
+        >
+          <h2 className="text-lg font-bold" style={{ color: "#093774" }}>
+            {title ?? ""}
+          </h2>
+        </header>
+        <main className="flex-1 px-6 py-8">{children}</main>
+      </div>
     </div>
   );
 }
