@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/auth";
+import { requireStaff } from "@/lib/auth";
 import {
   getActiveSeasonId,
   computeFitScore,
@@ -20,7 +20,7 @@ const RecommendSchema = z.object({
  * và tạo Match ở trạng thái `recommended` + `match_reviews` chờ ĐPV duyệt.
  */
 export const POST = withErrorHandling(async (req: Request) => {
-  const user = await requireUser();
+  const user = await requireStaff();
   const body = await req.json();
   const { seasonId, menteeApplicationId } = RecommendSchema.parse(body);
 

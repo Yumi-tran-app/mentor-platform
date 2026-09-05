@@ -38,3 +38,15 @@ export async function requireUser(): Promise<User> {
   if (!user) throw new Error("UNAUTHORIZED");
   return user;
 }
+
+/**
+ * Yêu cầu người dùng hiện tại phải có vai trò admin hoặc dpv.
+ * Ném lỗi FORBIDDEN nếu không đủ quyền.
+ */
+export async function requireStaff(): Promise<User> {
+  const user = await requireUser();
+  if (user.role !== "admin" && user.role !== "dpv") {
+    throw new Error("FORBIDDEN");
+  }
+  return user;
+}

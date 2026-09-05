@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getOrCreateCurrentUser } from "@/lib/auth";
+import { requireStaff } from "@/lib/auth";
 import { withErrorHandling } from "@/lib/api-helpers";
 
 /**
@@ -9,8 +9,7 @@ import { withErrorHandling } from "@/lib/api-helpers";
  * hoặc recommended đã có match_review).
  */
 export const GET = withErrorHandling(async (req: Request) => {
-  const user = await getOrCreateCurrentUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  await requireStaff();
 
   const matches = await prisma.match.findMany({
     where: {

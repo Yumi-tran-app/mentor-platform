@@ -24,6 +24,12 @@ enum SeasonStatus {
   closed
 }
 
+enum UserRole {
+  admin
+  dpv
+  mentor
+  mentee
+}
 enum ValueType {
   number
   text
@@ -170,6 +176,7 @@ model User {
   phone        String?
   clerkUserId  String?  @unique @map("clerk_user_id")
   authProvider String   @map("auth_provider") @default("clerk")
+  role         UserRole @default(mentee)
   createdAt    DateTime @default(now()) @map("created_at")
 
   // Quan hệ

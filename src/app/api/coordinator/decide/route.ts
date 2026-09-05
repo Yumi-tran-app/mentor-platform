@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/auth";
+import { requireStaff } from "@/lib/auth";
 import { transitionMatch, writeAudit, getSlaDays } from "@/lib/domain";
 import { withErrorHandling } from "@/lib/api-helpers";
 
@@ -17,7 +17,7 @@ const DecideSchema = z.object({
  * Ghi KPI completed_on_time nếu xử lý đúng hạn.
  */
 export const POST = withErrorHandling(async (req: Request) => {
-  const user = await requireUser();
+  const user = await requireStaff();
   const body = await req.json();
   const { matchReviewId, decision, notes } = DecideSchema.parse(body);
 

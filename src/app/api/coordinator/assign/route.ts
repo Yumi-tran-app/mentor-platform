@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/auth";
+import { requireStaff } from "@/lib/auth";
 import {
   transitionMatch,
   addBusinessDays,
@@ -20,7 +20,7 @@ const AssignSchema = z.object({
  * tính due_at theo SLA (số ngày làm việc từ season_criteria).
  */
 export const POST = withErrorHandling(async (req: Request) => {
-  const user = await requireUser();
+  const user = await requireStaff();
   const body = await req.json();
   const { matchReviewId, coordinatorId } = AssignSchema.parse(body);
 

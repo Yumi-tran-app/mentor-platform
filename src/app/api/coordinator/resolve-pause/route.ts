@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/auth";
+import { requireStaff } from "@/lib/auth";
 import { transitionMatch, writeAudit } from "@/lib/domain";
 import { withErrorHandling } from "@/lib/api-helpers";
 
@@ -26,7 +26,7 @@ const ResolveSchema = z.object({
  * - ended -> match kết thúc (end_reason tuỳ tình huống)
  */
 export const POST = withErrorHandling(async (req: Request) => {
-  const user = await requireUser();
+  const user = await requireStaff();
   const body = await req.json();
   const { pauseRequestId, resolution, endReason, notes } =
     ResolveSchema.parse(body);

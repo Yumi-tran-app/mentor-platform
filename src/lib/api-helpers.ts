@@ -23,6 +23,9 @@ export function withErrorHandling(
       if (err?.message === "UNAUTHORIZED") {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
+      if (err?.message === "FORBIDDEN") {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
       const status = err?.status ?? 400;
       return NextResponse.json(
         { error: err?.message ?? "Internal error" },
