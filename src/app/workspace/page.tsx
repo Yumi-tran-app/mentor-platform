@@ -64,13 +64,13 @@ export default function WorkspacePage() {
 
       {matches.length === 0 ? (
         <Card>
+          <h2 className="font-bold mb-2" style={{ color: "#093774" }}>
+            Chưa có cặp đồng hành
+          </h2>
           <p className="text-sm" style={{ color: "#94A3B8" }}>
-            Bạn chưa có cặp đồng hành nào. Hãy đăng ký tham gia mùa và chờ ghép
-            cặp.
+            Sau khi đơn đăng ký của bạn được duyệt, đội ngũ điều phối sẽ ghép
+            cặp phù hợp và cặp của bạn sẽ hiển thị tại đây.
           </p>
-          <Link href="/onboarding" className="mt-4 inline-block">
-            <Button>Đăng ký tham gia</Button>
-          </Link>
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

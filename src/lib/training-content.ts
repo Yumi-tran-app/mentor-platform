@@ -14,6 +14,99 @@ export type TrainingModuleContent = {
   slides: TrainingSlide[];
 };
 
+export type MenteeModuleContent = {
+  title: string;
+  summary: string;
+  slides: TrainingSlide[];
+};
+
+export const MENTEE_TRAINING_CONTENT: MenteeModuleContent[] = [
+  {
+    title: "Chuẩn bị cho buổi gặp đầu tiên",
+    summary: "Giúp mentee bước vào buổi gặp đầu với sự tự tin và chủ động.",
+    slides: [
+      {
+        title: "Trước buổi gặp đầu tiên",
+        bullets: [
+          "Suy nghĩ trước về điều bạn muốn đạt được trong 9 tháng.",
+          "Chuẩn bị 2-3 câu hỏi hoặc điều muốn chia sẻ.",
+          "Đọc lại hồ sơ mentor của bạn (nếu có) để hiểu người đồng hành.",
+        ],
+      },
+      {
+        title: "Trong buổi gặp đầu tiên",
+        bullets: [
+          "Chủ động giới thiệu bản thân và mục tiêu của mình.",
+          "Lắng nghe định hướng của mentor, ghi chép những điểm quan trọng.",
+          "Thống nhất cách làm việc: tần suất, hình thức, thời lượng.",
+        ],
+      },
+      {
+        title: "Sau buổi gặp đầu tiên",
+        bullets: [
+          "Gửi lời cảm ơn và tóm tắt lại những gì đã thống nhất.",
+          "Đặt mục tiêu nhỏ cho tuần tiếp theo.",
+          "Lên lịch buổi gặp kế tiếp.",
+        ],
+      },
+    ],
+  },
+  {
+    title: "Cách đặt câu hỏi để được hướng dẫn tốt",
+    summary: "Câu hỏi hay là chìa khoá để nhận được giá trị tối đa từ mentor.",
+    slides: [
+      {
+        title: "Đặt câu hỏi cụ thể",
+        bullets: [
+          "Thay vì 'Em nên làm gì?' hãy nói rõ bối cảnh và điều bạn đã thử.",
+          "Ví dụ: 'Em đang phân vân giữa 2 lựa chọn A và B, anh/chị thấy...?'",
+        ],
+      },
+      {
+        title: "Hỏi để hiểu tư duy, không chỉ xin đáp án",
+        bullets: [
+          "Hỏi về cách mentor suy nghĩ thay vì chỉ xin câu trả lời.",
+          "Ví dụ: 'Khi anh/chị gặp tình huống này, anh/chị cân nhắc điều gì?'",
+        ],
+      },
+      {
+        title: "Theo dõi và phản hồi",
+        bullets: [
+          "Sau khi nhận định hướng, hãy thực hành và cập nhật lại kết quả.",
+          "Chia sẻ điều gì hiệu quả/không để nhận góp ý sâu hơn.",
+        ],
+      },
+    ],
+  },
+  {
+    title: "Hiểu rõ ranh giới của mối quan hệ mentoring",
+    summary: "Biết điều gì nên và không nên mong đợi để quan hệ lành mạnh.",
+    slides: [
+      {
+        title: "Mentor là người dẫn dắt, không phải người làm thay",
+        bullets: [
+          "Mentor định hướng và chia sẻ kinh nghiệm, không làm việc giúp bạn.",
+          "Trách nhiệm thực hiện thuộc về chính bạn.",
+        ],
+      },
+      {
+        title: "Tôn trọng thời gian của mentor",
+        bullets: [
+          "Đến đúng giờ, chuẩn bị trước, không nhắn tin ngoài giờ vô cớ.",
+          "Báo trước nếu cần huỷ hoặc dời lịch.",
+        ],
+      },
+      {
+        title: "Khi gặp vấn đề",
+        bullets: [
+          "Chủ động trao đổi thẳng thắn nhưng tôn trọng.",
+          "Nếu vướng mắc lớn, liên hệ Điều phối viên (ĐPV) để được hỗ trợ.",
+        ],
+      },
+    ],
+  },
+];
+
 export const TRAINING_CONTENT: TrainingModuleContent[] = [
   {
     moduleIndex: 0,

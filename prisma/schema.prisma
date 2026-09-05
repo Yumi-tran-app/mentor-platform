@@ -577,6 +577,7 @@ model TrainingModule {
   id          String  @id @default(uuid()) @db.Uuid
   seasonId    String  @map("season_id") @db.Uuid
   season      Season  @relation(fields: [seasonId], references: [id])
+  audience    String  @default("all") // "all" | "mentor" | "mentee"
   title       String
   description String?
   sortOrder   Int     @default(0) @map("sort_order")
@@ -584,6 +585,7 @@ model TrainingModule {
 
   progress TrainingProgress[]
 
+  @@index([seasonId, audience])
   @@map("training_modules")
 }
 

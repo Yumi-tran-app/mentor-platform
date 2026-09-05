@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, Fragment } from "react";
 import { AppShell, Card, Button } from "@/components/ui";
-import { TRAINING_CONTENT } from "@/lib/training-content";
+import { TRAINING_CONTENT, MENTEE_TRAINING_CONTENT } from "@/lib/training-content";
 
 type Module = { id: string; title: string; description: string | null; required: boolean };
 
@@ -12,12 +12,14 @@ export default function TrainingPage() {
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(true);
   const [openIdx, setOpenIdx] = useState<number | null>(null);
+  const [audience, setAudience] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     const res = await fetch("/api/training").then((r) => r.json());
     setModules(res.modules ?? []);
     setCompleted(res.completedIds ?? []);
     setProgress(res.progress ?? 0);
+    setAudience(res.audience ?? null);
     setLoading(false);
   }, []);
 
@@ -70,7 +72,9 @@ export default function TrainingPage() {
         <div className="space-y-3">
           {modules.map((m, idx) => {
             const done = completed.includes(m.id);
-            const content = TRAINING_CONTENT[idx];
+            const content = audience === "mentor"
+              ? TRAINING_CONTENT.find((c) => c.title === m.title)
+              : MENTEE_TRAINING_CONTENT.find((c) => c.title === m.title);
             const opened = openIdx === idx;
             return (
               <Card key={m.id}>
