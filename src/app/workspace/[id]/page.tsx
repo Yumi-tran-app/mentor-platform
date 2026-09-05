@@ -5,6 +5,15 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { AppShell, Card, Button, Badge } from "@/components/ui";
 
+const AGREEMENT_ROWS: [string, string, string][] = [
+  ["purpose", "Mục đích", "Đồng hành để đạt mục tiêu đã thống nhất."],
+  ["freq", "Tần suất", "Gặp định kỳ, mỗi buổi theo lịch đã hẹn."],
+  ["contact", "Cách liên lạc", "Thống nhất kênh liên lạc chính giữa các buổi."],
+  ["boundary", "Ranh giới", "Không bàn chuyện riêng tư ngoài phạm vi; tham chiếu Quy tắc ứng xử."],
+  ["commit", "Cam kết", "Nếu không gặp được, báo trước ít nhất 48 giờ."],
+  ["privacy", "Bảo mật", "Chia sẻ được giữ riêng, trừ trường hợp cần báo cáo an toàn."],
+];
+
 type Match = {
   id: string;
   status: string;
@@ -33,6 +42,14 @@ export default function MatchDetailPage() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [confirming, setConfirming] = useState(false);
+  const [agreementItems, setAgreementItems] = useState<Record<string, boolean>>({
+    purpose: false,
+    freq: false,
+    contact: false,
+    boundary: false,
+    commit: false,
+    privacy: false,
+  });
 
   const load = useCallback(async () => {
     try {
@@ -143,7 +160,7 @@ export default function MatchDetailPage() {
         </div>
       </div>
 
-      {/* THOẢ THUẬN */}
+      {/* THOẢ THUẬN ĐỒNG HÀNH */}
       <div className="mt-6">
         <Card>
           <h2 className="font-bold mb-2" style={{ color: "#093774" }}>
@@ -155,12 +172,45 @@ export default function MatchDetailPage() {
               {new Date(match.agreementConfirmedAt).toLocaleDateString("vi-VN")}
             </p>
           ) : (
-            <div className="flex items-center justify-between">
-              <p className="text-sm" style={{ color: "#2C335D" }}>
-                Chưa xác nhận thoả thuận đồng hành chính thức.
+            <div className="space-y-2">
+              <p className="text-sm italic" style={{ color: "#94A3B8" }}>
+                "Cùng xác nhận những điều quan trọng trước khi bắt đầu — biến ghép cặp thành một mối quan hệ thật sự."
               </p>
-              <Button onClick={confirmAgreement} disabled={confirming} variant="secondary">
-                {confirming ? "Đang xác nhận..." : "Xác nhận thoả thuận"}
+              {AGREEMENT_ROWS.map(([key, label, desc]) => {
+                const on = agreementItems[key];
+                return (
+                  <button
+                    key={key}
+                    onClick={() => setAgreementItems((s) => ({ ...s, [key]: !s[key] }))}
+                    className="w-full text-left p-3 rounded-xl border flex items-start gap-3 transition"
+                    style={{
+                      background: on ? "#fff" : "#F5F2EC",
+                      borderColor: on ? "#15B5B0" : "#E5E0D5",
+                      opacity: on ? 1 : 0.7,
+                    }}
+                  >
+                    <span
+                      className="mt-0.5 w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0"
+                      style={{
+                        background: on ? "#15B5B0" : "transparent",
+                        borderColor: on ? "#15B5B0" : "#C0C5CE",
+                        color: "#fff",
+                      }}
+                    >
+                      {on && "✓"}
+                    </span>
+                    <div>
+                      <span className="block text-sm font-bold" style={{ color: "#2C335D" }}>{label}</span>
+                      <span className="block text-xs mt-0.5" style={{ color: "#94A3B8" }}>{desc}</span>
+                    </div>
+                  </button>
+                );
+              })}
+              <Button
+                onClick={confirmAgreement}
+                disabled={confirming || !Object.values(agreementItems).every(Boolean)}
+              >
+                {confirming ? "Đang xác nhận..." : "Cả hai cùng xác nhận"}
               </Button>
             </div>
           )}

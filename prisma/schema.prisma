@@ -385,6 +385,7 @@ model Match {
 
   fitScore   Float?      @map("fit_score")
   status     MatchStatus @default(recommended)
+  goalText   String?     @map("goal_text")
 
   proposedAt          DateTime? @map("proposed_at")
   mentorRespondedAt   DateTime? @map("mentor_responded_at")

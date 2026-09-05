@@ -8,20 +8,35 @@ type Match = {
   id: string;
   status: string;
   fitScore: number | null;
-  mentorApplication: { user: { fullName: string } };
-  menteeApplication: { user: { fullName: string } };
+  goalText: string | null;
+  mentorApplication: { user: { fullName: string; id: string } };
+  menteeApplication: { user: { fullName: string; id: string } };
 };
 
 export default function WorkspacePage() {
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
+  const [myId, setMyId] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/matches")
       .then((r) => r.json())
       .then((d) => setMatches(d.matches ?? []))
       .finally(() => setLoading(false));
+    fetch("/api/profile")
+      .then((r) => r.json())
+      .then((d) => setMyId(d.user?.id ?? null));
   }, []);
+
+  async function respond(matchId: string, accept: boolean) {
+    await fetch(`/api/matches/${matchId}/respond`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ accept }),
+    });
+    const res = await fetch("/api/matches").then((r) => r.json());
+    setMatches(res.matches ?? []);
+  }
 
   const statusLabel: Record<string, string> = {
     recommended: "Đã đề xuất",
@@ -94,6 +109,20 @@ export default function WorkspacePage() {
                 <span className="font-semibold">Mentee:</span>{" "}
                 {m.menteeApplication.user.fullName}
               </p>
+
+              {m.goalText && (
+                <div className="mt-3 p-3 rounded-lg text-sm" style={{ background: "#F2F9F4", color: "#2C335D" }}>
+                  🎯 <b>Mục tiêu:</b> {m.goalText}
+                </div>
+              )}
+
+              {/* Nút respond khi có yêu cầu kết nối đang chờ */}
+              {(m.status === "proposed_to_parties" || m.status === "mentor_accepted") && (
+                <div className="mt-3 flex gap-2">
+                  <Button onClick={() => respond(m.id, true)}>💚 Đồng ý</Button>
+                  <Button variant="danger" onClick={() => respond(m.id, false)}>Từ chối</Button>
+                </div>
+              )}
 
               <div className="mt-4 flex flex-wrap gap-2">
                 <Link href={`/workspace/${m.id}`}>
