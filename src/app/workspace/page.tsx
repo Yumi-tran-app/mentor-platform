@@ -95,7 +95,10 @@ export default function WorkspacePage() {
                 {m.menteeApplication.user.fullName}
               </p>
 
-              <div className="mt-4 flex gap-2">
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Link href={`/workspace/${m.id}`}>
+                  <Button>Mở chi tiết</Button>
+                </Link>
                 <Link href={`/workspace/${m.id}/reflect`}>
                   <Button variant="secondary">Phản tư</Button>
                 </Link>

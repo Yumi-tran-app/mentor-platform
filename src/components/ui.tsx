@@ -19,6 +19,13 @@ export function AppShell({
         </Link>
         <div className="flex items-center gap-4">
           <span className="text-sm opacity-80">{title ?? ""}</span>
+          <Link
+            href="/notifications"
+            title="Thông báo"
+            style={{ color: "#fff", fontSize: 20 }}
+          >
+            🔔
+          </Link>
           <UserButton afterSignOutUrl="/" />
         </div>
       </header>
