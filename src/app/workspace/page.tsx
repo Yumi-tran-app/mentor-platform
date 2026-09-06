@@ -117,12 +117,33 @@ export default function WorkspacePage() {
               )}
 
               {/* Nút respond khi có yêu cầu kết nối đang chờ */}
-              {(m.status === "proposed_to_parties" || m.status === "mentor_accepted") && (
-                <div className="mt-3 flex gap-2">
-                  <Button onClick={() => respond(m.id, true)}>💚 Đồng ý</Button>
-                  <Button variant="danger" onClick={() => respond(m.id, false)}>Từ chối</Button>
-                </div>
-              )}
+              {(m.status === "proposed_to_parties" || m.status === "mentor_accepted") &&
+                (() => {
+                  const myRole =
+                    myId === m.mentorApplication.user.id
+                      ? "mentor"
+                      : myId === m.menteeApplication.user.id
+                        ? "mentee"
+                        : null;
+                  // proposed_to_parties: chỉ mentor được đồng ý trước
+                  // mentor_accepted: chỉ mentee đồng ý tiếp
+                  const canAct =
+                    (m.status === "proposed_to_parties" && myRole === "mentor") ||
+                    (m.status === "mentor_accepted" && myRole === "mentee");
+                  if (!canAct) {
+                    return (
+                      <p className="mt-3 text-xs italic" style={{ color: "#94A3B8" }}>
+                        ⏳ Đang chờ đối phương xác nhận.
+                      </p>
+                    );
+                  }
+                  return (
+                    <div className="mt-3 flex gap-2">
+                      <Button onClick={() => respond(m.id, true)}>💚 Đồng ý</Button>
+                      <Button variant="danger" onClick={() => respond(m.id, false)}>Từ chối</Button>
+                    </div>
+                  );
+                })()}
 
               <div className="mt-4 flex flex-wrap gap-2">
                 <Link href={`/workspace/${m.id}`}>

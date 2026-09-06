@@ -19,8 +19,8 @@ type Match = {
   status: string;
   agreementConfirmedAt: string | null;
   fitScore: number | null;
-  mentorApplication: { user: { fullName: string } };
-  menteeApplication: { user: { fullName: string } };
+  mentorApplication: { user: { fullName: string; id: string } };
+  menteeApplication: { user: { fullName: string; id: string } };
 };
 
 type Log = {
@@ -42,6 +42,7 @@ export default function MatchDetailPage() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [confirming, setConfirming] = useState(false);
+  const [connecting, setConnecting] = useState(false);
   const [agreementItems, setAgreementItems] = useState<Record<string, boolean>>({
     purpose: false,
     freq: false,
@@ -103,6 +104,20 @@ export default function MatchDetailPage() {
     }
   }
 
+  async function markFirstConnection() {
+    setConnecting(true);
+    try {
+      const res = await fetch(`/api/matches/${matchId}/first-connection`, {
+        method: "POST",
+      });
+      if (res.ok) await load();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setConnecting(false);
+    }
+  }
+
   const statusLabel: Record<string, string> = {
     recommended: "Đã đề xuất",
     pending_coordinator_review: "ĐPV đang duyệt",
@@ -160,8 +175,24 @@ export default function MatchDetailPage() {
         </div>
       </div>
 
-      {/* THOẢ THUẬN ĐỒNG HÀNH */}
       <div className="mt-6">
+        {/* LUỒNG KẾT NỐI — đánh dấu buổi gặp đầu khi hai bên đã đồng thuận */}
+        {match.status === "mutual_accepted" && (
+          <Card className="mb-4">
+            <h2 className="font-bold mb-2" style={{ color: "#093774" }}>
+              Buổi gặp đầu tiên
+            </h2>
+            <p className="text-sm mb-3" style={{ color: "#2C335D" }}>
+              Hai bên đã đồng ý kết nối. Sau khi sắp xếp và hoàn thành buổi gặp
+              đầu tiên, đánh dấu để chuyển sang giai đoạn đồng hành chính thức.
+            </p>
+            <Button onClick={markFirstConnection} disabled={connecting}>
+              {connecting ? "Đang cập nhật..." : "✅ Đã gặp buổi đầu tiên"}
+            </Button>
+          </Card>
+        )}
+
+        {/* THOẢ THUẬN ĐỒNG HÀNH */}
         <Card>
           <h2 className="font-bold mb-2" style={{ color: "#093774" }}>
             Thoả thuận đồng hành

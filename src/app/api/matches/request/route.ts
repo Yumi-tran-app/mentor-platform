@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentUser } from "@/lib/auth";
-import { getActiveSeasonId } from "@/lib/domain";
+import { getActiveSeasonId, notifyUser } from "@/lib/domain";
 import { withErrorHandling } from "@/lib/api-helpers";
 
 const RequestSchema = z.object({
@@ -66,6 +66,19 @@ export const POST = withErrorHandling(async (req: Request) => {
       proposedAt: new Date(),
     },
   });
+
+  // Gửi thông báo cho đối phương
+  const targetAppId = mentorAppId === myMentorApp?.id ? menteeAppId : mentorAppId;
+  const targetApp = mentorAppId === myMentorApp?.id
+    ? await prisma.menteeApplication.findUnique({ where: { id: targetAppId } })
+    : await prisma.mentorApplication.findUnique({ where: { id: targetAppId } });
+  if (targetApp) {
+    await notifyUser({
+      userId: targetApp.userId,
+      type: "match.request_received",
+      payload: { matchId: match.id },
+    });
+  }
 
   return NextResponse.json({ match }, { status: 201 });
 });

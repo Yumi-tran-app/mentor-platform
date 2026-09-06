@@ -274,6 +274,22 @@ export function computeFitScore(
   return matched / menteeNeeds.length;
 }
 
+// ---------- Notification helper ----------
+
+export async function notifyUser(opts: {
+  userId: string;
+  type: string;
+  payload?: unknown;
+}) {
+  await prisma.notification.create({
+    data: {
+      userId: opts.userId,
+      type: opts.type,
+      payload: opts.payload === undefined ? undefined : (opts.payload as any),
+    },
+  });
+}
+
 // ---------- Utility ----------
 
 export function addBusinessDays(from: Date, days: number): Date {
