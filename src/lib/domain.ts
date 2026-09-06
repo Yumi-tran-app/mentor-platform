@@ -52,7 +52,7 @@ const MENTOR_VALID_TRANSITIONS: Record<
   MentorApplicationStatus[]
 > = {
   draft: ["submitted"],
-  submitted: ["interview_scheduled", "rejected"],
+  submitted: ["interview_scheduled", "approved", "rejected"],
   interview_scheduled: ["interview_awaiting_review"],
   interview_awaiting_review: ["approved", "rejected"],
   approved: ["in_pool"],
@@ -65,7 +65,7 @@ const MENTEE_VALID_TRANSITIONS: Record<
   MenteeApplicationStatus[]
 > = {
   draft: ["submitted"],
-  submitted: ["interview_scheduled", "rejected"],
+  submitted: ["interview_scheduled", "approved", "rejected"],
   interview_scheduled: ["interview_awaiting_review"],
   interview_awaiting_review: ["approved", "rejected"],
   approved: ["in_pool"],

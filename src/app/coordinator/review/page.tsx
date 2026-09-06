@@ -38,6 +38,7 @@ export default function ReviewApplicationsPage() {
   const [tab, setTab] = useState<"mentor" | "mentee">("mentor");
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   async function load(kind: "mentor" | "mentee") {
     setLoading(true);
@@ -61,15 +62,23 @@ export default function ReviewApplicationsPage() {
 
   async function decide(id: string, decision: "approve" | "reject") {
     setBusy(id);
+    setError(null);
     try {
-      await fetch("/api/coordinator/review-application", {
+      const res = await fetch("/api/coordinator/review-application", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ kind: tab, applicationId: id, decision }),
       });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error ?? "Có lỗi xảy ra khi duyệt đơn.");
+      } else {
+        setError(null);
+      }
       await load(tab);
     } catch (e) {
       console.error(e);
+      setError("Có lỗi xảy ra khi duyệt đơn.");
     } finally {
       setBusy(null);
     }
@@ -112,6 +121,15 @@ export default function ReviewApplicationsPage() {
           </button>
         ))}
       </div>
+
+      {error && (
+        <div
+          className="mb-4 rounded-lg px-4 py-3 text-sm"
+          style={{ background: "#FCE8E6", color: "#B42318" }}
+        >
+          ⚠️ {error}
+        </div>
+      )}
 
       {loading ? (
         <p style={{ color: "#2C335D" }}>Đang tải...</p>
