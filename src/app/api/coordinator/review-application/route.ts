@@ -6,6 +6,7 @@ import {
   transitionMentorApplication,
   transitionMenteeApplication,
   writeAudit,
+  notifyUser,
 } from "@/lib/domain";
 import { withErrorHandling } from "@/lib/api-helpers";
 
@@ -27,6 +28,22 @@ export const POST = withErrorHandling(async (req: Request) => {
   const body = await req.json();
   const { kind, applicationId, decision } = ReviewSchema.parse(body);
 
+  // Lấy userId của đơn để cập nhật vai trò người dùng + thông báo
+  let applicantUserId: string | null = null;
+  if (kind === "mentor") {
+    const app = await prisma.mentorApplication.findUnique({
+      where: { id: applicationId },
+      select: { userId: true },
+    });
+    applicantUserId = app?.userId ?? null;
+  } else {
+    const app = await prisma.menteeApplication.findUnique({
+      where: { id: applicationId },
+      select: { userId: true },
+    });
+    applicantUserId = app?.userId ?? null;
+  }
+
   if (decision === "approve") {
     if (kind === "mentor") {
       await transitionMentorApplication(applicationId, "approved", user.id);
@@ -35,11 +52,32 @@ export const POST = withErrorHandling(async (req: Request) => {
       await transitionMenteeApplication(applicationId, "approved", user.id);
       await transitionMenteeApplication(applicationId, "in_pool", user.id);
     }
+
+    // Cập nhật vai trò người dùng theo loại đơn được duyệt
+    if (applicantUserId) {
+      const targetRole = kind === "mentor" ? "mentor" : "mentee";
+      await prisma.user.update({
+        where: { id: applicantUserId },
+        data: { role: targetRole },
+      });
+      await notifyUser({
+        userId: applicantUserId,
+        type: "application.approved",
+        payload: { kind, role: targetRole },
+      });
+    }
   } else if (decision === "reject") {
     if (kind === "mentor") {
       await transitionMentorApplication(applicationId, "rejected", user.id);
     } else {
       await transitionMenteeApplication(applicationId, "rejected", user.id);
+    }
+    if (applicantUserId) {
+      await notifyUser({
+        userId: applicantUserId,
+        type: "application.rejected",
+        payload: { kind },
+      });
     }
   } else {
     // schedule_interview: submitted -> interview_scheduled
