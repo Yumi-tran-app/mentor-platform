@@ -16,6 +16,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/training", icon: "🎓", label: "Đào tạo" },
   { href: "/profile", icon: "👤", label: "Hồ sơ" },
   { href: "/coordinator", icon: "🎯", label: "Điều phối (ĐPV)", staffOnly: true },
+  { href: "/coordinator/matchmaking", icon: "🔗", label: "Ghép cặp", staffOnly: true },
 ];
 
 export function AppShell({

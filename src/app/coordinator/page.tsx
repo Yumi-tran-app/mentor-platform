@@ -45,6 +45,9 @@ export default function CoordinatorPage() {
       </h1>
 
       <div className="flex gap-3 mb-8">
+        <Link href="/coordinator/matchmaking">
+          <Button variant="secondary">🔗 Ghép cặp & duyệt kết nối</Button>
+        </Link>
         <Link href="/coordinator/review">
           <Button variant="secondary">📋 Duyệt đơn đăng ký</Button>
         </Link>

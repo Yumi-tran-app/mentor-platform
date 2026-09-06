@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { requireStaff } from "@/lib/auth";
-import { transitionMatch, writeAudit, getSlaDays } from "@/lib/domain";
+import { transitionMatch, writeAudit, getSlaDays, notifyUser } from "@/lib/domain";
 import { withErrorHandling } from "@/lib/api-helpers";
 
 const DecideSchema = z.object({
@@ -23,7 +23,7 @@ export const POST = withErrorHandling(async (req: Request) => {
 
   const review = await prisma.matchReview.findUnique({
     where: { id: matchReviewId },
-    include: { match: true, assignments: true },
+    include: { match: { include: { mentorApplication: true, menteeApplication: true } }, assignments: true },
   });
   if (!review) {
     return NextResponse.json({ error: "Review not found" }, { status: 404 });
@@ -67,6 +67,17 @@ export const POST = withErrorHandling(async (req: Request) => {
   if (decision === "approved") {
     await transitionMatch(review.matchId, "proposed_to_parties", {
       actorUserId: user.id,
+    });
+    // Gửi thông báo cho mentor & mentee biết đã được đề xuất kết nối
+    await notifyUser({
+      userId: review.match.mentorApplication.userId,
+      type: "match.proposed",
+      payload: { matchId: review.matchId },
+    });
+    await notifyUser({
+      userId: review.match.menteeApplication.userId,
+      type: "match.proposed",
+      payload: { matchId: review.matchId },
     });
   }
 
