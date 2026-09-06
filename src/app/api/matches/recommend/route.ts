@@ -33,7 +33,7 @@ export const POST = withErrorHandling(async (req: Request) => {
     where: { id: menteeApplicationId },
     include: { needs: true },
   });
-  if (!mentee || mentee.seasonId !== sid || mentee.status !== "approved") {
+  if (!mentee || mentee.seasonId !== sid || !["approved", "in_pool"].includes(mentee.status)) {
     return NextResponse.json(
       { error: "Mentee not approved for this season" },
       { status: 400 }

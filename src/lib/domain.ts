@@ -256,7 +256,7 @@ export async function getAvailableMentors(seasonId: string) {
   return prisma.mentorApplication.findMany({
     where: {
       seasonId,
-      status: "approved",
+      status: { in: ["approved", "in_pool"] },
       programStatus: "active",
       capacityUsed: { lt: prisma.mentorApplication.fields.capacityMax },
     },

@@ -35,7 +35,7 @@ export const GET = withErrorHandling(async () => {
   const mentors = sid
     ? await getAvailableMentors(sid)
     : await prisma.mentorApplication.findMany({
-        where: { status: "approved", programStatus: "active" },
+        where: { status: { in: ["approved", "in_pool"] }, programStatus: "active" },
         include: { user: { select: { fullName: true, email: true } } },
       });
 
