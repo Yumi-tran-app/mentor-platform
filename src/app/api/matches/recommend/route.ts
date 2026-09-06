@@ -50,11 +50,19 @@ export const POST = withErrorHandling(async (req: Request) => {
 
   const needs = mentee.needs.map((n) => n.needCategory);
 
-  // Chọn mentor có fit score cao nhất (đơn giản — sẽ nâng cấp sau)
+  // Chọn mentor có fit score cao nhất (engine nhiều chiều)
   let best = mentors[0];
   let bestScore = -1;
   for (const m of mentors) {
-    const s = computeFitScore(m.industry, needs);
+    const s = computeFitScore(
+      {
+        industry: m.industry,
+        professionalJson: m.professionalJson,
+        identityJson: m.identityJson,
+        readinessJson: m.readinessJson,
+      },
+      { needs, profileJson: mentee.profileJson }
+    );
     if (s > bestScore) {
       bestScore = s;
       best = m;

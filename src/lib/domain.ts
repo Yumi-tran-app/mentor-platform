@@ -260,18 +260,78 @@ export async function getAvailableMentors(seasonId: string) {
       programStatus: "active",
       capacityUsed: { lt: prisma.mentorApplication.fields.capacityMax },
     },
+    include: {
+      user: { select: { fullName: true } },
+    },
   });
 }
 
 export function computeFitScore(
-  mentorIndustry: string | null,
-  menteeNeeds: string[]
+  mentor: {
+    industry: string | null;
+    professionalJson: any;
+    identityJson: any;
+    readinessJson: any;
+  },
+  mentee: {
+    needs: string[];
+    profileJson: any;
+  }
 ): number {
-  // Fit score đơn giản hiện tại: trả về 0..1 dựa trên số nhu cầu khớp.
-  // Sau này có thể thay bằng engine phức tạp hơn.
-  if (!mentorIndustry || menteeNeeds.length === 0) return 0.5;
-  const matched = menteeNeeds.filter((n) => n === mentorIndustry).length;
-  return matched / menteeNeeds.length;
+  // Engine chấm điểm nhiều chiều, thang 0..100.
+  // Trọng số ưu tiên: khớp ngành > kinh nghiệm > cùng thành phố > kinh nghiệm mentoring.
+  const needs = mentee.needs ?? [];
+  const prof = mentor.professionalJson ?? {};
+  const identity = mentor.identityJson ?? {};
+  const readiness = mentor.readinessJson ?? {};
+  const mProf = mentee.profileJson ?? {};
+
+  let score = 0;
+
+  // 1) Khớp ngành (tối đa 55 điểm)
+  const mentorIndustry = (mentor.industry ?? prof.industry ?? "").toLowerCase();
+  const INDUSTRY_TO_NEEDS: Record<string, string[]> = {
+    learning: ["learning"],
+    career: ["career", "personal_dev"],
+    personal_dev: ["personal_dev", "learning"],
+    life_transition: ["life_transition", "career"],
+  };
+  if (mentorIndustry && needs.length > 0) {
+    // Nhu cầu nào "hợp" với ngành mentor (map thô) — nếu mentor ghi rõ ngành
+    // khớp với need category thì tính điểm; về bản chất đây là heuristic.
+    const needSet = new Set(needs.map((n) => n.toLowerCase()));
+    const relevant = needs.filter((n) => {
+      const aliases = INDUSTRY_TO_NEEDS[n] ?? [];
+      return aliases.includes(n) || mentorIndustry.includes(n);
+    });
+    if (relevant.length > 0) {
+      score += 55;
+    } else if (needSet.has("career") && mentorIndustry) {
+      // Mentor có ngành rõ ràng + mentee cần phát triển sự nghiệp
+      score += 40;
+    }
+  }
+
+  // 2) Kinh nghiệm (tối đa 25 điểm)
+  const yearsExp = Number(prof.yearsExperience) || 0;
+  const yearsMgmt = Number(prof.yearsManagement) || 0;
+  score += Math.min(20, yearsExp * 1.5); // mỗi năm ~1.5đ, chặn 20
+  score += Math.min(5, yearsMgmt); // quản lý tối đa 5đ
+
+  // 3) Cùng thành phố (tối đa 10 điểm)
+  const mentorCity = (identity.city ?? "").trim().toLowerCase();
+  const menteeCity = (mProf.city ?? "").trim().toLowerCase();
+  if (mentorCity && menteeCity && mentorCity === menteeCity) {
+    score += 10;
+  }
+
+  // 4) Kinh nghiệm mentoring (tối đa 10 điểm)
+  if (readiness.hasMentoredBefore === true) score += 6;
+  if (readiness.hasMentoredStartup === true) score += 4;
+
+  // Chuẩn hóa 0..100 rồi giữ 2 chữ số thập phân
+  const clamped = Math.max(0, Math.min(100, score));
+  return Math.round(clamped * 100) / 100;
 }
 
 // ---------- Notification helper ----------
