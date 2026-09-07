@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
-import { transitionMentorApplication } from "@/lib/domain";
+import { transitionMentorApplication, getMentoringCutoffDate } from "@/lib/domain";
 import { sendEmail, simpleHtml, lateRegistrationEmailHtml } from "@/lib/email";
 import { withErrorHandling } from "@/lib/api-helpers";
 
@@ -23,10 +23,12 @@ export async function PATCH(
 
     const updated = await transitionMentorApplication(id, "submitted", user.id);
 
-    // Kiểm tra đăng ký muộn: sau khi đã hết hạn ghép cặp & kết nối
-    const season = await prisma.season.findUnique({ where: { id: app.seasonId } });
-    const regDeadline = season?.registrationDeadline ?? null;
-    const isLate = regDeadline ? new Date() > regDeadline : false;
+    // Kiểm tra đăng ký muộn: sau khi đã hoàn tất đào tạo (start + 60 ngày) = đã vào kỳ ghép cặp & kết nối
+    const [cutoff, season] = await Promise.all([
+      getMentoringCutoffDate(app.seasonId),
+      prisma.season.findUnique({ where: { id: app.seasonId } }),
+    ]);
+    const isLate = cutoff ? new Date() > cutoff : false;
 
     if (isLate) {
       sendEmail({

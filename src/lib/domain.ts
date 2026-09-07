@@ -46,6 +46,24 @@ export async function getActiveSeasonId(): Promise<string | null> {
   return season?.id ?? null;
 }
 
+/**
+ * Mốc bắt đầu kỳ ghép cặp & kết nối = ngày bắt đầu + 60 ngày (45đ ĐK + 15đ đào tạo).
+ * Ai đăng ký SAU mốc này coi như đăng ký muộn (đã hoàn công tác kết nối).
+ */
+export async function getMentoringCutoffDate(seasonId: string): Promise<Date | null> {
+  // Ưu tiên đọc deadline của milestone "training"
+  const trainingMilestone = await prisma.seasonMilestone.findFirst({
+    where: { seasonId, key: "training" },
+  });
+  if (trainingMilestone?.deadline) return trainingMilestone.deadline;
+
+  const season = await prisma.season.findUnique({ where: { id: seasonId } });
+  if (!season) return null;
+  const d = new Date(season.startDate);
+  d.setDate(d.getDate() + 60);
+  return d;
+}
+
 // ---------- Application state transitions ----------
 
 const MENTOR_VALID_TRANSITIONS: Record<
