@@ -16,10 +16,12 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/messages", icon: "💬", label: "Tin nhắn" },
   { href: "/calendar", icon: "📅", label: "Lịch gặp" },
   { href: "/training", icon: "🎓", label: "Đào tạo" },
+  { href: "/events", icon: "📅", label: "Workshop/Training" },
   { href: "/profile", icon: "👤", label: "Hồ sơ" },
   { href: "/coordinator", icon: "🎯", label: "Điều phối (ĐPV)", staffOnly: true },
   { href: "/coordinator/matchmaking", icon: "🔗", label: "Ghép cặp", staffOnly: true },
   { href: "/admin", icon: "🛠️", label: "Quản trị hệ thống", adminOnly: true },
+  { href: "/admin/events", icon: "📅", label: "Workshop/Training", adminOnly: true },
 ];
 
 export function AppShell({

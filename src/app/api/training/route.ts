@@ -36,7 +36,7 @@ export const GET = withErrorHandling(async (req: Request) => {
   const audience = await resolveAudience(user.id, user.role);
 
   const modules = await prisma.trainingModule.findMany({
-    where: { seasonId, audience: { in: ["all", audience] } },
+    where: { seasonId, audience: { in: ["all", audience] }, type: "online_module" },
     orderBy: { sortOrder: "asc" },
   });
 

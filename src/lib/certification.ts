@@ -21,6 +21,7 @@ export async function getTrainingStatus(
       seasonId,
       audience: { in: ["all", audience] },
       required: true,
+      type: "online_module",
     },
     orderBy: { sortOrder: "asc" },
   });
@@ -166,6 +167,7 @@ export async function getMentoringJourney(
   hasMatch: boolean;
   activeMatch: boolean;
   completedMatch: boolean;
+  bothReportsSubmitted: boolean;
   mentoringCert: { id: string; certificateNo: string } | null;
 }> {
   const trainingStatus = await getTrainingStatus(userId, seasonId, audience);
@@ -178,7 +180,7 @@ export async function getMentoringJourney(
       : { menteeApplication: { userId } };
   const matches = await prisma.match.findMany({
     where: { seasonId, ...appWhere },
-    select: { status: true },
+    select: { id: true, status: true },
   });
   const hasMatch = matches.length > 0;
   const activeMatch = matches.some((m) =>
@@ -193,6 +195,19 @@ export async function getMentoringJourney(
     select: { id: true, certificateNo: true },
   });
 
+  // Match đã ended + cả 2 nộp report => đủ điều kiện cấp chứng nhận
+  let bothReportsSubmitted = false;
+  if (completedMatch) {
+    const endedMatchIds = matches.filter((m) => m.status === "ended").map((m) => m.id);
+    for (const mid of endedMatchIds) {
+      const reportCount = await prisma.endOfProgramReport.count({ where: { matchId: mid } });
+      if (reportCount >= 2) {
+        bothReportsSubmitted = true;
+        break;
+      }
+    }
+  }
+
   const steps = [
     { key: "registered", label: "Đăng ký", done: true, active: false },
     { key: "training", label: "Tham gia đào tạo", done: trainingStatus.eligible, active: false },
@@ -201,7 +216,6 @@ export async function getMentoringJourney(
     { key: "certified", label: "Cấp giấy chứng nhận", done: !!mentoringCert, active: false },
   ];
 
-  // Đánh dấu bước đang active (bước đầu tiên chưa done)
   const firstUndoneIdx = steps.findIndex((s) => !s.done);
   if (firstUndoneIdx >= 0) steps[firstUndoneIdx].active = true;
 
@@ -212,6 +226,7 @@ export async function getMentoringJourney(
     hasMatch,
     activeMatch,
     completedMatch,
+    bothReportsSubmitted,
     mentoringCert,
   };
 }

@@ -2,33 +2,57 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentUser } from "@/lib/auth";
 import { getActiveSeasonId } from "@/lib/domain";
+import { resolveApplicantAudience } from "@/lib/certification";
 import {
   MENTOR_TEST_TITLE,
   MENTOR_PASS_SCORE,
   MENTOR_TEST_QUESTIONS,
 } from "@/lib/training-test-content";
+import {
+  MENTEE_TEST_TITLE,
+  MENTEE_PASS_SCORE,
+  MENTEE_TEST_QUESTIONS,
+} from "@/lib/training-test-mentee";
 import { withErrorHandling } from "@/lib/api-helpers";
 
+type Audience = "mentor" | "mentee";
+
+const TEST_CONFIG: Record<
+  Audience,
+  { title: string; passScore: number; questions: typeof MENTOR_TEST_QUESTIONS }
+> = {
+  mentor: {
+    title: MENTOR_TEST_TITLE,
+    passScore: MENTOR_PASS_SCORE,
+    questions: MENTOR_TEST_QUESTIONS,
+  },
+  mentee: {
+    title: MENTEE_TEST_TITLE,
+    passScore: MENTEE_PASS_SCORE,
+    questions: MENTEE_TEST_QUESTIONS as any,
+  },
+};
+
 /**
- * Lấy (hoặc tạo nếu chưa có) bộ test mentor cho season hiện tại.
- * Lazy-seed từ nội dung tĩnh để không phụ thuộc seed script.
+ * Lấy (hoặc tạo nếu chưa có) bộ test cho audience + season hiện tại.
  */
-async function ensureMentorTest(seasonId: string) {
+async function ensureTest(seasonId: string, audience: Audience) {
   const existing = await prisma.trainingTest.findFirst({
-    where: { seasonId, audience: "mentor" },
+    where: { seasonId, audience },
     include: { questions: { orderBy: { sortOrder: "asc" } } },
   });
   if (existing) return existing;
 
+  const cfg = TEST_CONFIG[audience];
   const test = await prisma.trainingTest.create({
     data: {
       seasonId,
-      audience: "mentor",
-      title: MENTOR_TEST_TITLE,
-      passScore: MENTOR_PASS_SCORE,
+      audience,
+      title: cfg.title,
+      passScore: cfg.passScore,
       status: "published",
       questions: {
-        create: MENTOR_TEST_QUESTIONS.map((q, i) => ({
+        create: cfg.questions.map((q, i) => ({
           type: q.type,
           prompt: q.prompt,
           options: q.options
@@ -45,7 +69,7 @@ async function ensureMentorTest(seasonId: string) {
 
 /**
  * GET /api/training/test
- * Trả về bộ test (KHÔNG kèm đáp án đúng) + lần làm gần nhất của user.
+ * Trả về bộ test theo audience của user (KHÔNG kèm đáp án đúng) + lần làm gần nhất.
  */
 export const GET = withErrorHandling(async (req: Request) => {
   const user = await getOrCreateCurrentUser();
@@ -56,9 +80,13 @@ export const GET = withErrorHandling(async (req: Request) => {
     return NextResponse.json({ error: "No active season" }, { status: 400 });
   }
 
-  const test = await ensureMentorTest(seasonId);
+  const audience = await resolveApplicantAudience(user.id);
+  if (!audience) {
+    return NextResponse.json({ error: "Bạn chưa đăng ký mentor/mentee" }, { status: 400 });
+  }
 
-  // Ẩn đáp án đúng khi trả cho user
+  const test = await ensureTest(seasonId, audience);
+
   const sanitizedQuestions = test.questions.map((q) => ({
     id: q.id,
     type: q.type,
@@ -74,6 +102,7 @@ export const GET = withErrorHandling(async (req: Request) => {
   });
 
   return NextResponse.json({
+    audience,
     test: { id: test.id, title: test.title, passScore: test.passScore },
     questions: sanitizedQuestions,
     lastAttempt: lastAttempt
@@ -85,8 +114,8 @@ export const GET = withErrorHandling(async (req: Request) => {
 /**
  * POST /api/training/test
  * Nộp bài: body { answers: [{questionId, value}] }
- * - MCQ được chấm tự động (so index đáp án).
- * - Essay lưu text, chấm tay sau (coi như pass nếu MCQ đạt ngưỡng; admin có thể duyệt sau).
+ * MCQ chấm tự động; essay lưu text.
+ * Khi pass -> tự đánh dấu module "Kiểm tra & chứng nhận" hoàn thành.
  */
 export const POST = withErrorHandling(async (req: Request) => {
   const user = await getOrCreateCurrentUser();
@@ -97,7 +126,12 @@ export const POST = withErrorHandling(async (req: Request) => {
     return NextResponse.json({ error: "No active season" }, { status: 400 });
   }
 
-  const test = await ensureMentorTest(seasonId);
+  const audience = await resolveApplicantAudience(user.id);
+  if (!audience) {
+    return NextResponse.json({ error: "Bạn chưa đăng ký mentor/mentee" }, { status: 400 });
+  }
+
+  const test = await ensureTest(seasonId, audience);
   const body = await req.json();
   const answers: { questionId: string; value: any }[] = body.answers ?? [];
 
@@ -123,7 +157,6 @@ export const POST = withErrorHandling(async (req: Request) => {
         isCorrect: correct,
       });
     } else {
-      // essay
       answerRecords.push({
         questionId: q.id,
         text: typeof a.value === "string" ? a.value : null,
@@ -150,7 +183,12 @@ export const POST = withErrorHandling(async (req: Request) => {
   // Khi pass test -> tự đánh dấu module "Kiểm tra & chứng nhận" hoàn thành
   if (passed) {
     const certModule = await prisma.trainingModule.findFirst({
-      where: { seasonId, audience: { in: ["all", "mentor"] }, required: true },
+      where: {
+        seasonId,
+        audience: { in: ["all", audience] },
+        required: true,
+        type: "online_module",
+      },
       orderBy: { sortOrder: "desc" },
     });
     if (certModule) {

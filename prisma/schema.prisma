@@ -203,6 +203,8 @@ model User {
   journeyEntries          JourneyEntry[]
   trainingTestAttempts    TrainingTestAttempt[]
   certificates            Certificate[]
+  trainingRegistrations   TrainingRegistration[]
+  endOfProgramReports     EndOfProgramReport[]
 
   @@map("users")
 }
@@ -406,15 +408,16 @@ model Match {
 
   createdAt DateTime @default(now()) @map("created_at")
 
-  reviews            MatchReview[]
-  pauseRequests      PauseRequest[]
-  pauseInterviews    Interview[]         @relation("PauseInterviews")
-  mentoringLogs      MentoringLog[]
-  monthlyReflections MonthlyReflection[]
-  supportRequests    SupportRequest[]
-  messages           Message[]
-  meetingEvents      MeetingEvent[]
-  journeyEntries     JourneyEntry[]
+  reviews             MatchReview[]
+  pauseRequests       PauseRequest[]
+  pauseInterviews     Interview[]          @relation("PauseInterviews")
+  mentoringLogs       MentoringLog[]
+  monthlyReflections  MonthlyReflection[]
+  supportRequests     SupportRequest[]
+  messages            Message[]
+  meetingEvents       MeetingEvent[]
+  journeyEntries      JourneyEntry[]
+  endOfProgramReports EndOfProgramReport[]
 
   @@index([seasonId, status])
   @@index([mentorApplicationId])
@@ -589,10 +592,39 @@ model TrainingModule {
   sortOrder   Int     @default(0) @map("sort_order")
   required    Boolean @default(true)
 
-  progress TrainingProgress[]
+  // Mở rộng thành Workshop/Training: phân loại module học online vs event
+  type        String    @default("online_module") @map("type") // "online_module" | "event"
+  status      String    @default("open") @map("status") // "draft" | "open" | "completed"
+  startAt     DateTime? @map("start_at")
+  endAt       DateTime? @map("end_at")
+  location    String?
+  zoomLink    String?   @map("zoom_link")
+  price       Int       @default(0) // giá vé (VND), 0 = miễn phí
+  capacity    Int       @default(0) @map("capacity") // 0 = không giới hạn
+  checkInCode String?   @unique @map("check_in_code") // mã check-in / QR cho event
+
+  progress      TrainingProgress[]
+  registrations TrainingRegistration[]
+  createdAt     DateTime               @default(now()) @map("created_at")
 
   @@index([seasonId, audience])
+  @@index([type, status])
   @@map("training_modules")
+}
+
+// Đăng ký tham dự event/workshop (mentor/mentee)
+model TrainingRegistration {
+  id           String         @id @default(uuid()) @db.Uuid
+  moduleId     String         @map("module_id") @db.Uuid
+  module       TrainingModule @relation(fields: [moduleId], references: [id])
+  userId       String         @map("user_id") @db.Uuid
+  user         User           @relation(fields: [userId], references: [id])
+  registeredAt DateTime       @default(now()) @map("registered_at")
+  checkedInAt  DateTime?      @map("checked_in_at")
+
+  @@unique([moduleId, userId])
+  @@index([moduleId])
+  @@map("training_registrations")
 }
 
 model TrainingProgress {
@@ -782,4 +814,27 @@ model Certificate {
 
   @@index([userId])
   @@map("certificates")
+}
+
+// Báo cáo cuối khoá (mentor & mentee điền khi hoàn thành match 9 tháng)
+model EndOfProgramReport {
+  id                String   @id @default(uuid()) @db.Uuid
+  matchId           String   @map("match_id") @db.Uuid
+  match             Match    @relation(fields: [matchId], references: [id])
+  authorUserId      String   @map("author_user_id") @db.Uuid
+  author            User     @relation(fields: [authorUserId], references: [id])
+  authorRole        String   @map("author_role") // "mentor" | "mentee"
+  sessionCount      Int      @map("session_count") // số buổi mentoring đã thực hiện
+  journeyHighlights String?  @map("journey_highlights") // ghi nhận trong hành trình
+  valueReceived     String?  @map("value_received") // giá trị nhận được
+  messageToPartner  String?  @map("message_to_partner") // chia sẻ với mentor/mentee
+  messageToOrg      String?  @map("message_to_org") // chia sẻ với BTC
+  satisfaction      Int      @default(0) @map("satisfaction") // 1..5
+  wantRejoin        Boolean  @default(false) @map("want_rejoin") // muốn tham gia tiếp
+  suggestions       String? // đề xuất cải thiện (optional)
+  submittedAt       DateTime @map("submitted_at")
+
+  @@unique([matchId, authorUserId])
+  @@index([matchId])
+  @@map("end_of_program_reports")
 }

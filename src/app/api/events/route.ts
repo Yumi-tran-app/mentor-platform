@@ -1,80 +1,80 @@
 import { NextResponse } from "next/server";
-import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentUser } from "@/lib/auth";
+import { getActiveSeasonId } from "@/lib/domain";
+import { resolveApplicantAudience } from "@/lib/certification";
 import { withErrorHandling } from "@/lib/api-helpers";
 
-const CreateEventSchema = z.object({
-  matchId: z.string().uuid(),
-  title: z.string().min(1),
-  startsAt: z.string().datetime(),
-  endsAt: z.string().datetime().optional(),
-  location: z.string().optional(),
-});
-
 /**
- * GET /api/events
- * Liệt kê lịch gặp của các cặp mà user tham gia (sắp theo thời gian).
+ * GET /api/events — danh sách workshop/training (event) cho mentor/mentee.
+ * Chỉ hiển thị event audience phù hợp (all hoặc audience của user).
  */
 export const GET = withErrorHandling(async (req: Request) => {
   const user = await getOrCreateCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const mentorApps = await prisma.mentorApplication.findMany({ where: { userId: user.id }, select: { id: true } });
-  const menteeApps = await prisma.menteeApplication.findMany({ where: { userId: user.id }, select: { id: true } });
-  const mentorIds = mentorApps.map((a) => a.id);
-  const menteeIds = menteeApps.map((a) => a.id);
+  const seasonId = await getActiveSeasonId();
+  if (!seasonId) return NextResponse.json({ error: "No active season" }, { status: 400 });
 
-  const events = await prisma.meetingEvent.findMany({
+  const audience = await resolveApplicantAudience(user.id) ?? "all";
+  const events = await prisma.trainingModule.findMany({
     where: {
-      match: {
-        OR: [
-          { mentorApplicationId: { in: mentorIds } },
-          { menteeApplicationId: { in: menteeIds } },
-        ],
-      },
+      seasonId,
+      type: "event",
+      OR: [
+        { status: "open" },
+        { status: "completed" },
+      ],
+      audience: { in: ["all", audience] },
     },
-    orderBy: { startsAt: "asc" },
-    include: { match: { include: { mentorApplication: { include: { user: true } }, menteeApplication: { include: { user: true } } } } },
+    orderBy: [{ status: "asc" }, { startAt: "asc" }],
+    include: {
+      _count: { select: { registrations: true } },
+      registrations: { where: { userId: user.id }, select: { id: true, checkedInAt: true } },
+    },
   });
 
-  return NextResponse.json({ events });
+  const mapped = events.map((e) => ({
+    ...e,
+    registered: e.registrations.length > 0,
+    checkedIn: e.registrations[0]?.checkedInAt ?? null,
+    slotsLeft: e.capacity > 0 ? Math.max(0, e.capacity - e._count.registrations) : null,
+    registrationsCount: e._count.registrations,
+  }));
+
+  return NextResponse.json({ events: mapped });
 });
 
 /**
- * POST /api/events
- * Tạo lịch gặp mới cho 1 cặp.
+ * POST /api/events — đăng ký tham dự event.
+ * body: { eventId }
  */
 export const POST = withErrorHandling(async (req: Request) => {
   const user = await getOrCreateCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const { matchId, title, startsAt, endsAt, location } = CreateEventSchema.parse(body);
+  const eventId = body.eventId;
+  if (!eventId) return NextResponse.json({ error: "eventId required" }, { status: 400 });
 
-  const match = await prisma.match.findUnique({
-    where: { id: matchId },
-    include: { mentorApplication: true, menteeApplication: true },
-  });
-  if (!match) return NextResponse.json({ error: "Not found" }, { status: 404 });
-
-  const isParticipant =
-    match.mentorApplication.userId === user.id ||
-    match.menteeApplication.userId === user.id;
-  if (!isParticipant && user.role !== "admin" && user.role !== "dpv") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  const event = await prisma.trainingModule.findUnique({ where: { id: eventId } });
+  if (!event || event.type !== "event" || event.status !== "open") {
+    return NextResponse.json({ error: "Event không khả dụng" }, { status: 400 });
   }
 
-  const event = await prisma.meetingEvent.create({
-    data: {
-      matchId,
-      title,
-      startsAt: new Date(startsAt),
-      endsAt: endsAt ? new Date(endsAt) : null,
-      location,
-      createdByUserId: user.id,
-    },
+  // Kiểm tra giới hạn số lượng
+  if (event.capacity > 0) {
+    const count = await prisma.trainingRegistration.count({ where: { moduleId: eventId } });
+    if (count >= event.capacity) {
+      return NextResponse.json({ error: "Event đã đủ chỗ" }, { status: 400 });
+    }
+  }
+
+  const reg = await prisma.trainingRegistration.upsert({
+    where: { moduleId_userId: { moduleId: eventId, userId: user.id } },
+    create: { moduleId: eventId, userId: user.id },
+    update: {},
   });
 
-  return NextResponse.json({ event }, { status: 201 });
+  return NextResponse.json({ registration: reg }, { status: 201 });
 });

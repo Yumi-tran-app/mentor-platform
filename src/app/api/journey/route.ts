@@ -65,9 +65,13 @@ export const POST = withErrorHandling(async (req: Request) => {
   }
 
   const journey = await getMentoringJourney(user.id, seasonId, audience);
-  if (!journey.completedMatch) {
+  if (!(journey.completedMatch && journey.bothReportsSubmitted)) {
     return NextResponse.json(
-      { error: "Chưa hoàn thành mentoring, chưa thể cấp chứng nhận", journey },
+      {
+        error:
+          "Chưa đủ điều kiện: cần hoàn thành mentoring VÀ cả mentor + mentee đều nộp báo cáo cuối khóa.",
+        journey,
+      },
       { status: 400 }
     );
   }

@@ -43,6 +43,19 @@ export default function MatchDetailPage() {
   const [sending, setSending] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [connecting, setConnecting] = useState(false);
+  const [report, setReport] = useState<any>(null);
+  const [reportForm, setReportForm] = useState({
+    sessionCount: 0,
+    journeyHighlights: "",
+    valueReceived: "",
+    messageToPartner: "",
+    messageToOrg: "",
+    satisfaction: 5,
+    wantRejoin: false,
+    suggestions: "",
+  });
+  const [reportSaving, setReportSaving] = useState(false);
+  const [reportMsg, setReportMsg] = useState<string | null>(null);
   const [agreementItems, setAgreementItems] = useState<Record<string, boolean>>({
     purpose: false,
     freq: false,
@@ -54,12 +67,26 @@ export default function MatchDetailPage() {
 
   const load = useCallback(async () => {
     try {
-      const [m, l] = await Promise.all([
+      const [m, l, r] = await Promise.all([
         fetch(`/api/matches?id=${matchId}`).then((r) => r.json()),
         fetch(`/api/logs?matchId=${matchId}`).then((r) => r.json()),
+        fetch(`/api/reports/final?matchId=${matchId}`).then((r) => r.json()),
       ]);
       setMatch(m.matches?.[0] ?? null);
       setLogs(l.logs ?? []);
+      if (r.report) {
+        setReport(r.report);
+        setReportForm({
+          sessionCount: r.report.sessionCount,
+          journeyHighlights: r.report.journeyHighlights ?? "",
+          valueReceived: r.report.valueReceived ?? "",
+          messageToPartner: r.report.messageToPartner ?? "",
+          messageToOrg: r.report.messageToOrg ?? "",
+          satisfaction: r.report.satisfaction ?? 5,
+          wantRejoin: r.report.wantRejoin ?? false,
+          suggestions: r.report.suggestions ?? "",
+        });
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -115,6 +142,32 @@ export default function MatchDetailPage() {
       console.error(err);
     } finally {
       setConnecting(false);
+    }
+  }
+
+  async function submitReport(e: React.FormEvent) {
+    e.preventDefault();
+    setReportSaving(true);
+    setReportMsg(null);
+    try {
+      const res = await fetch("/api/reports/final", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ matchId, ...reportForm }),
+      });
+      const d = await res.json();
+      if (res.ok) {
+        setReportMsg(
+          d.certificatesIssued?.length
+            ? "🎉 Đã nộp báo cáo! Cả hai bên đã nộp đủ — chứng nhận mentoring đã được cấp."
+            : "✅ Đã nộp báo cáo cuối khóa."
+        );
+        await load();
+      } else {
+        setReportMsg(d.error ?? "Có lỗi khi nộp báo cáo.");
+      }
+    } finally {
+      setReportSaving(false);
     }
   }
 
@@ -320,6 +373,99 @@ export default function MatchDetailPage() {
           )}
         </Card>
       </div>
+      {/* BÁO CÁO CUỐI KHOA (khi match kết thúc) */}
+      {match.status === "ended" && (
+        <div className="mt-6">
+          <Card>
+            <h2 className="font-bold mb-4" style={{ color: "#093774" }}>
+              📝 Báo cáo cuối khóa
+            </h2>
+            {report ? (
+              <p className="text-sm" style={{ color: "#15803D" }}>
+                ✅ Bạn đã nộp báo cáo cuối khóa vào{" "}
+                {new Date(report.submittedAt).toLocaleDateString("vi-VN")}.
+              </p>
+            ) : (
+              <form onSubmit={submitReport} className="space-y-4">
+                <p className="text-sm italic" style={{ color: "#94A3B8" }}>
+                  Chia sẻ hành trình của bạn để nhận chứng nhận hoàn thành mentoring.
+                </p>
+                <div>
+                  <label className="block text-sm font-medium mb-1" style={{ color: "#2C335D" }}>
+                    Số buổi mentoring đã thực hiện *
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    value={reportForm.sessionCount}
+                    onChange={(e) => setReportForm({ ...reportForm, sessionCount: Number(e.target.value) })}
+                    className={inputCls}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1" style={{ color: "#2C335D" }}>
+                    Những ghi nhận trong hành trình
+                  </label>
+                  <textarea rows={3} value={reportForm.journeyHighlights} onChange={(e) => setReportForm({ ...reportForm, journeyHighlights: e.target.value })} className={inputCls} placeholder="Điều đáng nhớ, khoảnh khắc, bài học..." />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1" style={{ color: "#2C335D" }}>
+                    Giá trị nhận được từ chương trình
+                  </label>
+                  <textarea rows={2} value={reportForm.valueReceived} onChange={(e) => setReportForm({ ...reportForm, valueReceived: e.target.value })} className={inputCls} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1" style={{ color: "#2C335D" }}>
+                    Điều muốn chia sẻ với mentor/mentee của bạn
+                  </label>
+                  <textarea rows={2} value={reportForm.messageToPartner} onChange={(e) => setReportForm({ ...reportForm, messageToPartner: e.target.value })} className={inputCls} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1" style={{ color: "#2C335D" }}>
+                    Điều muốn chia sẻ với Ban tổ chức
+                  </label>
+                  <textarea rows={2} value={reportForm.messageToOrg} onChange={(e) => setReportForm({ ...reportForm, messageToOrg: e.target.value })} className={inputCls} />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-sm font-medium mb-1" style={{ color: "#2C335D" }}>
+                      Mức độ hài lòng
+                    </label>
+                    <select value={reportForm.satisfaction} onChange={(e) => setReportForm({ ...reportForm, satisfaction: Number(e.target.value) })} className={inputCls}>
+                      {[1, 2, 3, 4, 5].map((n) => <option key={n} value={n}>{n} ⭐</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1" style={{ color: "#2C335D" }}>
+                      Muốn tham gia mùa tiếp?
+                    </label>
+                    <select value={reportForm.wantRejoin ? "1" : "0"} onChange={(e) => setReportForm({ ...reportForm, wantRejoin: e.target.value === "1" })} className={inputCls}>
+                      <option value="0">Chưa chắc</option>
+                      <option value="1">Có, muốn tham gia</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1" style={{ color: "#2C335D" }}>
+                    Đề xuất cải thiện chương trình (không bắt buộc)
+                  </label>
+                  <textarea rows={2} value={reportForm.suggestions} onChange={(e) => setReportForm({ ...reportForm, suggestions: e.target.value })} className={inputCls} />
+                </div>
+                {reportMsg && (
+                  <p className="text-sm" style={{ color: reportMsg.startsWith("✅") || reportMsg.startsWith("🎉") ? "#15803D" : "#B42318" }}>
+                    {reportMsg}
+                  </p>
+                )}
+                <Button type="submit" disabled={reportSaving}>
+                  {reportSaving ? "Đang nộp..." : "Nộp báo cáo"}
+                </Button>
+              </form>
+            )}
+          </Card>
+        </div>
+      )}
     </AppShell>
   );
 }
+
+const inputCls = "w-full px-4 py-2.5 rounded-lg border text-sm";
