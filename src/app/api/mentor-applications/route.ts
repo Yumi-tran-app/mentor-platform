@@ -33,6 +33,9 @@ const MentorApplicationSchema = z.object({
     reason: z.string().optional(),
     readyForOrientation: z.boolean().optional(),
     readyForIntroCall: z.boolean().optional(),
+    mentoringFocus: z
+      .array(z.enum(["learning", "career", "personal_dev", "life_transition"]))
+      .optional(),
   }),
   docs: z.object({
     cvUrl: z.string().optional(),
@@ -44,10 +47,15 @@ const MentorApplicationSchema = z.object({
   capacityMax: z.number().int().min(1).max(3).default(1),
   commitText: z.string().optional(),
   commitments: z.object({
-    codeOfConduct: z.boolean(),
-    timeCommitment: z.boolean(),
-    confidentiality: z.boolean(),
-    availability: z.boolean(),
+    codeOfConduct: z.boolean().optional(),
+    timeCommitment: z.boolean().optional(),
+    confidentiality: z.boolean().optional(),
+    availability: z.boolean().optional(),
+    // 4 điều khoản mới (bước 6)
+    timePerMonth: z.boolean().optional(),
+    infoAccuracy: z.boolean().optional(),
+    crossIndustry: z.boolean().optional(),
+    respectNoImpose: z.boolean().optional(),
   }),
 });
 

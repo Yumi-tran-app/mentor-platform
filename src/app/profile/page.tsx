@@ -129,10 +129,13 @@ export default function ProfilePage() {
                 👤 Thông tin cá nhân (Mentor)
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm" style={{ color: "#2C335D" }}>
-                <Field label="Tên muốn gọi" value={mIdentity.preferredName || mIdentity.fullName} />
+                <Field label="Họ và tên" value={mIdentity.fullName} />
+                <Field label="Tên thường gọi" value={mIdentity.preferredName} />
                 <Field label="Giới tính" value={GENDER_LABEL[mIdentity.gender] ?? mIdentity.gender} />
                 <Field label="Năm sinh" value={mIdentity.birthYear} />
                 <Field label="Thành phố" value={mIdentity.city} />
+                <Field label="Email" value={mIdentity.email} />
+                <Field label="Số điện thoại" value={mIdentity.phone} />
                 <Field label="LinkedIn" value={mIdentity.linkedin} full />
               </div>
             </Card>
@@ -160,20 +163,32 @@ export default function ProfilePage() {
               <div className="space-y-2 text-sm" style={{ color: "#2C335D" }}>
                 <p>🔹 Đã từng làm mentor: <b>{mReadiness.hasMentoredBefore ? "Có" : "Chưa"}</b></p>
                 <p>🔹 Đã mentor SME/startup: <b>{mReadiness.hasMentoredStartup ? "Có" : "Chưa"}</b></p>
+                {mReadiness.mentoringFocus?.length > 0 && (
+                  <div>
+                    <p className="font-medium mb-1">🔹 Định hướng đồng hành:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {mReadiness.mentoringFocus.map((f: string) => (
+                        <Badge key={f} color="#093774">{NEED_LABEL[f] ?? f}</Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 {mReadiness.reason && <p><b>Lý do muốn làm mentor:</b> {mReadiness.reason}</p>}
                 <p>🔹 Số mentee muốn đồng hành: <b>{mentor.capacityMax}</b></p>
               </div>
             </Card>
 
-            {mDocs && (mDocs.cvUrl || mDocs.references || mDocs.source) && (
+            {mDocs && (mDocs.cvUrl || mDocs.photoUrl || mDocs.references || mDocs.source || mDocs.notes) && (
               <Card>
                 <h2 className="font-bold mb-4" style={{ color: "#093774" }}>
                   📎 Hồ sơ bổ sung
                 </h2>
                 <div className="space-y-2 text-sm" style={{ color: "#2C335D" }}>
+                  {mDocs.photoUrl && <img src={mDocs.photoUrl} alt="Profile" style={{ width: 96, height: 96, borderRadius: "50%", objectFit: "cover" }} />}
                   {mDocs.cvUrl && <p>🔗 CV: <a href={mDocs.cvUrl} target="_blank" style={{ color: "#15B5B0" }}>{mDocs.cvUrl}</a></p>}
-                  {mDocs.references && <p>👥 Người tham chiếu: {mDocs.references}</p>}
+                  {mDocs.references && <p>👥 Người giới thiệu: {mDocs.references}</p>}
                   {mDocs.source && <p>ℹ️ Biết đến chương trình từ: {mDocs.source}</p>}
+                  {mDocs.notes && <p>📝 Ghi chú Core Team: {mDocs.notes}</p>}
                 </div>
               </Card>
             )}
