@@ -10,6 +10,9 @@ const SeasonSchema = z.object({
   startDate: z.string().min(1), // yyyy-mm-dd
   endDate: z.string().min(1),
   registrationDays: z.number().int().min(1).default(45),
+  trainingDays: z.number().int().min(1).default(15),
+  mentoringMonths: z.number().int().min(1).default(9),
+  wrapupMonths: z.number().int().min(1).default(1),
   sessionTarget: z.number().int().min(1).default(6),
   milestones: z
     .array(
@@ -46,16 +49,20 @@ export const POST = withErrorHandling(async (req: Request) => {
   const parsed = SeasonSchema.parse(body);
 
   const start = new Date(parsed.startDate + "T00:00:00");
-  const end = new Date(parsed.endDate + "T00:00:00");
-  // Mốc "Đăng ký & xét duyệt" = startDate + registrationDays
+  // Lộ trình chuẩn 12 tháng: đăng ký 45d + đào tạo 15d + mentoring 9 tháng + tổng kết 1 tháng
   const regDeadline = new Date(start);
   regDeadline.setDate(regDeadline.getDate() + parsed.registrationDays);
+  const trainingDeadline = new Date(start);
+  trainingDeadline.setDate(trainingDeadline.getDate() + parsed.registrationDays + parsed.trainingDays);
+  const mentoringDeadline = new Date(start);
+  mentoringDeadline.setMonth(mentoringDeadline.getMonth() + (parsed.mentoringMonths + Math.ceil((parsed.registrationDays + parsed.trainingDays) / 30)));
+  const end = new Date(parsed.endDate + "T00:00:00");
 
   const defaultMilestones = [
     { key: "registration", title: "Đăng ký & Xét duyệt", deadline: regDeadline },
-    { key: "training", title: "Đào tạo Mentor", deadline: null },
-    { key: "matching", title: "Nhận ghép cặp & Kết nối", deadline: null },
-    { key: "wrapup", title: "Tổng kết & Nhận chứng nhận", deadline: end },
+    { key: "training", title: "Đào tạo", deadline: trainingDeadline },
+    { key: "mentoring", title: "Mentoring (9 tháng)", deadline: mentoringDeadline },
+    { key: "wrapup", title: "Báo cáo & Tổng kết", deadline: end },
   ];
   const milestonesInput = (parsed.milestones && parsed.milestones.length > 0
     ? parsed.milestones

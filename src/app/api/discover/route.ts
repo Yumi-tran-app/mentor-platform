@@ -35,7 +35,11 @@ export const GET = withErrorHandling(async (req: Request) => {
         needs: true,
       },
     });
-    return NextResponse.json({ type, mentees });
+    const mapped = mentees.map((m) => ({
+      ...m,
+      city: (m.profileJson as any)?.city ?? null,
+    }));
+    return NextResponse.json({ type, mentees: mapped });
   }
 
   // === Danh sách mentor ===
@@ -85,6 +89,7 @@ export const GET = withErrorHandling(async (req: Request) => {
 
       return {
         ...m,
+        city: (m.identityJson as any)?.city ?? (m.professionalJson as any)?.city ?? null,
         capacityMax,
         connected, // đã kết nối (đang đồng hành)
         pendingCount, // đang chờ duyệt

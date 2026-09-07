@@ -313,11 +313,13 @@ export async function getJourneyV2(
     if (!done) {
       if (ms.key === "registration" && registeredAt) { done = true; doneAt = registeredAt; }
       else if (ms.key === "training" && trainingStatus.eligible) { done = true; doneAt = null; }
-      else if (ms.key === "matching" && matches.length > 0) {
-        const anyProposed = matches.some((m) =>
-          ["proposed_to_parties", "mentor_accepted", "mutual_accepted", "first_connection_done", "active", "paused", "ended"].includes(m.status)
-        );
-        if (anyProposed) { done = true; doneAt = matches[0]?.createdAt ?? null; }
+      else if (ms.key === "mentoring" || ms.key === "matching") {
+        // Giai đoạn mentoring 9 tháng — chỉ hoàn thành khi match đã kết thúc (ended)
+        const anyEnded = matches.some((m) => m.status === "ended");
+        if (anyEnded) {
+          done = true;
+          doneAt = matches.find((m) => m.status === "ended")?.createdAt ?? null;
+        }
       }
       else if (ms.key === "wrapup" && mentoringCert) { done = true; doneAt = mentoringCert.issuedAt ?? null; }
     }
