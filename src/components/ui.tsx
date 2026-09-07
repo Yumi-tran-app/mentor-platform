@@ -1,11 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCurrentUser, isStaff } from "@/lib/use-current-user";
 
-type NavItem = { href: string; icon: string; label: string; staffOnly?: boolean };
+type NavItem = { href: string; icon: string; label: string; staffOnly?: boolean; adminOnly?: boolean };
 
 const NAV_ITEMS: NavItem[] = [
   { href: "/dashboard", icon: "🏠", label: "Trang chủ" },
@@ -17,6 +18,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/profile", icon: "👤", label: "Hồ sơ" },
   { href: "/coordinator", icon: "🎯", label: "Điều phối (ĐPV)", staffOnly: true },
   { href: "/coordinator/matchmaking", icon: "🔗", label: "Ghép cặp", staffOnly: true },
+  { href: "/admin", icon: "🛠️", label: "Quản trị hệ thống", adminOnly: true },
 ];
 
 export function AppShell({
@@ -28,10 +30,23 @@ export function AppShell({
 }) {
   const pathname = usePathname();
   const user = useCurrentUser();
+  const [unread, setUnread] = useState(0);
 
-  const visibleItems = NAV_ITEMS.filter(
-    (item) => !item.staffOnly || isStaff(user?.role)
-  );
+  useEffect(() => {
+    if (!user) return;
+    fetch("/api/notifications")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d?.unreadCount) setUnread(d.unreadCount);
+      })
+      .catch(() => {});
+  }, [user]);
+
+  const visibleItems = NAV_ITEMS.filter((item) => {
+    if (item.adminOnly) return user?.role === "admin";
+    if (item.staffOnly) return isStaff(user?.role);
+    return true;
+  });
 
   return (
     <div className="min-h-screen flex" style={{ background: "#FFF3E6" }}>
@@ -81,10 +96,18 @@ export function AppShell({
             )}
             <Link
               href="/notifications"
-              className="text-sm block hover:opacity-80"
+              className="text-sm flex items-center gap-2 hover:opacity-80"
               title="Thông báo"
             >
               🔔 Thông báo
+              {unread > 0 && (
+                <span
+                  className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full text-[11px] font-bold text-white"
+                  style={{ background: "#FF6859" }}
+                >
+                  {unread}
+                </span>
+              )}
             </Link>
           </div>
         </div>

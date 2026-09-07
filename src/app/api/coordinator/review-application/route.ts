@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { requireStaff } from "@/lib/auth";
+import { requireStaff, safeRoleForApplicant } from "@/lib/auth";
 import {
   transitionMentorApplication,
   transitionMenteeApplication,
@@ -54,12 +54,20 @@ export const POST = withErrorHandling(async (req: Request) => {
     }
 
     // Cập nhật vai trò người dùng theo loại đơn được duyệt
+    // AN TOÀN: không ghi đè quyền admin/dpv xuống mentor/mentee.
     if (applicantUserId) {
       const targetRole = kind === "mentor" ? "mentor" : "mentee";
-      await prisma.user.update({
+      const applicant = await prisma.user.findUnique({
         where: { id: applicantUserId },
-        data: { role: targetRole },
+        select: { role: true },
       });
+      const nextRole = safeRoleForApplicant(applicant?.role ?? "mentee", kind);
+      if (nextRole && applicant?.role !== nextRole) {
+        await prisma.user.update({
+          where: { id: applicantUserId },
+          data: { role: nextRole as any },
+        });
+      }
       await notifyUser({
         userId: applicantUserId,
         type: "application.approved",

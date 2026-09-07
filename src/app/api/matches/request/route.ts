@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentUser } from "@/lib/auth";
 import { getActiveSeasonId, notifyUser } from "@/lib/domain";
+import { getMentorCertificationStatus } from "@/lib/certification";
 import { withErrorHandling } from "@/lib/api-helpers";
 
 const RequestSchema = z.object({
@@ -41,6 +42,24 @@ export const POST = withErrorHandling(async (req: Request) => {
     // user là mentee -> target là mentor
     mentorAppId = targetId;
     menteeAppId = myMenteeApp.id;
+
+    // Nguyên tắc: mentor phải pass chương trình đào tạo online + bài test mới được nhận mentee
+    const mentorApp = await prisma.mentorApplication.findUnique({
+      where: { id: targetId },
+      select: { userId: true },
+    });
+    if (mentorApp) {
+      const cert = await getMentorCertificationStatus(mentorApp.userId, sid);
+      if (!cert.eligible) {
+        return NextResponse.json(
+          {
+            error:
+              "Mentor này chưa hoàn thành chương trình đào tạo và bài kiểm tra, nên chưa thể nhận mentee.",
+          },
+          { status: 400 }
+        );
+      }
+    }
   } else {
     return NextResponse.json(
       { error: "Bạn cần đăng ký làm mentor/mentee trước" },

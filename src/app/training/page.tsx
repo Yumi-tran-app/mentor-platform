@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, Fragment } from "react";
+import Link from "next/link";
 import { AppShell, Card, Button } from "@/components/ui";
 import { TRAINING_CONTENT, MENTEE_TRAINING_CONTENT } from "@/lib/training-content";
 
@@ -13,6 +14,7 @@ export default function TrainingPage() {
   const [loading, setLoading] = useState(true);
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   const [audience, setAudience] = useState<string | null>(null);
+  const [testStatus, setTestStatus] = useState<{ score: number; status: string } | null>(null);
 
   const load = useCallback(async () => {
     const res = await fetch("/api/training").then((r) => r.json());
@@ -36,6 +38,18 @@ export default function TrainingPage() {
     await load();
   }
 
+  // Lấy trạng thái bài test (cho mentor)
+  useEffect(() => {
+    if (audience !== "mentor") return;
+    fetch("/api/training/test")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d?.lastAttempt) setTestStatus(d.lastAttempt);
+        else setTestStatus(null);
+      })
+      .catch(() => {});
+  }, [audience]);
+
   if (loading) {
     return (
       <AppShell title="Đào tạo">
@@ -50,9 +64,20 @@ export default function TrainingPage() {
         <h1 className="text-2xl font-bold" style={{ color: "#093774" }}>
           Chương trình đào tạo
         </h1>
-        <span className="text-lg font-bold" style={{ color: "#15B5B0" }}>
-          {progress}%
-        </span>
+        <div className="flex items-center gap-3">
+          {audience === "mentor" && (
+            <Link href="/training/test">
+              <Button variant="secondary">
+                {testStatus?.status === "passed"
+                  ? `✅ Đã đạt bài test (${testStatus.score}%)`
+                  : "📝 Làm bài kiểm tra"}
+              </Button>
+            </Link>
+          )}
+          <span className="text-lg font-bold" style={{ color: "#15B5B0" }}>
+            {progress}%
+          </span>
+        </div>
       </div>
 
       <div className="w-full h-3 rounded-full mb-8" style={{ background: "#F5F2EC" }}>

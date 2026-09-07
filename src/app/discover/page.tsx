@@ -11,6 +11,10 @@ type Mentor = {
   professionalJson: any;
   identityJson: any;
   readinessJson: any;
+  connected?: number;
+  pendingCount?: number;
+  slotsLeft?: number;
+  certified?: boolean;
 };
 
 type Mentee = {
@@ -142,6 +146,16 @@ export default function DiscoverPage() {
                   <p>🏢 {ph(m.professionalJson, "company")}</p>
                   <p>💼 {ph(m.professionalJson, "yearsExperience")} năm KN</p>
                   <p>📍 {ph(m.identityJson, "city") || "—"}</p>
+                  <p>
+                    🪑 Slot: {m.connected ?? 0} đã kết nối /{" "}
+                    {m.capacityMax} · còn {m.slotsLeft ?? "—"} chỗ
+                    {m.pendingCount ? ` · ${m.pendingCount} đang chờ` : ""}
+                  </p>
+                  {m.certified === false && (
+                    <p style={{ color: "#F2A93B" }}>
+                      ⏳ Chưa hoàn thành đào tạo &amp; kiểm tra
+                    </p>
+                  )}
                 </div>
                 {m.industry && (
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -150,7 +164,9 @@ export default function DiscoverPage() {
                 )}
                 <div className="mt-4 flex gap-2">
                   <Button variant="secondary" onClick={() => setSelectedMentor(m)}>Xem chi tiết</Button>
-                  <Button onClick={() => requestConnect(m.id)} disabled={busy}>Kết nối</Button>
+                  <Button onClick={() => requestConnect(m.id)} disabled={busy || m.certified === false}>
+                    {m.certified === false ? "Chưa sẵn sàng" : "Kết nối"}
+                  </Button>
                 </div>
               </Card>
             ))}

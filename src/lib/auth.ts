@@ -45,8 +45,32 @@ export async function requireUser(): Promise<User> {
  */
 export async function requireStaff(): Promise<User> {
   const user = await requireUser();
-  if (user.role !== "admin" && user.role !== "dpv") {
+  if (!isStaffRole(user.role)) {
     throw new Error("FORBIDDEN");
   }
   return user;
+}
+
+/**
+ * Vai trò hệ thống (quyền) tách biệt khỏi vai trò đăng ký (mentor/mentee).
+ * role chỉ mang ý nghĩa quyền: admin / dpv / (mentee = mặc định, chưa có quyền đặc biệt).
+ * Vai trò đăng ký mentor/mentee LUÔN suy từ Application.
+ */
+export function isStaffRole(role: string): boolean {
+  return role === "admin" || role === "dpv";
+}
+
+/**
+ * Nâng/quản lý role một cách AN TOÀN: không bao giờ hạ quyền admin/dpv
+ * xuống mentor/mentee. mentor/mentee là vai trò đăng ký, KHÔNG phải quyền hệ thống,
+ * nên nếu user đang là staff thì ta KHÔNG ghi đè role của họ.
+ */
+export function safeRoleForApplicant(
+  currentRole: string,
+  applicantType: "mentor" | "mentee"
+): string | null {
+  // Nếu đang là staff (admin/dpv) -> giữ nguyên, không đổi.
+  if (isStaffRole(currentRole)) return null;
+  // Chỉ set mentor khi user hiện đang là mentee (mặc định).
+  return applicantType;
 }

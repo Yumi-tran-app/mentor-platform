@@ -37,6 +37,7 @@ export default function DashboardPage() {
   const [mentorApps, setMentorApps] = useState<Application[]>([]);
   const [menteeApps, setMenteeApps] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
+  const [cert, setCert] = useState<any>(null);
 
   useEffect(() => {
     async function load() {
@@ -47,6 +48,14 @@ export default function DashboardPage() {
         ]);
         setMentorApps(m.applications ?? []);
         setMenteeApps(me.applications ?? []);
+
+        // Lộ trình mentoring (nếu có đơn mentor)
+        if ((m.applications ?? []).length > 0) {
+          const c = await fetch("/api/certification").then((r) =>
+            r.ok ? r.json() : null
+          );
+          if (c) setCert(c);
+        }
       } catch (e) {
         console.error(e);
       } finally {
@@ -166,6 +175,93 @@ export default function DashboardPage() {
             <p>1️⃣ Chọn vai trò Mentor hoặc Mentee ở trên để đăng ký.</p>
             <p>2️⃣ Hoàn thành đơn đăng ký và chờ đội ngũ điều phối duyệt.</p>
             <p>3️⃣ Sau khi được duyệt, bạn sẽ được ghép cặp và bắt đầu hành trình.</p>
+          </div>
+        </Card>
+      )}
+
+      {/* Lộ trình mentoring (dành cho mentor) */}
+      {hasMentorApp && cert && (
+        <Card className="mt-6">
+          <h2 className="font-bold mb-4" style={{ color: "#093774" }}>
+            🗺️ Lộ trình mentoring của bạn
+          </h2>
+          <div className="space-y-3">
+            {cert.modules?.map((mod: any, i: number) => (
+              <div key={mod.id} className="flex items-center gap-3">
+                <div
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0"
+                  style={{ background: mod.done ? "#15803D" : "#94A3B8" }}
+                >
+                  {mod.done ? "✓" : i + 1}
+                </div>
+                <div className="flex-1">
+                  <p
+                    className="text-sm font-medium"
+                    style={{ color: mod.done ? "#2C335D" : "#093774" }}
+                  >
+                    {mod.title}
+                  </p>
+                </div>
+                {mod.done && (
+                  <span className="text-xs font-medium" style={{ color: "#15803D" }}>
+                    Đã xong
+                  </span>
+                )}
+              </div>
+            ))}
+
+            {/* Bước bài test */}
+            <div className="flex items-center gap-3">
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0"
+                style={{ background: cert.testPassed ? "#15803D" : "#94A3B8" }}
+              >
+                {cert.testPassed ? "✓" : cert.modules?.length + 1}
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium" style={{ color: "#2C335D" }}>
+                  Vượt qua bài kiểm tra
+                </p>
+              </div>
+              {cert.testPassed ? (
+                <span className="text-xs font-medium" style={{ color: "#15803D" }}>Đã đạt</span>
+              ) : (
+                <Link href="/training/test">
+                  <Button variant="secondary">Làm bài test</Button>
+                </Link>
+              )}
+            </div>
+
+            {/* Bước chứng nhận */}
+            <div className="flex items-center gap-3">
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0"
+                style={{ background: cert.certified ? "#15803D" : "#94A3B8" }}
+              >
+                {cert.certified ? "🏅" : "🔒"}
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium" style={{ color: "#2C335D" }}>
+                  Nhận giấy chứng nhận
+                </p>
+              </div>
+              {cert.certificateId ? (
+                <Link href={`/certificate/${cert.certificateId}`}>
+                  <Button>🏅 Xem chứng nhận</Button>
+                </Link>
+              ) : cert.eligible ? (
+                <Button onClick={async () => {
+                  const r = await fetch("/api/certification", { method: "POST" });
+                  if (r.ok) location.reload();
+                }}>
+                  Nhận chứng nhận
+                </Button>
+              ) : (
+                <span className="text-xs" style={{ color: "#94A3B8" }}>
+                  Hoàn thành đào tạo + test
+                </span>
+              )}
+            </div>
           </div>
         </Card>
       )}

@@ -32,3 +32,8 @@ export function useCurrentUser(): CurrentUser | null {
 export function isStaff(role?: string | null): boolean {
   return role === "admin" || role === "dpv";
 }
+
+/**
+ * Lưu ý: `role` chỉ mang ý nghĩa QUYỀN HỆ THỐNG (admin/dpv).
+ * Vai trò đăng ký mentor/mentee phải suy từ Application/dashboard.
+ */

@@ -14,6 +14,14 @@ type Notification = {
 
 const TYPE_LABEL: Record<string, string> = {
   match_proposed: "Đề xuất ghép cặp mới",
+  match_request_received: "Yêu cầu kết nối mới",
+  match_mentor_accepted: "Mentor đã đồng ý",
+  match_mutual_accepted: "Hai bên đã đồng ý",
+  match_first_connection_done: "Đã gặp buổi đầu tiên",
+  "application.approved": "Đơn đăng ký được duyệt",
+  "application.rejected": "Đơn đăng ký chưa đạt",
+  "match.proposed": "Được đề xuất ghép cặp",
+  "match.declined": "Yêu cầu bị từ chối",
   interview_result: "Kết quả phỏng vấn",
   pause_flagged: "Yêu cầu tạm dừng",
   sla_reminder: "Nhắc đúng hạn duyệt",
@@ -22,7 +30,7 @@ const TYPE_LABEL: Record<string, string> = {
 };
 
 export default function NotificationsPage() {
-  const [items, setItems] = useState<Notification[]>([]);
+    const [items, setItems] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
 
   async function load() {
@@ -89,7 +97,9 @@ export default function NotificationsPage() {
                 </p>
                 {n.payload && Object.keys(n.payload).length > 0 && (
                   <p className="text-xs mt-1" style={{ color: "#94A3B8" }}>
-                    {JSON.stringify(n.payload)}
+                    {typeof n.payload === "string"
+                      ? n.payload
+                      : JSON.stringify(n.payload)}
                   </p>
                 )}
                 <p className="text-xs mt-1" style={{ color: "#94A3B8" }}>

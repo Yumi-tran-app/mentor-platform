@@ -17,7 +17,11 @@ export const GET = withErrorHandling(async (req: Request) => {
     take: 50,
   });
 
-  return NextResponse.json({ notifications });
+  const unreadCount = await prisma.notification.count({
+    where: { userId: user.id, readAt: null },
+  });
+
+  return NextResponse.json({ notifications, unreadCount });
 });
 
 /**

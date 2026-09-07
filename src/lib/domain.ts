@@ -1,4 +1,5 @@
 import { prisma } from "./prisma";
+import { getMentorCertificationStatus } from "./certification";
 import type {
   Match,
   MentorApplicationStatus,
@@ -253,7 +254,7 @@ async function endMatchSideEffects(
 // ---------- Ghép cặp helper ----------
 
 export async function getAvailableMentors(seasonId: string) {
-  return prisma.mentorApplication.findMany({
+  const mentors = await prisma.mentorApplication.findMany({
     where: {
       seasonId,
       status: { in: ["approved", "in_pool"] },
@@ -261,9 +262,21 @@ export async function getAvailableMentors(seasonId: string) {
       capacityUsed: { lt: prisma.mentorApplication.fields.capacityMax },
     },
     include: {
-      user: { select: { fullName: true } },
+      user: { select: { fullName: true, id: true } },
     },
   });
+
+  // Lọc mentor đã pass đào tạo + test (chỉ mentor đủ điều kiện mới được ghép)
+  const eligible: typeof mentors = [];
+  for (const m of mentors) {
+    try {
+      const st = await getMentorCertificationStatus(m.user.id, seasonId);
+      if (st.eligible) eligible.push(m);
+    } catch {
+      // bỏ qua mentor lỗi
+    }
+  }
+  return eligible;
 }
 
 export function computeFitScore(
