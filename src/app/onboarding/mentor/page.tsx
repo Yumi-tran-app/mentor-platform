@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, Button } from "@/components/ui";
+import { VIETNAM_PROVINCES } from "@/lib/vietnam-locations";
 
 const FOCUS_OPTIONS = [
   ["learning", "Học tập"],
@@ -226,7 +227,7 @@ export default function MentorOnboardingPage() {
                 </select>
               </div>
               <div><label className={labelCls}>Năm sinh</label><input type="number" className={inputCls} style={inputStyle} value={form.birthYear} min={1950} max={2010} onChange={(e) => set("birthYear", e.target.value)} placeholder="VD: 1985" /></div>
-              <div><label className={labelCls}>Thành phố hiện tại</label><input className={inputCls} style={inputStyle} value={form.city} onChange={(e) => set("city", e.target.value)} /></div>
+              <div><label className={labelCls}>Thành phố hiện tại</label><select className={inputCls} style={inputStyle} value={form.city} onChange={(e) => set("city", e.target.value)}><option value="">— Chọn tỉnh/thành —</option>{VIETNAM_PROVINCES.map((c) => <option key={c} value={c}>{c}</option>)}</select></div>
               <div><label className={labelCls}>Email *</label><input type="email" className={inputCls} style={inputStyle} value={form.email} onChange={(e) => set("email", e.target.value)} /></div>
               <div><label className={labelCls}>Số điện thoại *</label><input className={inputCls} style={inputStyle} value={form.phone} onChange={(e) => set("phone", e.target.value)} /></div>
               <div className="sm:col-span-2"><label className={labelCls}>LinkedIn URL</label><input className={inputCls} style={inputStyle} value={form.linkedin} onChange={(e) => set("linkedin", e.target.value)} placeholder="https://linkedin.com/in/..." /></div>

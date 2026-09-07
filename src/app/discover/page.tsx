@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { AppShell, Card, Badge, Button, LineIcon } from "@/components/ui";
 import { useCurrentUser } from "@/lib/use-current-user";
+import { VIETNAM_PROVINCES } from "@/lib/vietnam-locations";
 
 type Mentor = {
   id: string;
@@ -110,13 +111,14 @@ export default function DiscoverPage() {
   const isMentor = role === "mentor"; // mentor chỉ xem danh sách mentee
   const title = isMentor ? "Mentee cần đồng hành" : "Mentor sẵn sàng";
 
-  // Lấy danh sách city để filter
+  // Lấy danh sách city để filter (dùng danh sách 63 tỉnh/thành chuẩn)
   const allItems = isMentor
     ? (mentees as { city?: string | null }[])
     : (mentors as { city?: string | null }[]);
-  const cities = Array.from(
+  const availableCities = Array.from(
     new Set(allItems.map((i) => i.city).filter(Boolean))
   ) as string[];
+  const cities = VIETNAM_PROVINCES.filter((c) => availableCities.includes(c));
 
   // Filter theo city (mặc định dùng city của chính mình nếu có)
   const [cityFilter, setCityFilter] = useState<string>("");

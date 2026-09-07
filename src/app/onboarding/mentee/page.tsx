@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, Button } from "@/components/ui";
+import { VIETNAM_PROVINCES } from "@/lib/vietnam-locations";
 
 const NEEDS = [
   ["learning", "Học tập"],
@@ -213,7 +214,10 @@ export default function MenteeOnboardingPage() {
               </div>
               <div>
                 <label className={labelCls}>Thành phố</label>
-                <input className={inputCls} style={inputStyle} value={form.city} onChange={(e) => set("city", e.target.value)} placeholder="VD: TP. Hồ Chí Minh" />
+                <select className={inputCls} style={inputStyle} value={form.city} onChange={(e) => set("city", e.target.value)}>
+                  <option value="">— Chọn tỉnh/thành —</option>
+                  {VIETNAM_PROVINCES.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
               </div>
             </div>
           </Card>
