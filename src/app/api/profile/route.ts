@@ -11,14 +11,30 @@ const UpdateSchema = z.object({
 
 /**
  * GET /api/profile
- * Thông tin người dùng hiện tại + vai trò.
+ * Thông tin người dùng hiện tại + vai trò + chi tiết hồ sơ đã khai báo (mentor/mentee).
  */
 export const GET = withErrorHandling(async (req: Request) => {
   const user = await getOrCreateCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { clerkUserId: _c, ...safe } = user;
-  return NextResponse.json({ user: safe });
+
+  // Lấy hồ sơ chi tiết từ đơn đăng ký
+  const mentorApp = await prisma.mentorApplication.findFirst({
+    where: { userId: user.id },
+    orderBy: { createdAt: "desc" },
+  });
+  const menteeApp = await prisma.menteeApplication.findFirst({
+    where: { userId: user.id },
+    orderBy: { createdAt: "desc" },
+    include: { needs: true },
+  });
+
+  return NextResponse.json({
+    user: safe,
+    mentor: mentorApp,
+    mentee: menteeApp,
+  });
 });
 
 /**

@@ -180,14 +180,18 @@ export const POST = withErrorHandling(async (req: Request) => {
     },
   });
 
-  // Khi pass test -> tự đánh dấu module "Kiểm tra & chứng nhận" hoàn thành
+  // Khi pass test -> tự đánh dấu module "Kiểm tra & chứng nhận" (đúng audience) hoàn thành
   if (passed) {
-    const certModule = await prisma.trainingModule.findFirst({
+    let certModule = await prisma.trainingModule.findFirst({
       where: {
         seasonId,
         audience: { in: ["all", audience] },
         required: true,
         type: "online_module",
+        OR: [
+          { title: { contains: "chứng nhận", mode: "insensitive" } },
+          { title: { contains: "kiểm tra", mode: "insensitive" } },
+        ],
       },
       orderBy: { sortOrder: "desc" },
     });

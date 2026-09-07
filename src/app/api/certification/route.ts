@@ -3,14 +3,15 @@ import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentUser } from "@/lib/auth";
 import { getActiveSeasonId } from "@/lib/domain";
 import {
-  getMentorCertificationStatus,
+  getTrainingStatus,
+  resolveApplicantAudience,
   issueCertificate,
 } from "@/lib/certification";
 import { withErrorHandling } from "@/lib/api-helpers";
 
 /**
  * GET /api/certification
- * Trạng thái ĐÀO TẠO (mentor) + danh sách chứng nhận đào tạo của user.
+ * Trạng thái ĐÀO TẠO (mentor/mentee) + danh sách chứng nhận đào tạo của user.
  */
 export const GET = withErrorHandling(async (req: Request) => {
   const user = await getOrCreateCurrentUser();
@@ -21,7 +22,11 @@ export const GET = withErrorHandling(async (req: Request) => {
     return NextResponse.json({ error: "No active season" }, { status: 400 });
   }
 
-  const status = await getMentorCertificationStatus(user.id, seasonId);
+  const audience = await resolveApplicantAudience(user.id);
+  const status = audience
+    ? await getTrainingStatus(user.id, seasonId, audience)
+    : { eligible: false, modules: [], modulesCompleted: 0, modulesTotal: 0, testPassed: false };
+
   const certificates = await prisma.certificate.findMany({
     where: { userId: user.id, type: "training" },
     orderBy: { issuedAt: "desc" },
@@ -34,12 +39,12 @@ export const GET = withErrorHandling(async (req: Request) => {
     },
   });
 
-  return NextResponse.json({ ...status, certificates });
+  return NextResponse.json({ audience, ...status, certificates, eligible: status.eligible });
 });
 
 /**
  * POST /api/certification
- * Cấp giấy chứng nhận ĐÀO TẠO khi mentor đã đủ điều kiện (đủ module + test).
+ * Cấp giấy chứng nhận ĐÀO TẠO khi user (mentor/mentee) đủ điều kiện (đủ module + test).
  */
 export const POST = withErrorHandling(async (req: Request) => {
   const user = await getOrCreateCurrentUser();
@@ -50,7 +55,12 @@ export const POST = withErrorHandling(async (req: Request) => {
     return NextResponse.json({ error: "No active season" }, { status: 400 });
   }
 
-  const status = await getMentorCertificationStatus(user.id, seasonId);
+  const audience = await resolveApplicantAudience(user.id);
+  if (!audience) {
+    return NextResponse.json({ error: "Bạn chưa đăng ký mentor/mentee" }, { status: 400 });
+  }
+
+  const status = await getTrainingStatus(user.id, seasonId, audience);
   if (!status.eligible) {
     return NextResponse.json(
       { error: "Chưa đủ điều kiện cấp chứng nhận", status },
@@ -58,6 +68,6 @@ export const POST = withErrorHandling(async (req: Request) => {
     );
   }
 
-  const cert = await issueCertificate(user.id, seasonId, user.fullName, "mentor", "training");
+  const cert = await issueCertificate(user.id, seasonId, user.fullName, audience, "training");
   return NextResponse.json({ certificate: cert });
 });

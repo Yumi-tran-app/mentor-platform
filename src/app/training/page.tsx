@@ -38,9 +38,9 @@ export default function TrainingPage() {
     await load();
   }
 
-  // Lấy trạng thái bài test (cho mentor) — hiển thị bên trong module "Kiểm tra & chứng nhận"
+  // Lấy trạng thái bài test (cho mentor & mentee) — hiển thị bên trong module "Kiểm tra & chứng nhận"
   useEffect(() => {
-    if (audience !== "mentor") return;
+    if (!audience) return;
     fetch("/api/training/test")
       .then((r) => r.json())
       .then((d) => {
@@ -201,29 +201,27 @@ export default function TrainingPage() {
       )}
 
       {/* Giấy chứng nhận đào tạo (nếu đủ điều kiện) */}
-      <TrainingCertificateSection audience={audience} testStatus={testStatus} />
+      <TrainingCertificateSection audience={audience} />
     </AppShell>
   );
 }
 
 function TrainingCertificateSection({
   audience,
-  testStatus,
 }: {
   audience: string | null;
-  testStatus: { score: number; status: string } | null;
 }) {
   const [cert, setCert] = useState<any>(null);
 
   useEffect(() => {
-    if (audience !== "mentor") return;
+    if (!audience) return;
     fetch("/api/certification")
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => setCert(d))
       .catch(() => {});
   }, [audience]);
 
-  if (audience !== "mentor" || !cert) return null;
+  if (!audience || !cert) return null;
 
   const certExisting = cert.certificates?.[0];
 
