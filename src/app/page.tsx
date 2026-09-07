@@ -92,7 +92,7 @@ export default function Home() {
           <div className="relative z-10 hidden lg:block">
             <div className="absolute inset-0 bg-teal-700/10 rounded-full blur-3xl transform translate-x-10 translate-y-10"></div>
             <img
-              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+              src="/images/hero-team.jpg"
               alt="Mentoring session"
               className="rounded-3xl shadow-2xl object-cover h-[500px] w-full relative z-10 border-4 border-white"
             />
@@ -244,7 +244,7 @@ export default function Home() {
                 <p className="font-medium italic text-stone-800">Dù bạn đang tìm kiếm ánh sáng dẫn đường, hay muốn trở thành ngọn hải đăng cho thế hệ sau... Chào mừng bạn về nhà.</p>
                 <div className="pt-6 mt-8 border-t border-stone-100 flex items-center gap-4">
                   <div className="w-14 h-14 bg-stone-200 rounded-full overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Founder" className="w-full h-full object-cover" />
+                    <img src="/images/founder.jpg" alt="Founder" className="w-full h-full object-cover" />
                   </div>
                   <div>
                     <p className="font-bold text-stone-800">Đội ngũ Sáng lập</p>
