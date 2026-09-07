@@ -18,8 +18,8 @@ const statusColor: Record<string, string> = {
   interview_scheduled: "#F2A93B",
   interview_awaiting_review: "#F2A93B",
   approved: "#15803D",
-  in_pool: "#093774",
-  rejected: "#FF6859",
+  in_pool: "#0F766E",
+  rejected: "#B45309",
 };
 
 const statusLabelMap: Record<string, string> = {
@@ -59,7 +59,7 @@ export default function DashboardPage() {
   if (loading || user === null) {
     return (
       <AppShell title="Trang chủ">
-        <p style={{ color: "#2C335D" }}>Đang tải...</p>
+        <p style={{ color: "#292524" }}>Đang tải...</p>
       </AppShell>
     );
   }
@@ -79,7 +79,7 @@ export default function DashboardPage() {
 
   return (
     <AppShell title="Trang chủ">
-      <h1 className="text-2xl font-bold mb-1" style={{ color: "#093774" }}>
+      <h1 className="text-2xl font-bold mb-1" style={{ color: "#0F766E" }}>
         Xin chào{user.fullName ? `, ${user.fullName}` : ""} 👋
       </h1>
       <p className="text-sm mb-4" style={{ color: "#94A3B8" }}>
@@ -98,7 +98,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bold" style={{ color: "#093774" }}>Vai trò Mentor</h2>
+            <h2 className="font-bold" style={{ color: "#0F766E" }}>Vai trò Mentor</h2>
             {!hasMentorApp ? (
               <Link href="/onboarding/mentor"><Button variant="secondary">Đăng ký</Button></Link>
             ) : (
@@ -114,7 +114,7 @@ export default function DashboardPage() {
               {mentorApps.map((a) => (
                 <div key={a.id} className="flex items-center justify-between p-3 rounded-lg border" style={{ borderColor: "#F5F2EC" }}>
                   <div>
-                    <p className="text-sm font-medium" style={{ color: "#2C335D" }}>{a.season?.name ?? "—"}</p>
+                    <p className="text-sm font-medium" style={{ color: "#292524" }}>{a.season?.name ?? "—"}</p>
                     <p className="text-xs" style={{ color: "#94A3B8" }}>
                       {a.submittedAt ? `Nộp ${new Date(a.submittedAt).toLocaleDateString("vi-VN")}` : "Chưa nộp"}
                     </p>
@@ -145,7 +145,7 @@ export default function DashboardPage() {
               {menteeApps.map((a) => (
                 <div key={a.id} className="flex items-center justify-between p-3 rounded-lg border" style={{ borderColor: "#F5F2EC" }}>
                   <div>
-                    <p className="text-sm font-medium" style={{ color: "#2C335D" }}>{a.season?.name ?? "—"}</p>
+                    <p className="text-sm font-medium" style={{ color: "#292524" }}>{a.season?.name ?? "—"}</p>
                     <p className="text-xs" style={{ color: "#94A3B8" }}>
                       {a.submittedAt ? `Nộp ${new Date(a.submittedAt).toLocaleDateString("vi-VN")}` : "Chưa nộp"}
                     </p>
@@ -161,8 +161,8 @@ export default function DashboardPage() {
       {/* Hướng dẫn nhanh cho người mới */}
       {!hasMentorApp && !hasMenteeApp && !staff && (
         <Card className="mt-6">
-          <h2 className="font-bold mb-3" style={{ color: "#093774" }}>Bắt đầu từ đâu?</h2>
-          <div className="space-y-2 text-sm" style={{ color: "#2C335D" }}>
+          <h2 className="font-bold mb-3" style={{ color: "#0F766E" }}>Bắt đầu từ đâu?</h2>
+          <div className="space-y-2 text-sm" style={{ color: "#292524" }}>
             <p>1️⃣ Chọn vai trò Mentor hoặc Mentee ở trên để đăng ký.</p>
             <p>2️⃣ Hoàn thành đơn đăng ký và chờ đội ngũ điều phối duyệt.</p>
             <p>3️⃣ Sau khi được duyệt, bạn sẽ được ghép cặp và bắt đầu hành trình.</p>
@@ -175,7 +175,7 @@ export default function DashboardPage() {
         <Card className="mt-6">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-bold" style={{ color: "#093774" }}>
+              <h2 className="font-bold" style={{ color: "#0F766E" }}>
                 🗺️ Lộ trình mentoring của bạn
               </h2>
               <p className="text-sm mt-1" style={{ color: "#94A3B8" }}>

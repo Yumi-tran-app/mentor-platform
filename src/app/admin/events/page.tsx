@@ -30,7 +30,7 @@ const STATUS_LABEL: Record<string, string> = {
 const STATUS_COLOR: Record<string, string> = {
   draft: "#94A3B8",
   open: "#15803D",
-  completed: "#0D2B45",
+  completed: "#134E4A",
 };
 
 export default function AdminEventsPage() {
@@ -138,7 +138,7 @@ export default function AdminEventsPage() {
   return (
     <AppShell title="Quản lý Workshop/Training">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold" style={{ color: "#093774" }}>
+        <h1 className="text-2xl font-bold" style={{ color: "#0F766E" }}>
           📅 Workshop / Training
         </h1>
         <Button onClick={openCreate}>+ Tạo Workshop/Training</Button>
@@ -146,11 +146,11 @@ export default function AdminEventsPage() {
 
       {/* Dashboard thống kê */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-        <StatBox label="Tổng" value={stats?.total ?? 0} color="#093774" />
+        <StatBox label="Tổng" value={stats?.total ?? 0} color="#0F766E" />
         <StatBox label="Đang mở" value={stats?.open ?? 0} color="#15803D" />
         <StatBox label="Nháp" value={stats?.draft ?? 0} color="#94A3B8" />
-        <StatBox label="Đã tổ chức" value={stats?.completed ?? 0} color="#0D2B45" />
-        <StatBox label="Tổng đăng ký" value={stats?.totalRegistrations ?? 0} color="#FF7A59" />
+        <StatBox label="Đã tổ chức" value={stats?.completed ?? 0} color="#134E4A" />
+        <StatBox label="Tổng đăng ký" value={stats?.totalRegistrations ?? 0} color="#D97706" />
       </div>
 
       {/* Tìm kiếm & lọc */}
@@ -161,7 +161,7 @@ export default function AdminEventsPage() {
           onKeyDown={(e) => e.key === "Enter" && load()}
           placeholder="Tìm theo tên..."
           className="flex-1 px-4 py-2 rounded-lg border text-sm"
-          style={{ borderColor: "#E5E0D5", color: "#2C335D" }}
+          style={{ borderColor: "#E5E0D5", color: "#292524" }}
         />
         <Button variant="secondary" onClick={load}>Tìm</Button>
         {["all", "open", "draft", "completed"].map((s) => (
@@ -170,8 +170,8 @@ export default function AdminEventsPage() {
             onClick={() => setFilter(s)}
             className="px-4 py-2 rounded-full text-sm font-semibold"
             style={{
-              background: filter === s ? "#093774" : "#fff",
-              color: filter === s ? "#fff" : "#2C335D",
+              background: filter === s ? "#0F766E" : "#fff",
+              color: filter === s ? "#fff" : "#292524",
               border: "1px solid #E5E0D5",
             }}
           >
@@ -182,7 +182,7 @@ export default function AdminEventsPage() {
 
       {/* Danh sách */}
       {loading ? (
-        <p style={{ color: "#2C335D" }}>Đang tải...</p>
+        <p style={{ color: "#292524" }}>Đang tải...</p>
       ) : events.length === 0 ? (
         <Card><p className="text-sm" style={{ color: "#94A3B8" }}>Chưa có workshop/training nào.</p></Card>
       ) : (
@@ -192,14 +192,14 @@ export default function AdminEventsPage() {
               <div className="flex items-center justify-between gap-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-bold" style={{ color: "#093774" }}>{e.title}</h3>
+                    <h3 className="font-bold" style={{ color: "#0F766E" }}>{e.title}</h3>
                     <Badge color={STATUS_COLOR[e.status]}>{STATUS_LABEL[e.status]}</Badge>
                   </div>
                   <p className="text-xs mt-1" style={{ color: "#94A3B8" }}>
                     {fmt(e.startAt)} · {money(e.price)} · {e.capacity > 0 ? `Giới hạn ${e.capacity}` : "Không giới hạn"}
                   </p>
                 </div>
-                <div className="flex items-center gap-2 text-xs font-medium" style={{ color: "#2C335D" }}>
+                <div className="flex items-center gap-2 text-xs font-medium" style={{ color: "#292524" }}>
                   🎟️ {e._count.registrations}{e.capacity > 0 ? `/${e.capacity}` : ""}
                 </div>
                 <div className="flex items-center gap-1">
@@ -268,7 +268,7 @@ export default function AdminEventsPage() {
       {/* Detail modal */}
       {detail && (
         <Modal title="Chi tiết Workshop/Training" onClose={() => setDetail(null)}>
-          <div className="space-y-3 text-sm" style={{ color: "#2C335D" }}>
+          <div className="space-y-3 text-sm" style={{ color: "#292524" }}>
             <p><b>Tên:</b> {detail.event.title}</p>
             <p><b>Trạng thái:</b> <Badge color={STATUS_COLOR[detail.event.status]}>{STATUS_LABEL[detail.event.status]}</Badge></p>
             <p><b>Thời gian:</b> {fmt(detail.event.startAt)} → {fmt(detail.event.endAt)}</p>
@@ -277,7 +277,7 @@ export default function AdminEventsPage() {
             <p><b>Đăng ký:</b> {detail.filled} · <b>Check-in:</b> {detail.checkedIn}/{detail.checkedTotal}</p>
             {detail.event.checkInCode && (
               <div className="p-3 rounded-lg" style={{ background: "#F2F9F4" }}>
-                <p><b>Mã Check-in:</b> <span style={{ fontSize: 18, letterSpacing: 2, color: "#093774", fontWeight: 700 }}>{detail.event.checkInCode}</span></p>
+                <p><b>Mã Check-in:</b> <span style={{ fontSize: 18, letterSpacing: 2, color: "#0F766E", fontWeight: 700 }}>{detail.event.checkInCode}</span></p>
                 <img
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${detail.event.checkInCode}`}
                   alt="QR check-in"
@@ -313,7 +313,7 @@ export default function AdminEventsPage() {
       {/* Confirm delete */}
       {confirmDelete && (
         <Modal title="Xác nhận xóa" onClose={() => setConfirmDelete(null)}>
-          <p className="text-sm mb-4" style={{ color: "#2C335D" }}>
+          <p className="text-sm mb-4" style={{ color: "#292524" }}>
             Bạn chắc chắn muốn xóa workshop/training này? Hành động không thể hoàn tác.
           </p>
           <div className="flex gap-3">
@@ -330,7 +330,7 @@ const inputCls = "w-full px-3 py-2 rounded-lg border text-sm";
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-xs font-medium mb-1" style={{ color: "#2C335D" }}>{label}</label>
+      <label className="block text-xs font-medium mb-1" style={{ color: "#292524" }}>{label}</label>
       {children}
     </div>
   );
@@ -355,7 +355,7 @@ function Modal({ title, onClose, children }: { title: string; onClose: () => voi
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(9,55,116,.5)" }}>
       <div className="bg-white rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold" style={{ color: "#093774" }}>{title}</h2>
+          <h2 className="text-lg font-bold" style={{ color: "#0F766E" }}>{title}</h2>
           <button onClick={onClose} className="text-2xl leading-none" style={{ color: "#94A3B8" }}>×</button>
         </div>
         {children}

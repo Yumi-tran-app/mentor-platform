@@ -9,7 +9,7 @@ const MOODS = [
   { id: "good", icon: "💚", label: "Đang kết nối tốt", color: "#E6F4EA", border: "#22C55E", ring: "rgba(34,197,94,.3)" },
   { id: "neutral", icon: "🔵", label: "Đang tìm nhịp phù hợp", color: "#F4F8FE", border: "#3B82F6", ring: "rgba(59,130,246,.3)" },
   { id: "uneasy", icon: "🟡", label: "Có điều gì đó chưa ổn", color: "#FEF9E7", border: "#F2A93B", ring: "rgba(242,169,59,.3)" },
-  { id: "support_needed", icon: "🔴", label: "Cần hỗ trợ", color: "#FFF5F4", border: "#FF6859", ring: "rgba(255,104,89,.3)" },
+  { id: "support_needed", icon: "🔴", label: "Cần hỗ trợ", color: "#FFF5F4", border: "#B45309", ring: "rgba(255,104,89,.3)" },
 ] as const;
 
 export default function ReflectionPage() {
@@ -53,12 +53,12 @@ export default function ReflectionPage() {
   }
 
   return (
-    <div className="min-h-screen px-6 py-10" style={{ background: "#FFF3E6" }}>
+    <div className="min-h-screen px-6 py-10" style={{ background: "#F5F2EC" }}>
       <div className="max-w-xl mx-auto">
-        <Link href="/workspace" className="text-sm" style={{ color: "#093774" }}>
+        <Link href="/workspace" className="text-sm" style={{ color: "#0F766E" }}>
           ← Quay lại
         </Link>
-        <h1 className="text-2xl font-bold mt-2 mb-6" style={{ color: "#093774" }}>
+        <h1 className="text-2xl font-bold mt-2 mb-6" style={{ color: "#0F766E" }}>
           Phản tư tháng
         </h1>
 
@@ -71,7 +71,7 @@ export default function ReflectionPage() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
             <Card>
-              <h2 className="font-bold mb-4" style={{ color: "#093774" }}>
+              <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
                 Tháng thứ mấy?
               </h2>
               <input
@@ -81,12 +81,12 @@ export default function ReflectionPage() {
                 value={monthNumber}
                 onChange={(e) => setMonthNumber(Number(e.target.value))}
                 className="w-full px-4 py-2.5 rounded-lg border text-sm"
-                style={{ borderColor: "#E5E0D5", color: "#2C335D" }}
+                style={{ borderColor: "#E5E0D5", color: "#292524" }}
               />
             </Card>
 
             <Card>
-              <h2 className="font-bold mb-4" style={{ color: "#093774" }}>
+              <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
                 Cảm nhận của bạn
               </h2>
               <div className="space-y-2">
@@ -108,7 +108,7 @@ export default function ReflectionPage() {
                       checked={mood === m.id}
                       onChange={() => setMood(m.id)}
                     />
-                    <span className="text-sm font-medium" style={{ color: "#2C335D" }}>
+                    <span className="text-sm font-medium" style={{ color: "#292524" }}>
                       {m.label}
                     </span>
                   </label>
@@ -117,7 +117,7 @@ export default function ReflectionPage() {
             </Card>
 
             <Card>
-              <h2 className="font-bold mb-4" style={{ color: "#093774" }}>
+              <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
                 Ghi chú (tuỳ chọn)
               </h2>
               <textarea
@@ -125,7 +125,7 @@ export default function ReflectionPage() {
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-lg border text-sm"
-                style={{ borderColor: "#E5E0D5", color: "#2C335D" }}
+                style={{ borderColor: "#E5E0D5", color: "#292524" }}
                 placeholder="Chia sẻ suy nghĩ của bạn..."
               />
             </Card>

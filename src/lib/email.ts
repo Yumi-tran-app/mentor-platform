@@ -43,8 +43,8 @@ export async function sendEmail({ to, subject, text, html }: EmailPayload) {
 export function simpleHtml(title: string, lines: string[]) {
   const items = lines.map((l) => `<p style="margin:0 0 8px">${l}</p>`).join("");
   return `
-    <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;color:#2C335D">
-      <h2 style="color:#093774">${title}</h2>
+    <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;color:#292524">
+      <h2 style="color:#0F766E">${title}</h2>
       ${items}
       <p style="margin-top:16px;color:#94A3B8;font-size:12px">Mentor Platform</p>
     </div>

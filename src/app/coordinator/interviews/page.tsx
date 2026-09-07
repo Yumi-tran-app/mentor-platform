@@ -51,7 +51,7 @@ export default function InterviewsPage() {
   if (loading) {
     return (
       <AppShell title="Phỏng vấn">
-        <p style={{ color: "#2C335D" }}>Đang tải...</p>
+        <p style={{ color: "#292524" }}>Đang tải...</p>
       </AppShell>
     );
   }
@@ -60,7 +60,7 @@ export default function InterviewsPage() {
 
   return (
     <AppShell title="Phỏng vấn">
-      <h1 className="text-2xl font-bold mb-6" style={{ color: "#093774" }}>
+      <h1 className="text-2xl font-bold mb-6" style={{ color: "#0F766E" }}>
         Quản lý phỏng vấn
       </h1>
 
@@ -77,8 +77,8 @@ export default function InterviewsPage() {
             onClick={() => setTab(key)}
             className="px-4 py-2 rounded-full text-sm font-semibold transition"
             style={{
-              background: tab === key ? "#093774" : "#fff",
-              color: tab === key ? "#fff" : "#2C335D",
+              background: tab === key ? "#0F766E" : "#fff",
+              color: tab === key ? "#fff" : "#292524",
               border: "1px solid #E5E0D5",
             }}
           >
@@ -95,7 +95,7 @@ export default function InterviewsPage() {
       )}
       {tab === "list" && (
         <Card>
-          <h2 className="font-bold mb-4" style={{ color: "#093774" }}>
+          <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
             Lịch phỏng vấn
           </h2>
           {interviews.length === 0 ? (
@@ -111,7 +111,7 @@ export default function InterviewsPage() {
                   style={{ borderColor: "#F5F2EC" }}
                 >
                   <div>
-                    <p className="text-sm font-medium" style={{ color: "#2C335D" }}>
+                    <p className="text-sm font-medium" style={{ color: "#292524" }}>
                       {iv.applicant.fullName}{" "}
                       <span className="text-xs" style={{ color: "#94A3B8" }}>
                         ({iv.applicantRole} · {iv.purpose})
@@ -140,7 +140,7 @@ export default function InterviewsPage() {
 function AppList({ apps, role }: { apps: Application[]; role: string }) {
   return (
     <Card>
-      <h2 className="font-bold mb-4" style={{ color: "#093774" }}>
+      <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
         Đơn {role} chờ phỏng vấn ({apps.length})
       </h2>
       {apps.length === 0 ? (
@@ -156,7 +156,7 @@ function AppList({ apps, role }: { apps: Application[]; role: string }) {
               style={{ borderColor: "#F5F2EC" }}
             >
               <div>
-                <p className="text-sm font-medium" style={{ color: "#2C335D" }}>
+                <p className="text-sm font-medium" style={{ color: "#292524" }}>
                   {a.user.fullName}
                 </p>
                 <p className="text-xs" style={{ color: "#94A3B8" }}>

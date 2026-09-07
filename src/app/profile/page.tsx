@@ -62,13 +62,13 @@ export default function ProfilePage() {
   if (!profile) {
     return (
       <AppShell title="Hồ sơ">
-        <p style={{ color: "#2C335D" }}>Đang tải...</p>
+        <p style={{ color: "#292524" }}>Đang tải...</p>
       </AppShell>
     );
   }
 
   const inputCls = "w-full px-4 py-2.5 rounded-lg border text-sm";
-  const inputStyle = { borderColor: "#E5E0D5", color: "#2C335D" };
+  const inputStyle = { borderColor: "#E5E0D5", color: "#292524" };
 
   // Mentor data
   const mIdentity = mentor?.identityJson ?? {};
@@ -83,7 +83,7 @@ export default function ProfilePage() {
 
   return (
     <AppShell title="Hồ sơ">
-      <h1 className="text-2xl font-bold mb-6" style={{ color: "#093774" }}>
+      <h1 className="text-2xl font-bold mb-6" style={{ color: "#0F766E" }}>
         Hồ sơ của bạn
       </h1>
 
@@ -93,19 +93,19 @@ export default function ProfilePage() {
           <div className="flex items-center gap-4 mb-4">
             <div
               className="w-16 h-16 rounded-full flex items-center justify-center text-2xl text-white font-bold"
-              style={{ background: "#093774" }}
+              style={{ background: "#0F766E" }}
             >
               {(profile.fullName?.[0] ?? "?").toUpperCase()}
             </div>
             <div>
-              <h2 className="text-xl font-bold" style={{ color: "#093774" }}>
+              <h2 className="text-xl font-bold" style={{ color: "#0F766E" }}>
                 {profile.fullName}
               </h2>
               <div className="mt-1">
                 <Badge
                   color={
                     profile.role === "admin"
-                      ? "#FF6859"
+                      ? "#B45309"
                       : profile.role === "dpv"
                         ? "#F2A93B"
                         : "#15B5B0"
@@ -125,10 +125,10 @@ export default function ProfilePage() {
         {mentor && (
           <>
             <Card>
-              <h2 className="font-bold mb-4" style={{ color: "#093774" }}>
+              <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
                 👤 Thông tin cá nhân (Mentor)
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm" style={{ color: "#2C335D" }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm" style={{ color: "#292524" }}>
                 <Field label="Họ và tên" value={mIdentity.fullName} />
                 <Field label="Tên thường gọi" value={mIdentity.preferredName} />
                 <Field label="Giới tính" value={GENDER_LABEL[mIdentity.gender] ?? mIdentity.gender} />
@@ -141,10 +141,10 @@ export default function ProfilePage() {
             </Card>
 
             <Card>
-              <h2 className="font-bold mb-4" style={{ color: "#093774" }}>
+              <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
                 💼 Kinh nghiệm nghề nghiệp
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm" style={{ color: "#2C335D" }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm" style={{ color: "#292524" }}>
                 <Field label="Công ty" value={mProf.company} />
                 <Field label="Chức danh" value={mProf.title} />
                 <Field label="Số năm kinh nghiệm" value={mProf.yearsExperience != null ? `${mProf.yearsExperience} năm` : undefined} />
@@ -157,10 +157,10 @@ export default function ProfilePage() {
             </Card>
 
             <Card>
-              <h2 className="font-bold mb-4" style={{ color: "#093774" }}>
+              <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
                 🌱 Mức độ sẵn sàng & cam kết
               </h2>
-              <div className="space-y-2 text-sm" style={{ color: "#2C335D" }}>
+              <div className="space-y-2 text-sm" style={{ color: "#292524" }}>
                 <p>🔹 Đã từng làm mentor: <b>{mReadiness.hasMentoredBefore ? "Có" : "Chưa"}</b></p>
                 <p>🔹 Đã mentor SME/startup: <b>{mReadiness.hasMentoredStartup ? "Có" : "Chưa"}</b></p>
                 {mReadiness.mentoringFocus?.length > 0 && (
@@ -168,7 +168,7 @@ export default function ProfilePage() {
                     <p className="font-medium mb-1">🔹 Định hướng đồng hành:</p>
                     <div className="flex flex-wrap gap-2">
                       {mReadiness.mentoringFocus.map((f: string) => (
-                        <Badge key={f} color="#093774">{NEED_LABEL[f] ?? f}</Badge>
+                        <Badge key={f} color="#0F766E">{NEED_LABEL[f] ?? f}</Badge>
                       ))}
                     </div>
                   </div>
@@ -180,10 +180,10 @@ export default function ProfilePage() {
 
             {mDocs && (mDocs.cvUrl || mDocs.photoUrl || mDocs.references || mDocs.source || mDocs.notes) && (
               <Card>
-                <h2 className="font-bold mb-4" style={{ color: "#093774" }}>
+                <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
                   📎 Hồ sơ bổ sung
                 </h2>
-                <div className="space-y-2 text-sm" style={{ color: "#2C335D" }}>
+                <div className="space-y-2 text-sm" style={{ color: "#292524" }}>
                   {mDocs.photoUrl && <img src={mDocs.photoUrl} alt="Profile" style={{ width: 96, height: 96, borderRadius: "50%", objectFit: "cover" }} />}
                   {mDocs.cvUrl && <p>🔗 CV: <a href={mDocs.cvUrl} target="_blank" style={{ color: "#15B5B0" }}>{mDocs.cvUrl}</a></p>}
                   {mDocs.references && <p>👥 Người giới thiệu: {mDocs.references}</p>}
@@ -202,7 +202,7 @@ export default function ProfilePage() {
               <h2 className="font-bold mb-4" style={{ color: "#15B5B0" }}>
                 🪪 Thông tin xác thực (Mentee)
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm" style={{ color: "#2C335D" }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm" style={{ color: "#292524" }}>
                 <Field label="Họ và tên" value={eIdentity.fullName} />
                 <Field label="Mã số sinh viên" value={eIdentity.studentId} />
                 <Field label="Email trường" value={eIdentity.email} full />
@@ -214,7 +214,7 @@ export default function ProfilePage() {
               <h2 className="font-bold mb-4" style={{ color: "#15B5B0" }}>
                 🎓 Thông tin học tập (Mentee)
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm" style={{ color: "#2C335D" }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm" style={{ color: "#292524" }}>
                 <Field label="Ngành học" value={eProfile.major} />
                 <Field label="Trường" value={eProfile.school} />
                 <Field label="Năm học" value={eProfile.yearOfStudy ? `Năm ${eProfile.yearOfStudy}` : undefined} />
@@ -226,7 +226,7 @@ export default function ProfilePage() {
               <h2 className="font-bold mb-4" style={{ color: "#15B5B0" }}>
                 🎯 Mục tiêu & nhu cầu
               </h2>
-              <div className="space-y-2 text-sm" style={{ color: "#2C335D" }}>
+              <div className="space-y-2 text-sm" style={{ color: "#292524" }}>
                 {mentee.goalText && (
                   <p><b>Mục tiêu:</b> {mentee.goalText}</p>
                 )}
@@ -246,7 +246,7 @@ export default function ProfilePage() {
 
         {/* Chỉnh sửa thông tin cơ bản */}
         <Card>
-          <h2 className="font-bold mb-4" style={{ color: "#093774" }}>
+          <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
             Chỉnh sửa thông tin
           </h2>
           <div className="space-y-4">

@@ -80,7 +80,7 @@ export default function TestPage() {
   if (loading || !data) {
     return (
       <AppShell title="Bài kiểm tra">
-        <p style={{ color: "#2C335D" }}>Đang tải...</p>
+        <p style={{ color: "#292524" }}>Đang tải...</p>
       </AppShell>
     );
   }
@@ -92,7 +92,7 @@ export default function TestPage() {
     <AppShell title="Bài kiểm tra">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold" style={{ color: "#093774" }}>
+          <h1 className="text-2xl font-bold" style={{ color: "#0F766E" }}>
             {data.test.title}
           </h1>
           <p className="text-sm mt-1" style={{ color: "#94A3B8" }}>
@@ -106,9 +106,9 @@ export default function TestPage() {
 
       {data.lastAttempt && (
         <Card className="mb-6">
-          <p className="text-sm" style={{ color: "#2C335D" }}>
+          <p className="text-sm" style={{ color: "#292524" }}>
             Lần làm gần nhất:{" "}
-            <b style={{ color: data.lastAttempt.status === "passed" ? "#15803D" : "#FF6859" }}>
+            <b style={{ color: data.lastAttempt.status === "passed" ? "#15803D" : "#B45309" }}>
               {data.lastAttempt.score}% ({data.lastAttempt.status === "passed" ? "Đạt" : "Chưa đạt"})
             </b>
           </p>
@@ -118,10 +118,10 @@ export default function TestPage() {
       {result && (
         <Card className="mb-6" >
           <div style={{ textAlign: "center", padding: "8px 0" }}>
-            <p className="text-3xl font-bold" style={{ color: result.status === "passed" ? "#15803D" : "#FF6859" }}>
+            <p className="text-3xl font-bold" style={{ color: result.status === "passed" ? "#15803D" : "#B45309" }}>
               {result.score}%
             </p>
-            <p className="text-sm mt-1" style={{ color: "#2C335D" }}>
+            <p className="text-sm mt-1" style={{ color: "#292524" }}>
               Đúng {result.correctCount}/{result.mcqTotal} câu trắc nghiệm ·{" "}
               {result.status === "passed" ? "🎉 Đạt yêu cầu" : "Chưa đạt, hãy ôn lại và thử lại"}
             </p>
@@ -138,10 +138,10 @@ export default function TestPage() {
       <div className="space-y-4">
         {data.questions.map((q, i) => (
           <Card key={q.id}>
-            <p className="font-semibold mb-3" style={{ color: "#093774" }}>
+            <p className="font-semibold mb-3" style={{ color: "#0F766E" }}>
               <span style={{ color: "#15B5B0" }}>{i + 1}.</span> {q.prompt}
               {q.type === "essay" && (
-                <span className="ml-2 text-xs font-normal" style={{ color: "#FF6859" }}>
+                <span className="ml-2 text-xs font-normal" style={{ color: "#B45309" }}>
                   Tự luận
                 </span>
               )}
@@ -159,7 +159,7 @@ export default function TestPage() {
                       style={{
                         borderColor: selected ? "#15B5B0" : "#E5E0D5",
                         background: selected ? "#F2F9F4" : "#fff",
-                        color: "#2C335D",
+                        color: "#292524",
                       }}
                     >
                       <span className="font-bold mr-2" style={{ color: selected ? "#15B5B0" : "#94A3B8" }}>
@@ -177,7 +177,7 @@ export default function TestPage() {
                 rows={4}
                 placeholder="Nhập câu trả lời của bạn..."
                 className="w-full px-4 py-3 rounded-lg border text-sm"
-                style={{ borderColor: "#E5E0D5", color: "#2C335D" }}
+                style={{ borderColor: "#E5E0D5", color: "#292524" }}
               />
             )}
           </Card>

@@ -75,7 +75,7 @@ export default function CalendarPage() {
   if (loading) {
     return (
       <AppShell title="Lịch gặp">
-        <p style={{ color: "#2C335D" }}>Đang tải...</p>
+        <p style={{ color: "#292524" }}>Đang tải...</p>
       </AppShell>
     );
   }
@@ -83,12 +83,12 @@ export default function CalendarPage() {
   const upcoming = events.filter((e) => new Date(e.startsAt) >= new Date());
   const past = events.filter((e) => new Date(e.startsAt) < new Date());
   const inputCls = "w-full px-4 py-2.5 rounded-lg border text-sm";
-  const inputStyle = { borderColor: "#E5E0D5", color: "#2C335D" };
+  const inputStyle = { borderColor: "#E5E0D5", color: "#292524" };
 
   return (
     <AppShell title="Lịch gặp">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold" style={{ color: "#093774" }}>
+        <h1 className="text-2xl font-bold" style={{ color: "#0F766E" }}>
           Lịch gặp
         </h1>
         <Button onClick={() => setShowForm((s) => !s)}>
@@ -99,7 +99,7 @@ export default function CalendarPage() {
       {/* Form tạo lịch */}
       {showForm && (
         <Card className="mb-8">
-          <h2 className="font-bold mb-4" style={{ color: "#093774" }}>
+          <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
             Tạo lịch gặp mới
           </h2>
           <form onSubmit={createEvent} className="space-y-4">
@@ -175,7 +175,7 @@ export default function CalendarPage() {
       )}
 
       <section className="mb-8">
-        <h2 className="font-bold mb-3" style={{ color: "#093774" }}>
+        <h2 className="font-bold mb-3" style={{ color: "#0F766E" }}>
           Sắp tới ({upcoming.length})
         </h2>
         {upcoming.length === 0 ? (
@@ -224,10 +224,10 @@ function EventCard({ event }: { event: Event }) {
     <Card>
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h3 className="font-bold" style={{ color: "#093774" }}>
+          <h3 className="font-bold" style={{ color: "#0F766E" }}>
             {event.title}
           </h3>
-          <p className="text-sm mt-1" style={{ color: "#2C335D" }}>
+          <p className="text-sm mt-1" style={{ color: "#292524" }}>
             🗓️ {dateStr} · 🕐 {timeStr}
           </p>
           <p className="text-xs mt-1" style={{ color: "#94A3B8" }}>

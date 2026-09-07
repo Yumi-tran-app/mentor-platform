@@ -55,7 +55,7 @@ export default function WorkspacePage() {
     proposed_to_parties: "#F2A93B",
     mentor_accepted: "#15B5B0",
     mutual_accepted: "#15B5B0",
-    first_connection_done: "#093774",
+    first_connection_done: "#0F766E",
     active: "#15803D",
     paused: "#F2A93B",
     ended: "#94A3B8",
@@ -64,7 +64,7 @@ export default function WorkspacePage() {
   if (loading) {
     return (
       <AppShell title="Workspace">
-        <p style={{ color: "#2C335D" }}>Đang tải...</p>
+        <p style={{ color: "#292524" }}>Đang tải...</p>
       </AppShell>
     );
   }
@@ -72,14 +72,14 @@ export default function WorkspacePage() {
   return (
     <AppShell title="Workspace">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold" style={{ color: "#093774" }}>
+        <h1 className="text-2xl font-bold" style={{ color: "#0F766E" }}>
           Không gian đồng hành
         </h1>
       </div>
 
       {matches.length === 0 ? (
         <Card>
-          <h2 className="font-bold mb-2" style={{ color: "#093774" }}>
+          <h2 className="font-bold mb-2" style={{ color: "#0F766E" }}>
             Chưa có cặp đồng hành
           </h2>
           <p className="text-sm" style={{ color: "#94A3B8" }}>
@@ -101,17 +101,17 @@ export default function WorkspacePage() {
                   </span>
                 )}
               </div>
-              <p className="text-sm" style={{ color: "#2C335D" }}>
+              <p className="text-sm" style={{ color: "#292524" }}>
                 <span className="font-semibold">Mentor:</span>{" "}
                 {m.mentorApplication.user.fullName}
               </p>
-              <p className="text-sm mt-1" style={{ color: "#2C335D" }}>
+              <p className="text-sm mt-1" style={{ color: "#292524" }}>
                 <span className="font-semibold">Mentee:</span>{" "}
                 {m.menteeApplication.user.fullName}
               </p>
 
               {m.goalText && (
-                <div className="mt-3 p-3 rounded-lg text-sm" style={{ background: "#F2F9F4", color: "#2C335D" }}>
+                <div className="mt-3 p-3 rounded-lg text-sm" style={{ background: "#F2F9F4", color: "#292524" }}>
                   🎯 <b>Mục tiêu:</b> {m.goalText}
                 </div>
               )}

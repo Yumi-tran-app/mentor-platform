@@ -33,14 +33,14 @@ export default function CoordinatorPage() {
   if (loading) {
     return (
       <AppShell title="ĐPV">
-        <p style={{ color: "#2C335D" }}>Đang tải...</p>
+        <p style={{ color: "#292524" }}>Đang tải...</p>
       </AppShell>
     );
   }
 
   return (
     <AppShell title="ĐPV (Điều phối viên)">
-      <h1 className="text-2xl font-bold mb-6" style={{ color: "#093774" }}>
+      <h1 className="text-2xl font-bold mb-6" style={{ color: "#0F766E" }}>
         Bảng điều phối
       </h1>
 
@@ -57,14 +57,14 @@ export default function CoordinatorPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <StatCard label="Cặp chờ duyệt" value={matches.length} color="#093774" />
+        <StatCard label="Cặp chờ duyệt" value={matches.length} color="#0F766E" />
         <StatCard label="Yêu cầu tạm dừng" value={pauses.length} color="#F2A93B" />
-        <StatCard label="Cần hỗ trợ" value={support.length} color="#FF6859" />
+        <StatCard label="Cần hỗ trợ" value={support.length} color="#B45309" />
       </div>
 
       <div className="space-y-6">
         <Card>
-          <h2 className="font-bold mb-4" style={{ color: "#093774" }}>
+          <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
             Cặp đang chờ ĐPV duyệt
           </h2>
           {matches.length === 0 ? (
@@ -79,7 +79,7 @@ export default function CoordinatorPage() {
                   className="flex items-center justify-between p-3 rounded-lg border"
                   style={{ borderColor: "#F5F2EC" }}
                 >
-                  <span className="text-sm" style={{ color: "#2C335D" }}>
+                  <span className="text-sm" style={{ color: "#292524" }}>
                     Fit: {m.fitScore?.toFixed(2) ?? "—"} · #{m.id.slice(0, 8)}
                   </span>
                   <Badge color="#F2A93B">{m.status}</Badge>
@@ -105,7 +105,7 @@ export default function CoordinatorPage() {
                   className="flex items-center justify-between p-3 rounded-lg border"
                   style={{ borderColor: "#F5F2EC" }}
                 >
-                  <span className="text-sm" style={{ color: "#2C335D" }}>
+                  <span className="text-sm" style={{ color: "#292524" }}>
                     {p.reasonText ?? "Không có lý do"}
                   </span>
                   <Badge color="#F2A93B">pending_review</Badge>
@@ -116,7 +116,7 @@ export default function CoordinatorPage() {
         </Card>
 
         <Card>
-          <h2 className="font-bold mb-4" style={{ color: "#FF6859" }}>
+          <h2 className="font-bold mb-4" style={{ color: "#B45309" }}>
             Yêu cầu hỗ trợ (open)
           </h2>
           {support.length === 0 ? (
@@ -131,7 +131,7 @@ export default function CoordinatorPage() {
                   className="p-3 rounded-lg border"
                   style={{ borderColor: "#F5F2EC" }}
                 >
-                  <p className="text-sm" style={{ color: "#2C335D" }}>
+                  <p className="text-sm" style={{ color: "#292524" }}>
                     {s.message}
                   </p>
                   <span className="text-xs" style={{ color: "#94A3B8" }}>

@@ -39,7 +39,7 @@ export default async function CertificateViewPage({
     : "đã hoàn thành xuất sắc Chương trình đào tạo & kiểm tra năng lực đồng hành, đủ điều kiện tham gia dẫn dắt trong chương trình mentoring cộng đồng.";
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0D2B45", padding: 40, display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <div style={{ minHeight: "100vh", background: "#134E4A", padding: 40, display: "flex", alignItems: "center", justifyContent: "center" }}>
       <div
         style={{
           width: 1050,
@@ -72,7 +72,7 @@ export default async function CertificateViewPage({
           <div style={{ margin: "40px 0 8px", fontSize: 18, color: "#5B564A" }}>
             Trân trọng chứng nhận
           </div>
-          <h1 style={{ margin: 0, fontSize: 52, fontWeight: 800, color: "#0D2B45", fontFamily: "Georgia, serif" }}>
+          <h1 style={{ margin: 0, fontSize: 52, fontWeight: 800, color: "#134E4A", fontFamily: "Georgia, serif" }}>
             {cert.recipientName}
           </h1>
           <div
@@ -80,7 +80,7 @@ export default async function CertificateViewPage({
               display: "inline-block",
               margin: "28px auto 0",
               padding: "6px 22px",
-              background: "#FF7A59",
+              background: "#D97706",
               color: "#fff",
               borderRadius: 999,
               fontWeight: 700,

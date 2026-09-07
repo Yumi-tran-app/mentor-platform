@@ -186,7 +186,7 @@ export default function MatchDetailPage() {
   if (loading) {
     return (
       <AppShell title="Chi tiết">
-        <p style={{ color: "#2C335D" }}>Đang tải...</p>
+        <p style={{ color: "#292524" }}>Đang tải...</p>
       </AppShell>
     );
   }
@@ -194,20 +194,20 @@ export default function MatchDetailPage() {
   if (!match) {
     return (
       <AppShell title="Chi tiết">
-        <p style={{ color: "#2C335D" }}>Không tìm thấy cặp này.</p>
+        <p style={{ color: "#292524" }}>Không tìm thấy cặp này.</p>
       </AppShell>
     );
   }
 
   return (
     <AppShell title="Chi tiết đồng hành">
-      <Link href="/workspace" className="text-sm" style={{ color: "#093774" }}>
+      <Link href="/workspace" className="text-sm" style={{ color: "#0F766E" }}>
         ← Quay lại
       </Link>
 
       <div className="mt-4 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold" style={{ color: "#093774" }}>
+          <h1 className="text-2xl font-bold" style={{ color: "#0F766E" }}>
             {match.mentorApplication.user.fullName} ↔{" "}
             {match.menteeApplication.user.fullName}
           </h1>
@@ -232,10 +232,10 @@ export default function MatchDetailPage() {
         {/* LUỒNG KẾT NỐI — đánh dấu buổi gặp đầu khi hai bên đã đồng thuận */}
         {match.status === "mutual_accepted" && (
           <Card className="mb-4">
-            <h2 className="font-bold mb-2" style={{ color: "#093774" }}>
+            <h2 className="font-bold mb-2" style={{ color: "#0F766E" }}>
               Buổi gặp đầu tiên
             </h2>
-            <p className="text-sm mb-3" style={{ color: "#2C335D" }}>
+            <p className="text-sm mb-3" style={{ color: "#292524" }}>
               Hai bên đã đồng ý kết nối. Sau khi sắp xếp và hoàn thành buổi gặp
               đầu tiên, đánh dấu để chuyển sang giai đoạn đồng hành chính thức.
             </p>
@@ -247,7 +247,7 @@ export default function MatchDetailPage() {
 
         {/* THOẢ THUẬN ĐỒNG HÀNH */}
         <Card>
-          <h2 className="font-bold mb-2" style={{ color: "#093774" }}>
+          <h2 className="font-bold mb-2" style={{ color: "#0F766E" }}>
             Thoả thuận đồng hành
           </h2>
           {match.agreementConfirmedAt ? (
@@ -284,7 +284,7 @@ export default function MatchDetailPage() {
                       {on && "✓"}
                     </span>
                     <div>
-                      <span className="block text-sm font-bold" style={{ color: "#2C335D" }}>{label}</span>
+                      <span className="block text-sm font-bold" style={{ color: "#292524" }}>{label}</span>
                       <span className="block text-xs mt-0.5" style={{ color: "#94A3B8" }}>{desc}</span>
                     </div>
                   </button>
@@ -304,7 +304,7 @@ export default function MatchDetailPage() {
       {/* GHI CHÚ TỪNG BUỔI */}
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
-          <h2 className="font-bold mb-4" style={{ color: "#093774" }}>
+          <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
             Thêm ghi chú buổi gặp
           </h2>
           <form onSubmit={addLog} className="space-y-3">
@@ -316,8 +316,8 @@ export default function MatchDetailPage() {
                   onClick={() => setVisibility(v)}
                   className="px-3 py-1.5 rounded-full text-xs font-semibold"
                   style={{
-                    background: visibility === v ? "#093774" : "#F5F2EC",
-                    color: visibility === v ? "#fff" : "#2C335D",
+                    background: visibility === v ? "#0F766E" : "#F5F2EC",
+                    color: visibility === v ? "#fff" : "#292524",
                   }}
                 >
                   {v === "shared" ? "Chung" : "Riêng tư"}
@@ -329,7 +329,7 @@ export default function MatchDetailPage() {
               onChange={(e) => setNote(e.target.value)}
               rows={3}
               className="w-full px-4 py-2.5 rounded-lg border text-sm"
-              style={{ borderColor: "#E5E0D5", color: "#2C335D" }}
+              style={{ borderColor: "#E5E0D5", color: "#292524" }}
               placeholder="Ghi lại nội dung trao đổi, việc cần làm..."
             />
             <div className="flex justify-end">
@@ -341,7 +341,7 @@ export default function MatchDetailPage() {
         </Card>
 
         <Card>
-          <h2 className="font-bold mb-4" style={{ color: "#093774" }}>
+          <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
             Lịch sử ghi chú ({logs.length})
           </h2>
           {logs.length === 0 ? (
@@ -359,7 +359,7 @@ export default function MatchDetailPage() {
                     background: log.visibility === "private" ? "#FFF5F4" : "#fff",
                   }}
                 >
-                  <p className="text-sm" style={{ color: "#2C335D" }}>
+                  <p className="text-sm" style={{ color: "#292524" }}>
                     {log.content}
                   </p>
                   <p className="text-xs mt-1" style={{ color: "#94A3B8" }}>
@@ -377,7 +377,7 @@ export default function MatchDetailPage() {
       {match.status === "ended" && (
         <div className="mt-6">
           <Card>
-            <h2 className="font-bold mb-4" style={{ color: "#093774" }}>
+            <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
               📝 Báo cáo cuối khóa
             </h2>
             {report ? (
@@ -391,7 +391,7 @@ export default function MatchDetailPage() {
                   Chia sẻ hành trình của bạn để nhận chứng nhận hoàn thành mentoring.
                 </p>
                 <div>
-                  <label className="block text-sm font-medium mb-1" style={{ color: "#2C335D" }}>
+                  <label className="block text-sm font-medium mb-1" style={{ color: "#292524" }}>
                     Số buổi mentoring đã thực hiện *
                   </label>
                   <input
@@ -403,32 +403,32 @@ export default function MatchDetailPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1" style={{ color: "#2C335D" }}>
+                  <label className="block text-sm font-medium mb-1" style={{ color: "#292524" }}>
                     Những ghi nhận trong hành trình
                   </label>
                   <textarea rows={3} value={reportForm.journeyHighlights} onChange={(e) => setReportForm({ ...reportForm, journeyHighlights: e.target.value })} className={inputCls} placeholder="Điều đáng nhớ, khoảnh khắc, bài học..." />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1" style={{ color: "#2C335D" }}>
+                  <label className="block text-sm font-medium mb-1" style={{ color: "#292524" }}>
                     Giá trị nhận được từ chương trình
                   </label>
                   <textarea rows={2} value={reportForm.valueReceived} onChange={(e) => setReportForm({ ...reportForm, valueReceived: e.target.value })} className={inputCls} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1" style={{ color: "#2C335D" }}>
+                  <label className="block text-sm font-medium mb-1" style={{ color: "#292524" }}>
                     Điều muốn chia sẻ với mentor/mentee của bạn
                   </label>
                   <textarea rows={2} value={reportForm.messageToPartner} onChange={(e) => setReportForm({ ...reportForm, messageToPartner: e.target.value })} className={inputCls} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1" style={{ color: "#2C335D" }}>
+                  <label className="block text-sm font-medium mb-1" style={{ color: "#292524" }}>
                     Điều muốn chia sẻ với Ban tổ chức
                   </label>
                   <textarea rows={2} value={reportForm.messageToOrg} onChange={(e) => setReportForm({ ...reportForm, messageToOrg: e.target.value })} className={inputCls} />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm font-medium mb-1" style={{ color: "#2C335D" }}>
+                    <label className="block text-sm font-medium mb-1" style={{ color: "#292524" }}>
                       Mức độ hài lòng
                     </label>
                     <select value={reportForm.satisfaction} onChange={(e) => setReportForm({ ...reportForm, satisfaction: Number(e.target.value) })} className={inputCls}>
@@ -436,7 +436,7 @@ export default function MatchDetailPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1" style={{ color: "#2C335D" }}>
+                    <label className="block text-sm font-medium mb-1" style={{ color: "#292524" }}>
                       Muốn tham gia mùa tiếp?
                     </label>
                     <select value={reportForm.wantRejoin ? "1" : "0"} onChange={(e) => setReportForm({ ...reportForm, wantRejoin: e.target.value === "1" })} className={inputCls}>
@@ -446,7 +446,7 @@ export default function MatchDetailPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1" style={{ color: "#2C335D" }}>
+                  <label className="block text-sm font-medium mb-1" style={{ color: "#292524" }}>
                     Đề xuất cải thiện chương trình (không bắt buộc)
                   </label>
                   <textarea rows={2} value={reportForm.suggestions} onChange={(e) => setReportForm({ ...reportForm, suggestions: e.target.value })} className={inputCls} />

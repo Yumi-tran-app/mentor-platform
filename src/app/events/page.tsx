@@ -59,18 +59,18 @@ export default function EventsPage() {
 
   return (
     <AppShell title="Workshop / Training">
-      <h1 className="text-2xl font-bold mb-6" style={{ color: "#093774" }}>
+      <h1 className="text-2xl font-bold mb-6" style={{ color: "#0F766E" }}>
         📅 Workshop & Training
       </h1>
 
       {msg && (
-        <div className="mb-4 rounded-lg px-4 py-3 text-sm" style={{ background: msg.startsWith("✅") ? "#E6F4EA" : "#FCE8E6", color: "#2C335D" }}>
+        <div className="mb-4 rounded-lg px-4 py-3 text-sm" style={{ background: msg.startsWith("✅") ? "#E6F4EA" : "#FCE8E6", color: "#292524" }}>
           {msg}
         </div>
       )}
 
       {loading ? (
-        <p style={{ color: "#2C335D" }}>Đang tải...</p>
+        <p style={{ color: "#292524" }}>Đang tải...</p>
       ) : events.length === 0 ? (
         <Card><p className="text-sm" style={{ color: "#94A3B8" }}>Chưa có workshop/training nào đang mở.</p></Card>
       ) : (
@@ -79,7 +79,7 @@ export default function EventsPage() {
             <Card key={e.id}>
               <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="font-bold" style={{ color: "#093774" }}>{e.title}</h3>
+                  <h3 className="font-bold" style={{ color: "#0F766E" }}>{e.title}</h3>
                   <p className="text-xs mt-1" style={{ color: "#94A3B8" }}>
                     {e.status === "open" ? "Đang mở đăng ký" : "Đã tổ chức"}
                   </p>
@@ -88,10 +88,10 @@ export default function EventsPage() {
               </div>
 
               {e.description && (
-                <p className="text-sm mt-2" style={{ color: "#2C335D" }}>{e.description}</p>
+                <p className="text-sm mt-2" style={{ color: "#292524" }}>{e.description}</p>
               )}
 
-              <div className="mt-3 space-y-1 text-sm" style={{ color: "#2C335D" }}>
+              <div className="mt-3 space-y-1 text-sm" style={{ color: "#292524" }}>
                 <p>🕐 {fmt(e.startAt)} → {fmt(e.endAt)}</p>
                 {e.location && <p>📍 {e.location}</p>}
                 {e.zoomLink && <p>💻 <a href={e.zoomLink} target="_blank" style={{ color: "#15B5B0" }}>Zoom link</a></p>}

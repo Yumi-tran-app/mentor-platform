@@ -186,30 +186,30 @@ export default function MentorOnboardingPage() {
   }
 
   const inputCls = "w-full px-4 py-2.5 rounded-lg border text-sm";
-  const inputStyle = { borderColor: "#E5E0D5", color: "#2C335D" };
+  const inputStyle = { borderColor: "#E5E0D5", color: "#292524" };
   const labelCls = "text-sm font-medium block mb-1";
 
   return (
-    <div className="min-h-screen px-6 py-10" style={{ background: "#FFF3E6" }}>
+    <div className="min-h-screen px-6 py-10" style={{ background: "#F5F2EC" }}>
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold mb-1" style={{ color: "#093774" }}>
+        <h1 className="text-2xl font-bold mb-1" style={{ color: "#0F766E" }}>
           Đăng ký trở thành Mentor
         </h1>
-        <p className="text-sm mb-4" style={{ color: "#2C335D" }}>
+        <p className="text-sm mb-4" style={{ color: "#292524" }}>
           Bước {step}/6 · {STEPS[step - 1]}
         </p>
 
         <div className="w-full h-2 rounded-full mb-8" style={{ background: "#F5F2EC" }}>
-          <div className="h-2 rounded-full transition-all" style={{ width: `${(step / 6) * 100}%`, background: "#093774" }} />
+          <div className="h-2 rounded-full transition-all" style={{ width: `${(step / 6) * 100}%`, background: "#0F766E" }} />
         </div>
 
         {step === 1 && (
           <Card>
-            <h2 className="font-bold mb-2" style={{ color: "#093774" }}>1. Thông tin định danh & liên hệ</h2>
+            <h2 className="font-bold mb-2" style={{ color: "#0F766E" }}>1. Thông tin định danh & liên hệ</h2>
             <p className="text-sm mb-4" style={{ color: "#94A3B8" }}>Thông tin dùng cho xác thực nội bộ.</p>
             <div className="mb-4 flex gap-3 p-3 rounded-lg" style={{ background: "#EEF2F9", border: "1px solid #D9E2F2" }}>
               <span className="text-lg">🔒</span>
-              <p className="text-sm" style={{ color: "#2C335D" }}>
+              <p className="text-sm" style={{ color: "#292524" }}>
                 Dữ liệu chỉ dùng nội bộ, không hiển thị công khai (ngoại trừ tên và chức danh khi đề xuất ghép cặp).
               </p>
             </div>
@@ -236,7 +236,7 @@ export default function MentorOnboardingPage() {
 
         {step === 2 && (
           <Card>
-            <h2 className="font-bold mb-2" style={{ color: "#093774" }}>2. Nghề nghiệp & chuyên môn</h2>
+            <h2 className="font-bold mb-2" style={{ color: "#0F766E" }}>2. Nghề nghiệp & chuyên môn</h2>
             <p className="text-sm mb-4" style={{ color: "#94A3B8" }}>Thông tin giúp đánh giá năng lực và kinh nghiệm thực tế.</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div><label className={labelCls}>Công ty hiện tại *</label><input className={inputCls} style={inputStyle} value={form.company} onChange={(e) => set("company", e.target.value)} /></div>
@@ -257,15 +257,15 @@ export default function MentorOnboardingPage() {
 
         {step === 3 && (
           <Card>
-            <h2 className="font-bold mb-2" style={{ color: "#093774" }}>3. Định hướng đồng hành</h2>
+            <h2 className="font-bold mb-2" style={{ color: "#0F766E" }}>3. Định hướng đồng hành</h2>
             <p className="text-sm mb-4" style={{ color: "#94A3B8" }}>Chọn nhóm năng lực bạn tự tin hỗ trợ tốt nhất.</p>
             <div className="space-y-2">
               {FOCUS_OPTIONS.map(([value, label]) => (
                 <button key={value} type="button" onClick={() => toggleFocus(value)}
                   className="w-full text-left px-4 py-3 rounded-lg border transition"
-                  style={{ borderColor: form.mentoringFocus.includes(value) ? "#093774" : "#E5E0D5", background: form.mentoringFocus.includes(value) ? "#EEF2F9" : "#fff" }}>
-                  <span className="text-sm" style={{ color: "#2C335D" }}>{label}</span>
-                  {form.mentoringFocus.includes(value) && <span className="float-right" style={{ color: "#093774" }}>✓</span>}
+                  style={{ borderColor: form.mentoringFocus.includes(value) ? "#0F766E" : "#E5E0D5", background: form.mentoringFocus.includes(value) ? "#EEF2F9" : "#fff" }}>
+                  <span className="text-sm" style={{ color: "#292524" }}>{label}</span>
+                  {form.mentoringFocus.includes(value) && <span className="float-right" style={{ color: "#0F766E" }}>✓</span>}
                 </button>
               ))}
             </div>
@@ -274,15 +274,15 @@ export default function MentorOnboardingPage() {
 
         {step === 4 && (
           <Card>
-            <h2 className="font-bold mb-2" style={{ color: "#093774" }}>4. Kinh nghiệm mentoring & sẵn sàng</h2>
+            <h2 className="font-bold mb-2" style={{ color: "#0F766E" }}>4. Kinh nghiệm mentoring & sẵn sàng</h2>
             <div className="space-y-3 mb-4">
               <label className="flex items-center gap-3 cursor-pointer">
                 <input type="checkbox" checked={form.hasMentoredBefore} onChange={(e) => set("hasMentoredBefore", e.target.checked)} />
-                <span className="text-sm" style={{ color: "#2C335D" }}>Tôi đã từng làm mentor cho cộng đồng</span>
+                <span className="text-sm" style={{ color: "#292524" }}>Tôi đã từng làm mentor cho cộng đồng</span>
               </label>
               <label className="flex items-center gap-3 cursor-pointer">
                 <input type="checkbox" checked={form.hasMentoredStartup} onChange={(e) => set("hasMentoredStartup", e.target.checked)} />
-                <span className="text-sm" style={{ color: "#2C335D" }}>Tôi đã từng mentor cho SME/Startup</span>
+                <span className="text-sm" style={{ color: "#292524" }}>Tôi đã từng mentor cho SME/Startup</span>
               </label>
             </div>
             <label className={labelCls}>Lý do muốn tham gia làm mentor * (tối thiểu 100 ký tự)</label>
@@ -295,7 +295,7 @@ export default function MentorOnboardingPage() {
 
         {step === 5 && (
           <Card>
-            <h2 className="font-bold mb-2" style={{ color: "#093774" }}>5. Khả năng đồng hành & tài liệu bổ sung</h2>
+            <h2 className="font-bold mb-2" style={{ color: "#0F766E" }}>5. Khả năng đồng hành & tài liệu bổ sung</h2>
             <div className="space-y-4">
               <div>
                 <label className={labelCls}>Số lượng Mentee có thể nhận</label>
@@ -320,7 +320,7 @@ export default function MentorOnboardingPage() {
 
         {step === 6 && (
           <Card>
-            <h2 className="font-bold mb-2" style={{ color: "#093774" }}>6. Xác nhận & cam kết</h2>
+            <h2 className="font-bold mb-2" style={{ color: "#0F766E" }}>6. Xác nhận & cam kết</h2>
             <p className="text-sm mb-4" style={{ color: "#94A3B8" }}>
               "Mentoring là hành trình cho đi trên tinh thần tự nguyện và tử tế. Cảm ơn bạn đã sẵn lòng đồng hành."
             </p>
@@ -328,7 +328,7 @@ export default function MentorOnboardingPage() {
               {COMMITMENTS.map(([key, label]) => (
                 <label key={key} className="flex items-start gap-3 py-1 cursor-pointer">
                   <input type="checkbox" className="mt-1" checked={form[key as keyof typeof form] as boolean} onChange={(e) => set(key as any, e.target.checked)} />
-                  <span className="text-sm" style={{ color: "#2C335D" }}>{label}</span>
+                  <span className="text-sm" style={{ color: "#292524" }}>{label}</span>
                 </label>
               ))}
             </div>
@@ -344,7 +344,7 @@ export default function MentorOnboardingPage() {
             ← Quay lại
           </button>
           {step < 6 ? (
-            <button type="button" onClick={next} disabled={!stepValid(step)} className="px-6 py-2.5 rounded-full font-semibold text-white transition disabled:opacity-40 disabled:cursor-not-allowed" style={{ background: stepValid(step) ? "#093774" : "#CBD5E1" }}>
+            <button type="button" onClick={next} disabled={!stepValid(step)} className="px-6 py-2.5 rounded-full font-semibold text-white transition disabled:opacity-40 disabled:cursor-not-allowed" style={{ background: stepValid(step) ? "#0F766E" : "#CBD5E1" }}>
               Tiếp tục →
             </button>
           ) : (

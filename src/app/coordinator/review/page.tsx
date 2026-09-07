@@ -93,7 +93,7 @@ export default function ReviewApplicationsPage() {
 
   return (
     <AppShell title="Duyệt đơn">
-      <h1 className="text-2xl font-bold mb-6" style={{ color: "#093774" }}>
+      <h1 className="text-2xl font-bold mb-6" style={{ color: "#0F766E" }}>
         Duyệt đơn đăng ký
       </h1>
 
@@ -112,8 +112,8 @@ export default function ReviewApplicationsPage() {
             }}
             className="px-4 py-2 rounded-full text-sm font-semibold transition"
             style={{
-              background: tab === key ? "#093774" : "#fff",
-              color: tab === key ? "#fff" : "#2C335D",
+              background: tab === key ? "#0F766E" : "#fff",
+              color: tab === key ? "#fff" : "#292524",
               border: "1px solid #E5E0D5",
             }}
           >
@@ -132,7 +132,7 @@ export default function ReviewApplicationsPage() {
       )}
 
       {loading ? (
-        <p style={{ color: "#2C335D" }}>Đang tải...</p>
+        <p style={{ color: "#292524" }}>Đang tải...</p>
       ) : tab === "mentor" ? (
         mentorCount === 0 ? (
           <Card>
@@ -146,13 +146,13 @@ export default function ReviewApplicationsPage() {
               <Card key={m.id}>
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
-                    <h2 className="font-bold" style={{ color: "#093774" }}>
+                    <h2 className="font-bold" style={{ color: "#0F766E" }}>
                       {m.user.fullName}
                     </h2>
                     <p className="text-xs" style={{ color: "#94A3B8" }}>
                       {m.user.email}
                     </p>
-                    <div className="mt-3 grid grid-cols-2 gap-2 text-sm" style={{ color: "#2C335D" }}>
+                    <div className="mt-3 grid grid-cols-2 gap-2 text-sm" style={{ color: "#292524" }}>
                       <span><b>Công ty:</b> {ph(m.professionalJson, "company")}</span>
                       <span><b>Chức danh:</b> {ph(m.professionalJson, "title")}</span>
                       <span><b>KN (năm):</b> {ph(m.professionalJson, "yearsExperience")}</span>
@@ -161,7 +161,7 @@ export default function ReviewApplicationsPage() {
                       <span><b>Sức chứa:</b> {m.capacityMax} mentee</span>
                     </div>
                     {m.readinessJson?.reason && (
-                      <p className="mt-2 text-sm" style={{ color: "#2C335D" }}>
+                      <p className="mt-2 text-sm" style={{ color: "#292524" }}>
                         <b>Lý do:</b> {m.readinessJson.reason}
                       </p>
                     )}
@@ -191,13 +191,13 @@ export default function ReviewApplicationsPage() {
             <Card key={m.id}>
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
-                  <h2 className="font-bold" style={{ color: "#093774" }}>
+                  <h2 className="font-bold" style={{ color: "#0F766E" }}>
                     {m.user.fullName}
                   </h2>
                   <p className="text-xs" style={{ color: "#94A3B8" }}>
                     {m.user.email}
                   </p>
-                  <div className="mt-3 grid grid-cols-2 gap-2 text-sm" style={{ color: "#2C335D" }}>
+                  <div className="mt-3 grid grid-cols-2 gap-2 text-sm" style={{ color: "#292524" }}>
                     <span><b>Ngành học:</b> {ph(m.profileJson, "major")}</span>
                     <span><b>Trường:</b> {ph(m.profileJson, "school")}</span>
                     <span><b>Thành phố:</b> {ph(m.profileJson, "city")}</span>
@@ -213,7 +213,7 @@ export default function ReviewApplicationsPage() {
                     </div>
                   )}
                   {m.goalText && (
-                    <p className="mt-2 text-sm" style={{ color: "#2C335D" }}>
+                    <p className="mt-2 text-sm" style={{ color: "#292524" }}>
                       <b>Mục tiêu:</b> {m.goalText}
                     </p>
                   )}

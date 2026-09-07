@@ -10,11 +10,13 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          navy: "#093774",
-          coral: "#FF6859",
-          growth: "#15B5B0",
-          cream: "#FFF3E6",
-          dark: "#2C335D",
+          primary: "#0F766E",
+          primaryDark: "#134E4A",
+          teal: "#15B5B0",
+          accent: "#B45309",
+          amber: "#D97706",
+          bg: "#F5F2EC",
+          text: "#292524",
         },
       },
       fontFamily: {

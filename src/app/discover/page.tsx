@@ -88,7 +88,7 @@ export default function DiscoverPage() {
 
   return (
     <AppShell title="Khám phá & Kết nối">
-      <h1 className="text-2xl font-bold mb-6" style={{ color: "#093774" }}>
+      <h1 className="text-2xl font-bold mb-6" style={{ color: "#0F766E" }}>
         Kết nối đồng hành
       </h1>
 
@@ -105,8 +105,8 @@ export default function DiscoverPage() {
             onClick={() => setViewing(key)}
             className="px-4 py-2 rounded-full text-sm font-semibold transition"
             style={{
-              background: viewing === key ? "#093774" : "#fff",
-              color: viewing === key ? "#fff" : "#2C335D",
+              background: viewing === key ? "#0F766E" : "#fff",
+              color: viewing === key ? "#fff" : "#292524",
               border: "1px solid #E5E0D5",
             }}
           >
@@ -118,14 +118,14 @@ export default function DiscoverPage() {
       {msg && (
         <div
           className="mb-4 rounded-lg px-4 py-3 text-sm"
-          style={{ background: msg.startsWith("✅") ? "#E6F4EA" : "#FCE8E6", color: "#2C335D" }}
+          style={{ background: msg.startsWith("✅") ? "#E6F4EA" : "#FCE8E6", color: "#292524" }}
         >
           {msg}
         </div>
       )}
 
       {loading ? (
-        <p style={{ color: "#2C335D" }}>Đang tải...</p>
+        <p style={{ color: "#292524" }}>Đang tải...</p>
       ) : viewing === "mentor" ? (
         mentors.length === 0 ? (
           <Card><p className="text-sm" style={{ color: "#94A3B8" }}>Chưa có mentor sẵn sàng ghép cặp.</p></Card>
@@ -134,15 +134,15 @@ export default function DiscoverPage() {
             {mentors.map((m) => (
               <Card key={m.id}>
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold" style={{ background: "#093774" }}>
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold" style={{ background: "#0F766E" }}>
                     {(m.user.fullName?.[0] ?? "?").toUpperCase()}
                   </div>
                   <div>
-                    <h3 className="font-bold" style={{ color: "#093774" }}>{m.user.fullName}</h3>
+                    <h3 className="font-bold" style={{ color: "#0F766E" }}>{m.user.fullName}</h3>
                     <p className="text-xs" style={{ color: "#94A3B8" }}>{ph(m.professionalJson, "title")}</p>
                   </div>
                 </div>
-                <div className="space-y-1 text-sm" style={{ color: "#2C335D" }}>
+                <div className="space-y-1 text-sm" style={{ color: "#292524" }}>
                   <p>🏢 {ph(m.professionalJson, "company")}</p>
                   <p>💼 {ph(m.professionalJson, "yearsExperience")} năm KN</p>
                   <p>📍 {ph(m.identityJson, "city") || "—"}</p>
@@ -183,11 +183,11 @@ export default function DiscoverPage() {
                   {(m.user.fullName?.[0] ?? "?").toUpperCase()}
                 </div>
                 <div>
-                  <h3 className="font-bold" style={{ color: "#093774" }}>{m.user.fullName}</h3>
+                  <h3 className="font-bold" style={{ color: "#0F766E" }}>{m.user.fullName}</h3>
                   <p className="text-xs" style={{ color: "#94A3B8" }}>{ph(m.profileJson, "major")} · {ph(m.profileJson, "school")}</p>
                 </div>
               </div>
-              <div className="space-y-1 text-sm" style={{ color: "#2C335D" }}>
+              <div className="space-y-1 text-sm" style={{ color: "#292524" }}>
                 <p>📍 {ph(m.profileJson, "city") || "—"}</p>
               </div>
               {m.needs?.length > 0 && (
@@ -213,22 +213,22 @@ export default function DiscoverPage() {
       {selectedMentor && (
         <DetailModal title="Hồ sơ Mentor" onClose={() => setSelectedMentor(null)}>
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-14 h-14 rounded-full flex items-center justify-center text-white text-xl font-bold" style={{ background: "#093774" }}>
+            <div className="w-14 h-14 rounded-full flex items-center justify-center text-white text-xl font-bold" style={{ background: "#0F766E" }}>
               {(selectedMentor.user.fullName?.[0] ?? "?").toUpperCase()}
             </div>
             <div>
-              <h3 className="text-lg font-bold" style={{ color: "#093774" }}>{selectedMentor.user.fullName}</h3>
+              <h3 className="text-lg font-bold" style={{ color: "#0F766E" }}>{selectedMentor.user.fullName}</h3>
               <p className="text-sm" style={{ color: "#94A3B8" }}>{ph(selectedMentor.professionalJson, "title")} @ {ph(selectedMentor.professionalJson, "company")}</p>
             </div>
           </div>
-          <div className="space-y-2 text-sm" style={{ color: "#2C335D" }}>
+          <div className="space-y-2 text-sm" style={{ color: "#292524" }}>
             <p><b>Kinh nghiệm:</b> {ph(selectedMentor.professionalJson, "yearsExperience")} năm · Quản lý {ph(selectedMentor.professionalJson, "yearsManagement")} năm</p>
             <p><b>Ngành:</b> {selectedMentor.industry ?? "—"}</p>
             <p><b>Thành phố:</b> {ph(selectedMentor.identityJson, "city") || "—"}</p>
             <p><b>Bằng cấp:</b> {ph(selectedMentor.professionalJson, "degree") || "—"}</p>
           </div>
           {selectedMentor.readinessJson?.reason && (
-            <div className="mt-3 p-3 rounded-lg italic text-sm" style={{ background: "#F2F9F4", color: "#2C335D" }}>
+            <div className="mt-3 p-3 rounded-lg italic text-sm" style={{ background: "#F2F9F4", color: "#292524" }}>
               "{selectedMentor.readinessJson.reason}"
             </div>
           )}
@@ -248,11 +248,11 @@ export default function DiscoverPage() {
               {(selectedMentee.user.fullName?.[0] ?? "?").toUpperCase()}
             </div>
             <div>
-              <h3 className="text-lg font-bold" style={{ color: "#093774" }}>{selectedMentee.user.fullName}</h3>
+              <h3 className="text-lg font-bold" style={{ color: "#0F766E" }}>{selectedMentee.user.fullName}</h3>
               <p className="text-sm" style={{ color: "#94A3B8" }}>{ph(selectedMentee.profileJson, "major")} · {ph(selectedMentee.profileJson, "school")}</p>
             </div>
           </div>
-          <div className="space-y-2 text-sm" style={{ color: "#2C335D" }}>
+          <div className="space-y-2 text-sm" style={{ color: "#292524" }}>
             <p><b>Thành phố:</b> {ph(selectedMentee.profileJson, "city") || "—"}</p>
             <p><b>Năm học:</b> {ph(selectedMentee.profileJson, "yearOfStudy") || "—"}</p>
           </div>
@@ -264,7 +264,7 @@ export default function DiscoverPage() {
             </div>
           )}
           {selectedMentee.goalText && (
-            <p className="mt-3 text-sm" style={{ color: "#2C335D" }}>🎯 <b>Mục tiêu:</b> {selectedMentee.goalText}</p>
+            <p className="mt-3 text-sm" style={{ color: "#292524" }}>🎯 <b>Mục tiêu:</b> {selectedMentee.goalText}</p>
           )}
           <div className="mt-4">
             <Button onClick={() => { requestConnect(selectedMentee.id); setSelectedMentee(null); }} disabled={busy}>
@@ -282,7 +282,7 @@ function DetailModal({ title, onClose, children }: { title: string; onClose: () 
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(9,55,116,.5)" }}>
       <div className="bg-white rounded-2xl p-6 w-full max-w-lg max-h-[85vh] overflow-y-auto shadow-2xl">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold" style={{ color: "#093774" }}>{title}</h2>
+          <h2 className="text-lg font-bold" style={{ color: "#0F766E" }}>{title}</h2>
           <button onClick={onClose} className="text-2xl leading-none" style={{ color: "#94A3B8" }}>×</button>
         </div>
         {children}

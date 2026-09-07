@@ -93,14 +93,14 @@ export default function AdminPage() {
   if (loading || !stats) {
     return (
       <AppShell title="Admin">
-        <p style={{ color: "#2C335D" }}>Đang tải...</p>
+        <p style={{ color: "#292524" }}>Đang tải...</p>
       </AppShell>
     );
   }
 
   return (
     <AppShell title="Quản trị hệ thống">
-      <h1 className="text-2xl font-bold mb-1" style={{ color: "#093774" }}>
+      <h1 className="text-2xl font-bold mb-1" style={{ color: "#0F766E" }}>
         🛠️ Bảng quản trị (Admin)
       </h1>
       <p className="text-sm mb-6" style={{ color: "#94A3B8" }}>
@@ -109,19 +109,19 @@ export default function AdminPage() {
 
       {/* Dashboard số liệu */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <StatBox label="Người dùng" value={stats.totalUsers} color="#093774" />
+        <StatBox label="Người dùng" value={stats.totalUsers} color="#0F766E" />
         <StatBox label="Mentor" value={stats.totalMentors} color="#15B5B0" />
         <StatBox label="Mentee" value={stats.totalMentees} color="#1BA7A6" />
         <StatBox label="Đơn mentor chờ" value={stats.pendingMentorApps} color="#F2A93B" />
         <StatBox label="Đơn mentee chờ" value={stats.pendingMenteeApps} color="#F2A93B" />
         <StatBox label="Cặp đang hoạt động" value={stats.activeMatches} color="#15803D" />
-        <StatBox label="Tổng cặp" value={stats.totalMatches} color="#0D2B45" />
-        <StatBox label="Chứng nhận" value={stats.totalCertificates} color="#FF7A59" />
+        <StatBox label="Tổng cặp" value={stats.totalMatches} color="#134E4A" />
+        <StatBox label="Chứng nhận" value={stats.totalCertificates} color="#D97706" />
       </div>
 
       {/* Quản lý chương trình đào tạo */}
       <Card>
-        <h2 className="font-bold mb-4" style={{ color: "#093774" }}>
+        <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
           📚 Quản lý chương trình đào tạo
         </h2>
 
@@ -131,13 +131,13 @@ export default function AdminPage() {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Tên module"
             className="px-3 py-2 rounded-lg border text-sm"
-            style={{ borderColor: "#E5E0D5", color: "#2C335D" }}
+            style={{ borderColor: "#E5E0D5", color: "#292524" }}
           />
           <select
             value={audience}
             onChange={(e) => setAudience(e.target.value as any)}
             className="px-3 py-2 rounded-lg border text-sm"
-            style={{ borderColor: "#E5E0D5", color: "#2C335D" }}
+            style={{ borderColor: "#E5E0D5", color: "#292524" }}
           >
             <option value="all">Tất cả</option>
             <option value="mentor">Mentor</option>
@@ -149,9 +149,9 @@ export default function AdminPage() {
             onChange={(e) => setSortOrder(Number(e.target.value))}
             placeholder="Thứ tự"
             className="px-3 py-2 rounded-lg border text-sm"
-            style={{ borderColor: "#E5E0D5", color: "#2C335D" }}
+            style={{ borderColor: "#E5E0D5", color: "#292524" }}
           />
-          <label className="flex items-center gap-2 text-sm" style={{ color: "#2C335D" }}>
+          <label className="flex items-center gap-2 text-sm" style={{ color: "#292524" }}>
             <input
               type="checkbox"
               checked={required}
@@ -182,18 +182,18 @@ export default function AdminPage() {
                 style={{ borderColor: "#F5F2EC" }}
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-sm font-medium" style={{ color: "#2C335D" }}>
+                  <span className="text-sm font-medium" style={{ color: "#292524" }}>
                     {m.title}
                   </span>
-                  <Badge color={m.audience === "mentor" ? "#093774" : m.audience === "mentee" ? "#15B5B0" : "#94A3B8"}>
+                  <Badge color={m.audience === "mentor" ? "#0F766E" : m.audience === "mentee" ? "#15B5B0" : "#94A3B8"}>
                     {AUDIENCE_LABEL[m.audience]}
                   </Badge>
-                  {m.required && <Badge color="#FF6859">Bắt buộc</Badge>}
+                  {m.required && <Badge color="#B45309">Bắt buộc</Badge>}
                 </div>
                 <button
                   onClick={() => deleteModule(m.id)}
                   className="text-sm font-medium"
-                  style={{ color: "#FF6859" }}
+                  style={{ color: "#B45309" }}
                 >
                   Xoá
                 </button>

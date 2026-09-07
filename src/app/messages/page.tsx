@@ -66,14 +66,14 @@ export default function MessagesPage() {
   if (loading) {
     return (
       <AppShell title="Tin nhắn">
-        <p style={{ color: "#2C335D" }}>Đang tải...</p>
+        <p style={{ color: "#292524" }}>Đang tải...</p>
       </AppShell>
     );
   }
 
   return (
     <AppShell title="Tin nhắn">
-      <h1 className="text-2xl font-bold mb-6" style={{ color: "#093774" }}>
+      <h1 className="text-2xl font-bold mb-6" style={{ color: "#0F766E" }}>
         Tin nhắn
       </h1>
 
@@ -97,7 +97,7 @@ export default function MessagesPage() {
                   background: activeId === m.id ? "#F2F9F4" : "#fff",
                 }}
               >
-                <p className="text-sm font-semibold truncate" style={{ color: "#093774" }}>
+                <p className="text-sm font-semibold truncate" style={{ color: "#0F766E" }}>
                   {m.mentorApplication.user.fullName} ↔ {m.menteeApplication.user.fullName}
                 </p>
               </button>
@@ -128,8 +128,8 @@ export default function MessagesPage() {
                           <div
                             className="max-w-[75%] px-4 py-2 rounded-2xl text-sm"
                             style={{
-                              background: mine ? "#093774" : "#F2F9F4",
-                              color: mine ? "#fff" : "#2C335D",
+                              background: mine ? "#0F766E" : "#F2F9F4",
+                              color: mine ? "#fff" : "#292524",
                             }}
                           >
                             <p>{msg.content}</p>
@@ -152,7 +152,7 @@ export default function MessagesPage() {
                     onChange={(e) => setDraft(e.target.value)}
                     placeholder="Nhập tin nhắn..."
                     className="flex-1 px-4 py-2.5 rounded-lg border text-sm"
-                    style={{ borderColor: "#E5E0D5", color: "#2C335D" }}
+                    style={{ borderColor: "#E5E0D5", color: "#292524" }}
                   />
                   <Button type="submit" disabled={!draft.trim()}>
                     Gửi

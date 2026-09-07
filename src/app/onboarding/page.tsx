@@ -7,11 +7,11 @@ export default function OnboardingPage() {
   const { user } = useUser();
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center" style={{ background: "#FFF3E6" }}>
-      <h1 className="text-3xl font-bold" style={{ color: "#093774" }}>
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center" style={{ background: "#F5F2EC" }}>
+      <h1 className="text-3xl font-bold" style={{ color: "#0F766E" }}>
         Chào {user?.firstName ?? "bạn"} 👋
       </h1>
-      <p className="mt-3 text-lg max-w-md" style={{ color: "#2C335D" }}>
+      <p className="mt-3 text-lg max-w-md" style={{ color: "#292524" }}>
         Bạn muốn tham gia chương trình với vai trò nào?
       </p>
 
@@ -22,10 +22,10 @@ export default function OnboardingPage() {
           style={{ background: "#fff", borderColor: "#F5F2EC" }}
         >
           <div className="text-3xl mb-3">🧑‍🏫</div>
-          <h2 className="text-xl font-bold" style={{ color: "#093774" }}>
+          <h2 className="text-xl font-bold" style={{ color: "#0F766E" }}>
             Tôi là Mentor
           </h2>
-          <p className="mt-2 text-sm" style={{ color: "#2C335D" }}>
+          <p className="mt-2 text-sm" style={{ color: "#292524" }}>
             Chia sẻ kinh nghiệm, đồng hành cùng mentee trong suốt mùa.
           </p>
         </Link>
@@ -39,7 +39,7 @@ export default function OnboardingPage() {
           <h2 className="text-xl font-bold" style={{ color: "#15B5B0" }}>
             Tôi là Mentee
           </h2>
-          <p className="mt-2 text-sm" style={{ color: "#2C335D" }}>
+          <p className="mt-2 text-sm" style={{ color: "#292524" }}>
             Học hỏi từ mentor có kinh nghiệm, phát triển bản thân và sự nghiệp.
           </p>
         </Link>

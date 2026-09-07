@@ -49,7 +49,7 @@ export default function JourneyPage() {
   if (loading) {
     return (
       <AppShell title="Lộ trình mentoring">
-        <p style={{ color: "#2C335D" }}>Đang tải...</p>
+        <p style={{ color: "#292524" }}>Đang tải...</p>
       </AppShell>
     );
   }
@@ -72,7 +72,7 @@ export default function JourneyPage() {
 
   return (
     <AppShell title="Lộ trình mentoring">
-      <h1 className="text-2xl font-bold mb-1" style={{ color: "#093774" }}>
+      <h1 className="text-2xl font-bold mb-1" style={{ color: "#0F766E" }}>
         🗺️ Lộ trình mentoring của bạn
       </h1>
       <p className="text-sm mb-6" style={{ color: "#94A3B8" }}>
@@ -101,7 +101,7 @@ export default function JourneyPage() {
                 <p
                   className="font-medium"
                   style={{
-                    color: s.done ? "#2C335D" : s.active ? "#093774" : "#94A3B8",
+                    color: s.done ? "#292524" : s.active ? "#0F766E" : "#94A3B8",
                   }}
                 >
                   {s.label}
@@ -123,14 +123,14 @@ export default function JourneyPage() {
 
       {/* Tiến độ đào tạo */}
       <Card className="mb-6">
-        <h2 className="font-bold mb-3" style={{ color: "#093774" }}>
+        <h2 className="font-bold mb-3" style={{ color: "#0F766E" }}>
           📚 Tiến độ đào tạo
         </h2>
-        <p className="text-sm" style={{ color: "#2C335D" }}>
+        <p className="text-sm" style={{ color: "#292524" }}>
           {data.trainingStatus.modulesCompleted}/{data.trainingStatus.modulesTotal} module{" "}
           {data.audience === "mentor" && (
             <> · Bài test:{" "}
-              <b style={{ color: data.trainingStatus.testPassed ? "#15803D" : "#FF6859" }}>
+              <b style={{ color: data.trainingStatus.testPassed ? "#15803D" : "#B45309" }}>
                 {data.trainingStatus.testPassed ? "Đạt" : "Chưa đạt"}
               </b>
             </>
@@ -143,13 +143,13 @@ export default function JourneyPage() {
 
       {/* Giấy chứng nhận mentoring */}
       <Card>
-        <h2 className="font-bold mb-3" style={{ color: "#093774" }}>
+        <h2 className="font-bold mb-3" style={{ color: "#0F766E" }}>
           🏅 Chứng nhận hoàn thành mentoring
         </h2>
 
         {data.mentoringCert ? (
           <div className="flex items-center justify-between">
-            <p className="text-sm" style={{ color: "#2C335D" }}>
+            <p className="text-sm" style={{ color: "#292524" }}>
               Bạn đã được cấp chứng nhận mentoring (Mã: {data.mentoringCert.certificateNo}).
             </p>
             <Link href={`/certificate/${data.mentoringCert.id}`}>
@@ -158,7 +158,7 @@ export default function JourneyPage() {
           </div>
         ) : data.completedMatch ? (
           <div className="flex items-center justify-between">
-            <p className="text-sm" style={{ color: "#2C335D" }}>
+            <p className="text-sm" style={{ color: "#292524" }}>
               🎉 Bạn đã hoàn thành mentoring, đủ điều kiện nhận chứng nhận.
             </p>
             <Button onClick={issueCert}>Nhận chứng nhận</Button>
@@ -176,7 +176,7 @@ export default function JourneyPage() {
         {/* Bảng danh sách chứng nhận */}
         {data.certificates.length > 0 && (
           <div className="mt-5 overflow-x-auto">
-            <table className="w-full text-sm" style={{ color: "#2C335D" }}>
+            <table className="w-full text-sm" style={{ color: "#292524" }}>
               <thead>
                 <tr style={{ borderBottom: "2px solid #F5F2EC" }}>
                   <th className="text-left py-2 font-semibold">Mã chứng nhận</th>

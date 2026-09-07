@@ -60,28 +60,28 @@ export default function JourneyPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen px-6 py-10" style={{ background: "#FFF3E6" }}>
-        <p style={{ color: "#2C335D" }}>Đang tải...</p>
+      <div className="min-h-screen px-6 py-10" style={{ background: "#F5F2EC" }}>
+        <p style={{ color: "#292524" }}>Đang tải...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen px-6 py-10" style={{ background: "#FFF3E6" }}>
+    <div className="min-h-screen px-6 py-10" style={{ background: "#F5F2EC" }}>
       <div className="max-w-2xl mx-auto">
-        <Link href={`/workspace/${matchId}`} className="text-sm" style={{ color: "#093774" }}>
+        <Link href={`/workspace/${matchId}`} className="text-sm" style={{ color: "#0F766E" }}>
           ← Quay lại
         </Link>
-        <h1 className="text-2xl font-bold mt-2 mb-2" style={{ color: "#093774" }}>
+        <h1 className="text-2xl font-bold mt-2 mb-2" style={{ color: "#0F766E" }}>
           Nhật ký hành trình
         </h1>
-        <p className="text-sm mb-6" style={{ color: "#2C335D" }}>
+        <p className="text-sm mb-6" style={{ color: "#292524" }}>
           Ghi lại hành trình của hai bạn — những gì đã cùng nhau trải qua và nhận ra.
         </p>
 
         {/* Form thêm */}
         <Card className="mb-8">
-          <h2 className="font-bold mb-3" style={{ color: "#093774" }}>
+          <h2 className="font-bold mb-3" style={{ color: "#0F766E" }}>
             Thêm vào nhật ký
           </h2>
           <form onSubmit={add} className="space-y-3">
@@ -93,8 +93,8 @@ export default function JourneyPage() {
                   onClick={() => setCategory(c.id)}
                   className="px-3 py-1.5 rounded-full text-xs font-semibold transition"
                   style={{
-                    background: category === c.id ? "#093774" : "#F5F2EC",
-                    color: category === c.id ? "#fff" : "#2C335D",
+                    background: category === c.id ? "#0F766E" : "#F5F2EC",
+                    color: category === c.id ? "#fff" : "#292524",
                   }}
                 >
                   {c.icon} {c.label}
@@ -106,7 +106,7 @@ export default function JourneyPage() {
               onChange={(e) => setContent(e.target.value)}
               rows={3}
               className="w-full px-4 py-2.5 rounded-lg border text-sm"
-              style={{ borderColor: "#E5E0D5", color: "#2C335D" }}
+              style={{ borderColor: "#E5E0D5", color: "#292524" }}
               placeholder={`Ghi ${CATEGORIES.find((c) => c.id === category)?.label.toLowerCase()}...`}
             />
             <div className="flex justify-end">
@@ -122,7 +122,7 @@ export default function JourneyPage() {
           const items = entries.filter((e) => e.category === cat.id);
           return (
             <div key={cat.id} className="mb-6">
-              <h3 className="font-bold mb-2 flex items-center gap-2" style={{ color: "#093774" }}>
+              <h3 className="font-bold mb-2 flex items-center gap-2" style={{ color: "#0F766E" }}>
                 <span>{cat.icon}</span> {cat.label}
                 <span className="text-xs font-normal" style={{ color: "#94A3B8" }}>
                   ({items.length})
@@ -140,7 +140,7 @@ export default function JourneyPage() {
                       className="p-3 rounded-lg bg-white border"
                       style={{ borderColor: "#F5F2EC" }}
                     >
-                      <p className="text-sm" style={{ color: "#2C335D" }}>
+                      <p className="text-sm" style={{ color: "#292524" }}>
                         {item.content}
                       </p>
                       <p className="text-xs mt-1" style={{ color: "#94A3B8" }}>

@@ -43,12 +43,12 @@ export default function SupportPage() {
   }
 
   return (
-    <div className="min-h-screen px-6 py-10" style={{ background: "#FFF3E6" }}>
+    <div className="min-h-screen px-6 py-10" style={{ background: "#F5F2EC" }}>
       <div className="max-w-xl mx-auto">
-        <Link href="/workspace" className="text-sm" style={{ color: "#093774" }}>
+        <Link href="/workspace" className="text-sm" style={{ color: "#0F766E" }}>
           ← Quay lại
         </Link>
-        <h1 className="text-2xl font-bold mt-2 mb-6" style={{ color: "#FF6859" }}>
+        <h1 className="text-2xl font-bold mt-2 mb-6" style={{ color: "#B45309" }}>
           Cần ĐPV hỗ trợ
         </h1>
 
@@ -61,7 +61,7 @@ export default function SupportPage() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
             <Card>
-              <h2 className="font-bold mb-4" style={{ color: "#093774" }}>
+              <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
                 Mô tả vấn đề
               </h2>
               <textarea
@@ -69,7 +69,7 @@ export default function SupportPage() {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-lg border text-sm"
-                style={{ borderColor: "#E5E0D5", color: "#2C335D" }}
+                style={{ borderColor: "#E5E0D5", color: "#292524" }}
                 placeholder="Bạn đang gặp khó khăn gì? Điều phối viên sẽ giúp bạn."
               />
             </Card>

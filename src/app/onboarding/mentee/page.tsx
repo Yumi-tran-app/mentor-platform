@@ -127,18 +127,18 @@ export default function MenteeOnboardingPage() {
   }
 
   const inputCls = "w-full px-4 py-2.5 rounded-lg border text-sm";
-  const inputStyle = { borderColor: "#E5E0D5", color: "#2C335D" };
+  const inputStyle = { borderColor: "#E5E0D5", color: "#292524" };
   const labelCls = "text-sm font-medium block mb-1";
 
   const progressPct = (step / 5) * 100;
 
   return (
-    <div className="min-h-screen px-6 py-10" style={{ background: "#FFF3E6" }}>
+    <div className="min-h-screen px-6 py-10" style={{ background: "#F5F2EC" }}>
       <div className="max-w-2xl mx-auto">
         <h1 className="text-2xl font-bold mb-1" style={{ color: "#15B5B0" }}>
           Đăng ký Mentee
         </h1>
-        <p className="text-sm mb-4" style={{ color: "#2C335D" }}>
+        <p className="text-sm mb-4" style={{ color: "#292524" }}>
           Bước {step}/5 · {STEPS[step - 1]}
         </p>
 
@@ -152,7 +152,7 @@ export default function MenteeOnboardingPage() {
 
         {step === 1 && (
           <Card>
-            <h2 className="font-bold mb-2" style={{ color: "#093774" }}>
+            <h2 className="font-bold mb-2" style={{ color: "#0F766E" }}>
               1. Thông tin xác thực
             </h2>
             <p className="text-sm mb-4" style={{ color: "#94A3B8" }}>
@@ -161,7 +161,7 @@ export default function MenteeOnboardingPage() {
 
             <div className="mb-4 flex gap-3 p-3 rounded-lg" style={{ background: "#F2F9F4", border: "1px solid #D1E7D9" }}>
               <span className="text-lg">🛡️</span>
-              <p className="text-sm" style={{ color: "#2C335D" }}>
+              <p className="text-sm" style={{ color: "#292524" }}>
                 Khuyến khích sử dụng email có đuôi <b>@edu</b> hoặc <b>@*.edu.vn</b> để xác thực diễn ra thuận lợi. Thông tin này <b>không hiển thị công khai</b>.
               </p>
             </div>
@@ -189,7 +189,7 @@ export default function MenteeOnboardingPage() {
 
         {step === 2 && (
           <Card>
-            <h2 className="font-bold mb-2" style={{ color: "#093774" }}>
+            <h2 className="font-bold mb-2" style={{ color: "#0F766E" }}>
               2. Thông tin cá nhân
             </h2>
             <p className="text-sm mb-4" style={{ color: "#94A3B8" }}>
@@ -221,7 +221,7 @@ export default function MenteeOnboardingPage() {
 
         {step === 3 && (
           <Card>
-            <h2 className="font-bold mb-2" style={{ color: "#093774" }}>
+            <h2 className="font-bold mb-2" style={{ color: "#0F766E" }}>
               3. Bạn cần hỗ trợ điều gì?
             </h2>
             <p className="text-sm mb-4" style={{ color: "#94A3B8" }}>
@@ -239,7 +239,7 @@ export default function MenteeOnboardingPage() {
                     background: form.needs.includes(value) ? "#F2F9F4" : "#fff",
                   }}
                 >
-                  <span className="text-sm" style={{ color: "#2C335D" }}>{label}</span>
+                  <span className="text-sm" style={{ color: "#292524" }}>{label}</span>
                   {form.needs.includes(value) && (
                     <span className="float-right" style={{ color: "#15B5B0" }}>✓</span>
                   )}
@@ -251,7 +251,7 @@ export default function MenteeOnboardingPage() {
 
         {step === 4 && (
           <Card>
-            <h2 className="font-bold mb-2" style={{ color: "#093774" }}>
+            <h2 className="font-bold mb-2" style={{ color: "#0F766E" }}>
               4. Mục tiêu kỳ vọng
             </h2>
             <p className="text-sm mb-4" style={{ color: "#94A3B8" }}>
@@ -274,7 +274,7 @@ export default function MenteeOnboardingPage() {
 
         {step === 5 && (
           <Card>
-            <h2 className="font-bold mb-2" style={{ color: "#093774" }}>
+            <h2 className="font-bold mb-2" style={{ color: "#0F766E" }}>
               5. Đồng thuận & Bảo mật
             </h2>
             <p className="text-sm mb-4" style={{ color: "#94A3B8" }}>
@@ -282,7 +282,7 @@ export default function MenteeOnboardingPage() {
             </p>
             <ul className="space-y-3 mb-6">
               {CONSENTS.map((c, i) => (
-                <li key={i} className="flex gap-3 text-sm" style={{ color: "#2C335D" }}>
+                <li key={i} className="flex gap-3 text-sm" style={{ color: "#292524" }}>
                   <span style={{ color: "#15B5B0" }}>✓</span>
                   <span>{c}</span>
                 </li>
@@ -315,7 +315,7 @@ export default function MenteeOnboardingPage() {
               onClick={next}
               disabled={!stepValid(step)}
               className="px-6 py-2.5 rounded-full font-semibold text-white transition disabled:opacity-40 disabled:cursor-not-allowed"
-              style={{ background: stepValid(step) ? "#093774" : "#CBD5E1" }}
+              style={{ background: stepValid(step) ? "#0F766E" : "#CBD5E1" }}
             >
               Tiếp tục →
             </button>

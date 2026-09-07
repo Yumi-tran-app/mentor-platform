@@ -176,7 +176,7 @@ export default function MatchmakingPage() {
 
   return (
     <AppShell title="Ghép cặp">
-      <h1 className="text-2xl font-bold mb-1" style={{ color: "#093774" }}>
+      <h1 className="text-2xl font-bold mb-1" style={{ color: "#0F766E" }}>
         Ghép cặp & duyệt kết nối
       </h1>
       <p className="text-sm mb-6" style={{ color: "#94A3B8" }}>
@@ -195,8 +195,8 @@ export default function MatchmakingPage() {
             onClick={() => setTab(key)}
             className="px-4 py-2 rounded-full text-sm font-semibold transition"
             style={{
-              background: tab === key ? "#093774" : "#fff",
-              color: tab === key ? "#fff" : "#2C335D",
+              background: tab === key ? "#0F766E" : "#fff",
+              color: tab === key ? "#fff" : "#292524",
               border: "1px solid #E5E0D5",
             }}
           >
@@ -208,14 +208,14 @@ export default function MatchmakingPage() {
       {msg && (
         <div
           className="mb-4 rounded-lg px-4 py-3 text-sm"
-          style={{ background: msg.startsWith("✅") || msg.startsWith("ℹ️") ? "#E6F4EA" : "#FCE8E6", color: "#2C335D" }}
+          style={{ background: msg.startsWith("✅") || msg.startsWith("ℹ️") ? "#E6F4EA" : "#FCE8E6", color: "#292524" }}
         >
           {msg}
         </div>
       )}
 
       {loading ? (
-        <p style={{ color: "#2C335D" }}>Đang tải...</p>
+        <p style={{ color: "#292524" }}>Đang tải...</p>
       ) : tab === "queue" ? (
         queue.length === 0 ? (
           <Card><p className="text-sm" style={{ color: "#94A3B8" }}>Không có cặp nào chờ duyệt.</p></Card>
@@ -238,12 +238,12 @@ export default function MatchmakingPage() {
                           </span>
                         )}
                       </div>
-                      <div className="mt-3 grid grid-cols-2 gap-2 text-sm" style={{ color: "#2C335D" }}>
+                      <div className="mt-3 grid grid-cols-2 gap-2 text-sm" style={{ color: "#292524" }}>
                         <span>🧑‍🏫 <b>Mentor:</b> {m.mentorApplication.user.fullName}</span>
                         <span>🎓 <b>Mentee:</b> {m.menteeApplication.user.fullName}</span>
                       </div>
                       {m.goalText && (
-                        <p className="mt-2 text-sm" style={{ color: "#2C335D" }}>
+                        <p className="mt-2 text-sm" style={{ color: "#292524" }}>
                           🎯 <b>Mục tiêu:</b> {m.goalText}
                         </p>
                       )}
@@ -285,7 +285,7 @@ export default function MatchmakingPage() {
                 <Card key={m.id}>
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1">
-                      <h3 className="font-bold text-sm" style={{ color: "#093774" }}>{m.user.fullName}</h3>
+                      <h3 className="font-bold text-sm" style={{ color: "#0F766E" }}>{m.user.fullName}</h3>
                       <p className="text-xs" style={{ color: "#94A3B8" }}>
                         {ph(m.profileJson, "major")} · {ph(m.profileJson, "school")}
                       </p>
@@ -297,7 +297,7 @@ export default function MatchmakingPage() {
                         </div>
                       )}
                       {m.hasActiveMatch && (
-                        <p className="mt-1 text-xs" style={{ color: "#FF6859" }}>Đã có cặp đang hoạt động</p>
+                        <p className="mt-1 text-xs" style={{ color: "#B45309" }}>Đã có cặp đang hoạt động</p>
                       )}
                     </div>
                     <Button onClick={() => recommend(m.id)} disabled={busy === m.id || m.hasActiveMatch}>
@@ -311,7 +311,7 @@ export default function MatchmakingPage() {
 
           {/* Mentor khả dụng */}
           <div>
-            <h2 className="font-bold mb-3" style={{ color: "#093774" }}>
+            <h2 className="font-bold mb-3" style={{ color: "#0F766E" }}>
               Mentor khả dụng ({mentors.length})
             </h2>
             <div className="space-y-3">
@@ -322,7 +322,7 @@ export default function MatchmakingPage() {
                 <Card key={m.id}>
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex-1">
-                      <h3 className="font-bold text-sm" style={{ color: "#093774" }}>{m.user.fullName}</h3>
+                      <h3 className="font-bold text-sm" style={{ color: "#0F766E" }}>{m.user.fullName}</h3>
                       {m.industry && <Badge color="#15B5B0">{m.industry}</Badge>}
                     </div>
                     <span className="text-xs" style={{ color: "#94A3B8" }}>

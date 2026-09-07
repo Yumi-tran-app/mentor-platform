@@ -58,7 +58,7 @@ export default function NotificationsPage() {
   if (loading) {
     return (
       <AppShell title="Thông báo">
-        <p style={{ color: "#2C335D" }}>Đang tải...</p>
+        <p style={{ color: "#292524" }}>Đang tải...</p>
       </AppShell>
     );
   }
@@ -66,7 +66,7 @@ export default function NotificationsPage() {
   return (
     <AppShell title="Thông báo">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold" style={{ color: "#093774" }}>
+        <h1 className="text-2xl font-bold" style={{ color: "#0F766E" }}>
           Thông báo
         </h1>
         <Button variant="secondary" onClick={markAll}>
@@ -92,7 +92,7 @@ export default function NotificationsPage() {
               }}
             >
               <div className="flex-1">
-                <p className="text-sm font-semibold" style={{ color: "#093774" }}>
+                <p className="text-sm font-semibold" style={{ color: "#0F766E" }}>
                   {TYPE_LABEL[n.type] ?? n.type}
                 </p>
                 {n.payload && Object.keys(n.payload).length > 0 && (
