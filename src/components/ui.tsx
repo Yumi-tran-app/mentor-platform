@@ -49,6 +49,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: "/admin", icon: "settings", label: "Quản trị hệ thống" },
       { href: "/admin/seasons", icon: "calendar", label: "Mùa / Cohort" },
       { href: "/admin/events", icon: "calendar", label: "Workshop/Training" },
+      { href: "/admin/roster", icon: "users", label: "Danh sách Mentor/Mentee" },
     ],
   },
 ];

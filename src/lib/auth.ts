@@ -52,6 +52,18 @@ export async function requireStaff(): Promise<User> {
 }
 
 /**
+ * Yêu cầu người dùng hiện tại phải là ADMIN (không phải dpv).
+ * Ném lỗi FORBIDDEN nếu không đủ quyền.
+ */
+export async function requireAdmin(): Promise<User> {
+  const user = await requireStaff();
+  if (user.role !== "admin") {
+    throw new Error("FORBIDDEN");
+  }
+  return user;
+}
+
+/**
  * Vai trò hệ thống (quyền) tách biệt khỏi vai trò đăng ký (mentor/mentee).
  * role chỉ mang ý nghĩa quyền: admin / dpv / (mentee = mặc định, chưa có quyền đặc biệt).
  * Vai trò đăng ký mentor/mentee LUÔN suy từ Application.
