@@ -147,6 +147,23 @@ export const POST = withErrorHandling(async (req: Request) => {
     },
   });
 
+  // Khi pass test -> tự đánh dấu module "Kiểm tra & chứng nhận" hoàn thành
+  if (passed) {
+    const certModule = await prisma.trainingModule.findFirst({
+      where: { seasonId, audience: { in: ["all", "mentor"] }, required: true },
+      orderBy: { sortOrder: "desc" },
+    });
+    if (certModule) {
+      await prisma.trainingProgress.upsert({
+        where: {
+          moduleId_userId: { moduleId: certModule.id, userId: user.id },
+        },
+        create: { moduleId: certModule.id, userId: user.id },
+        update: {},
+      });
+    }
+  }
+
   return NextResponse.json({
     attempt: { id: attempt.id, score: mcqScore, status: attempt.status },
     correctCount,

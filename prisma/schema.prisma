@@ -761,18 +761,24 @@ model TrainingTestAnswer {
   @@map("training_test_answers")
 }
 
-// Giấy chứng nhận hoàn thành lộ trình mentoring
+// Giấy chứng nhận — 2 loại: training (đào tạo) & mentoring (hoàn thành đồng hành)
+enum CertificateType {
+  training
+  mentoring
+}
+
 model Certificate {
-  id            String   @id @default(uuid()) @db.Uuid
-  userId        String   @map("user_id") @db.Uuid
-  user          User     @relation(fields: [userId], references: [id])
-  seasonId      String   @map("season_id") @db.Uuid
-  season        Season   @relation(fields: [seasonId], references: [id])
-  orgName       String   @default("Mentoring for Vietnamese Student") @map("org_name")
-  recipientName String   @map("recipient_name")
-  role          String   @default("mentor") // "mentor" | "mentee"
-  issuedAt      DateTime @default(now()) @map("issued_at")
-  certificateNo String   @unique @map("certificate_no")
+  id            String          @id @default(uuid()) @db.Uuid
+  userId        String          @map("user_id") @db.Uuid
+  user          User            @relation(fields: [userId], references: [id])
+  seasonId      String          @map("season_id") @db.Uuid
+  season        Season          @relation(fields: [seasonId], references: [id])
+  type          CertificateType @default(training)
+  orgName       String          @default("Mentoring for Vietnamese Student") @map("org_name")
+  recipientName String          @map("recipient_name")
+  role          String          @default("mentor") // "mentor" | "mentee"
+  issuedAt      DateTime        @default(now()) @map("issued_at")
+  certificateNo String          @unique @map("certificate_no")
 
   @@index([userId])
   @@map("certificates")

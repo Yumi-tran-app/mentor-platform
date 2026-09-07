@@ -10,6 +10,7 @@ type NavItem = { href: string; icon: string; label: string; staffOnly?: boolean;
 
 const NAV_ITEMS: NavItem[] = [
   { href: "/dashboard", icon: "🏠", label: "Trang chủ" },
+  { href: "/journey", icon: "🗺️", label: "Lộ trình mentoring" },
   { href: "/discover", icon: "🔍", label: "Khám phá mentor" },
   { href: "/workspace", icon: "🌱", label: "Không gian đồng hành" },
   { href: "/messages", icon: "💬", label: "Tin nhắn" },

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback, Fragment } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { AppShell, Card, Button } from "@/components/ui";
 import { TRAINING_CONTENT, MENTEE_TRAINING_CONTENT } from "@/lib/training-content";
@@ -38,7 +38,7 @@ export default function TrainingPage() {
     await load();
   }
 
-  // Lấy trạng thái bài test (cho mentor)
+  // Lấy trạng thái bài test (cho mentor) — hiển thị bên trong module "Kiểm tra & chứng nhận"
   useEffect(() => {
     if (audience !== "mentor") return;
     fetch("/api/training/test")
@@ -49,6 +49,12 @@ export default function TrainingPage() {
       })
       .catch(() => {});
   }, [audience]);
+
+  // Module "Kiểm tra & chứng nhận" là module đặc biệt: hoàn thành = pass bài test
+  function isTestModule(m: Module): boolean {
+    const t = m.title.toLowerCase();
+    return t.includes("kiểm tra") || t.includes("chứng nhận") || t.includes("test");
+  }
 
   if (loading) {
     return (
@@ -64,20 +70,9 @@ export default function TrainingPage() {
         <h1 className="text-2xl font-bold" style={{ color: "#093774" }}>
           Chương trình đào tạo
         </h1>
-        <div className="flex items-center gap-3">
-          {audience === "mentor" && (
-            <Link href="/training/test">
-              <Button variant="secondary">
-                {testStatus?.status === "passed"
-                  ? `✅ Đã đạt bài test (${testStatus.score}%)`
-                  : "📝 Làm bài kiểm tra"}
-              </Button>
-            </Link>
-          )}
-          <span className="text-lg font-bold" style={{ color: "#15B5B0" }}>
-            {progress}%
-          </span>
-        </div>
+        <span className="text-lg font-bold" style={{ color: "#15B5B0" }}>
+          {progress}%
+        </span>
       </div>
 
       <div className="w-full h-3 rounded-full mb-8" style={{ background: "#F5F2EC" }}>
@@ -97,10 +92,12 @@ export default function TrainingPage() {
         <div className="space-y-3">
           {modules.map((m, idx) => {
             const done = completed.includes(m.id);
+            const isTest = isTestModule(m);
             const content = audience === "mentor"
               ? TRAINING_CONTENT.find((c) => c.title === m.title)
               : MENTEE_TRAINING_CONTENT.find((c) => c.title === m.title);
             const opened = openIdx === idx;
+            const testPassed = testStatus?.status === "passed";
             return (
               <Card key={m.id}>
                 <div className="flex items-start justify-between gap-4">
@@ -139,7 +136,24 @@ export default function TrainingPage() {
                       </span>
                     </div>
                   </button>
-                  {!done ? (
+
+                  {/* Module "Kiểm tra & chứng nhận": hoàn thành qua bài test */}
+                  {isTest ? (
+                    testStatus ? (
+                      <span
+                        className="text-sm font-medium"
+                        style={{ color: testPassed ? "#15803D" : "#FF6859" }}
+                      >
+                        {testPassed
+                          ? `✅ Hoàn thành (${testStatus.score}%)`
+                          : `❌ Chưa hoàn thành (${testStatus.score}%)`}
+                      </span>
+                    ) : (
+                      <Link href="/training/test">
+                        <Button>📝 Làm bài kiểm tra</Button>
+                      </Link>
+                    )
+                  ) : !done ? (
                     <Button variant="secondary" onClick={() => markDone(m.id)}>
                       Hoàn thành
                     </Button>
@@ -185,6 +199,67 @@ export default function TrainingPage() {
           })}
         </div>
       )}
+
+      {/* Giấy chứng nhận đào tạo (nếu đủ điều kiện) */}
+      <TrainingCertificateSection audience={audience} testStatus={testStatus} />
     </AppShell>
+  );
+}
+
+function TrainingCertificateSection({
+  audience,
+  testStatus,
+}: {
+  audience: string | null;
+  testStatus: { score: number; status: string } | null;
+}) {
+  const [cert, setCert] = useState<any>(null);
+
+  useEffect(() => {
+    if (audience !== "mentor") return;
+    fetch("/api/certification")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => setCert(d))
+      .catch(() => {});
+  }, [audience]);
+
+  if (audience !== "mentor" || !cert) return null;
+
+  const certExisting = cert.certificates?.[0];
+
+  return (
+    <Card className="mt-6">
+      <h2 className="font-bold mb-3" style={{ color: "#093774" }}>
+        🏅 Chứng nhận đào tạo
+      </h2>
+      {certExisting ? (
+        <div className="flex items-center justify-between">
+          <p className="text-sm" style={{ color: "#2C335D" }}>
+            Bạn đã được cấp chứng nhận đào tạo (Mã: {certExisting.certificateNo}).
+          </p>
+          <Link href={`/certificate/${certExisting.id}`}>
+            <Button>Xem chứng nhận</Button>
+          </Link>
+        </div>
+      ) : cert.eligible ? (
+        <div className="flex items-center justify-between">
+          <p className="text-sm" style={{ color: "#2C335D" }}>
+            🎉 Bạn đã đủ điều kiện nhận chứng nhận đào tạo.
+          </p>
+          <Button
+            onClick={async () => {
+              const r = await fetch("/api/certification", { method: "POST" });
+              if (r.ok) location.reload();
+            }}
+          >
+            Nhận chứng nhận
+          </Button>
+        </div>
+      ) : (
+        <p className="text-sm" style={{ color: "#94A3B8" }}>
+          Hoàn thành tất cả module bắt buộc và đạt bài kiểm tra để nhận chứng nhận đào tạo.
+        </p>
+      )}
+    </Card>
   );
 }

@@ -30,6 +30,13 @@ export default async function CertificateViewPage({
   });
 
   const roleLabel = cert.role === "mentor" ? "Mentor" : "Mentee";
+  const isMentoring = cert.type === "mentoring";
+  const headingText = isMentoring
+    ? "Certificate of Mentoring Completion"
+    : "Certificate of Training Completion";
+  const descText = isMentoring
+    ? "đã hoàn thành trọn vẹn hành trình đồng hành mentoring, thể hiện sự cam kết, trách nhiệm và trưởng thành trong suốt chương trình."
+    : "đã hoàn thành xuất sắc Chương trình đào tạo & kiểm tra năng lực đồng hành, đủ điều kiện tham gia dẫn dắt trong chương trình mentoring cộng đồng.";
 
   return (
     <div style={{ minHeight: "100vh", background: "#0D2B45", padding: 40, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -56,7 +63,7 @@ export default async function CertificateViewPage({
         />
         <div style={{ padding: "64px 48px", textAlign: "center" }}>
           <p style={{ margin: 0, fontSize: 14, letterSpacing: 4, textTransform: "uppercase", color: "#F2A93B", fontWeight: 700 }}>
-            Certificate of Completion
+            {headingText}
           </p>
           <p style={{ margin: "8px 0 0", fontSize: 13, color: "#3B2A24", letterSpacing: 1 }}>
             {cert.orgName}
@@ -85,9 +92,7 @@ export default async function CertificateViewPage({
           </div>
 
           <p style={{ margin: "36px auto 0", maxWidth: 620, fontSize: 15, lineHeight: 1.7, color: "#3B2A24" }}>
-            đã hoàn thành xuất sắc Chương trình đào tạo &amp; kiểm tra năng lực
-            đồng hành, đủ điều kiện tham gia dẫn dắt trong chương trình
-            mentoring cộng đồng.
+            {descText}
           </p>
 
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: 64, gap: 24 }}>

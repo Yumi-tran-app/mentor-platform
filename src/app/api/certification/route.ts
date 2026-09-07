@@ -10,8 +10,7 @@ import { withErrorHandling } from "@/lib/api-helpers";
 
 /**
  * GET /api/certification
- * Trạng thái lộ trình mentoring (mentor) của user hiện tại:
- * từng module đào tạo, bài test, chứng nhận.
+ * Trạng thái ĐÀO TẠO (mentor) + danh sách chứng nhận đào tạo của user.
  */
 export const GET = withErrorHandling(async (req: Request) => {
   const user = await getOrCreateCurrentUser();
@@ -24,7 +23,7 @@ export const GET = withErrorHandling(async (req: Request) => {
 
   const status = await getMentorCertificationStatus(user.id, seasonId);
   const certificates = await prisma.certificate.findMany({
-    where: { userId: user.id },
+    where: { userId: user.id, type: "training" },
     orderBy: { issuedAt: "desc" },
     select: {
       id: true,
@@ -40,7 +39,7 @@ export const GET = withErrorHandling(async (req: Request) => {
 
 /**
  * POST /api/certification
- * Cấp giấy chứng nhận khi mentor đã đủ điều kiện (pass đủ module + test).
+ * Cấp giấy chứng nhận ĐÀO TẠO khi mentor đã đủ điều kiện (đủ module + test).
  */
 export const POST = withErrorHandling(async (req: Request) => {
   const user = await getOrCreateCurrentUser();
@@ -59,6 +58,6 @@ export const POST = withErrorHandling(async (req: Request) => {
     );
   }
 
-  const cert = await issueCertificate(user.id, seasonId, user.fullName, "mentor");
+  const cert = await issueCertificate(user.id, seasonId, user.fullName, "mentor", "training");
   return NextResponse.json({ certificate: cert });
 });

@@ -1,78 +1,77 @@
 import { NextResponse } from "next/server";
-import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentUser } from "@/lib/auth";
+import { getActiveSeasonId } from "@/lib/domain";
+import {
+  getMentoringJourney,
+  resolveApplicantAudience,
+  issueCertificate,
+} from "@/lib/certification";
 import { withErrorHandling } from "@/lib/api-helpers";
 
-const CATEGORIES = ["met", "explored", "realized", "changed", "tried", "next"] as const;
-
-const CreateSchema = z.object({
-  matchId: z.string().uuid(),
-  category: z.enum(CATEGORIES),
-  content: z.string().min(1),
-});
-
 /**
- * GET /api/journey?matchId=<uuid>
- * Nhật ký hành trình của 1 cặp (gộp theo category).
+ * GET /api/journey
+ * Lộ trình MENTORING của user hiện tại (mentor hoặc mentee).
+ * Flow: Đăng ký → Tham gia đào tạo → Tham gia mentoring → Hoàn thành mentoring → Cấp chứng nhận.
  */
 export const GET = withErrorHandling(async (req: Request) => {
   const user = await getOrCreateCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const url = new URL(req.url);
-  const matchId = url.searchParams.get("matchId");
-  if (!matchId) return NextResponse.json({ error: "matchId required" }, { status: 400 });
-
-  const match = await prisma.match.findUnique({
-    where: { id: matchId },
-    include: { mentorApplication: true, menteeApplication: true },
-  });
-  if (!match) return NextResponse.json({ error: "Not found" }, { status: 404 });
-
-  const isParticipant =
-    match.mentorApplication.userId === user.id ||
-    match.menteeApplication.userId === user.id;
-  if (!isParticipant && user.role !== "admin" && user.role !== "dpv") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  const seasonId = await getActiveSeasonId();
+  if (!seasonId) {
+    return NextResponse.json({ error: "No active season" }, { status: 400 });
   }
 
-  const entries = await prisma.journeyEntry.findMany({
-    where: { matchId },
-    orderBy: { createdAt: "desc" },
-    include: { author: { select: { fullName: true } } },
+  const audience = await resolveApplicantAudience(user.id);
+  if (!audience) {
+    return NextResponse.json({ error: "Bạn chưa đăng ký mentor/mentee" }, { status: 400 });
+  }
+
+  const journey = await getMentoringJourney(user.id, seasonId, audience);
+
+  // Kèm danh sách chứng nhận mentoring để hiển thị bảng
+  const certs = await prisma.certificate.findMany({
+    where: { userId: user.id, type: "mentoring" },
+    orderBy: { issuedAt: "desc" },
+    select: {
+      id: true,
+      certificateNo: true,
+      role: true,
+      issuedAt: true,
+      orgName: true,
+    },
   });
 
-  return NextResponse.json({ entries });
+  return NextResponse.json({ ...journey, certificates: certs });
 });
 
 /**
  * POST /api/journey
- * Thêm 1 mục vào nhật ký hành trình.
+ * Cấp giấy chứng nhận MENTORING khi user đã "Hoàn thành mentoring" (match ended).
  */
 export const POST = withErrorHandling(async (req: Request) => {
   const user = await getOrCreateCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const body = await req.json();
-  const { matchId, category, content } = CreateSchema.parse(body);
-
-  const match = await prisma.match.findUnique({
-    where: { id: matchId },
-    include: { mentorApplication: true, menteeApplication: true },
-  });
-  if (!match) return NextResponse.json({ error: "Not found" }, { status: 404 });
-
-  const isParticipant =
-    match.mentorApplication.userId === user.id ||
-    match.menteeApplication.userId === user.id;
-  if (!isParticipant && user.role !== "admin" && user.role !== "dpv") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  const seasonId = await getActiveSeasonId();
+  if (!seasonId) {
+    return NextResponse.json({ error: "No active season" }, { status: 400 });
   }
 
-  const entry = await prisma.journeyEntry.create({
-    data: { matchId, category, content, authorUserId: user.id },
-  });
+  const audience = await resolveApplicantAudience(user.id);
+  if (!audience) {
+    return NextResponse.json({ error: "Bạn chưa đăng ký mentor/mentee" }, { status: 400 });
+  }
 
-  return NextResponse.json({ entry }, { status: 201 });
+  const journey = await getMentoringJourney(user.id, seasonId, audience);
+  if (!journey.completedMatch) {
+    return NextResponse.json(
+      { error: "Chưa hoàn thành mentoring, chưa thể cấp chứng nhận", journey },
+      { status: 400 }
+    );
+  }
+
+  const cert = await issueCertificate(user.id, seasonId, user.fullName, audience, "mentoring");
+  return NextResponse.json({ certificate: cert });
 });
