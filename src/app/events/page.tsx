@@ -60,7 +60,7 @@ export default function EventsPage() {
   return (
     <AppShell title="Workshop / Training">
       <h1 className="text-2xl font-bold mb-6" style={{ color: "#0F766E" }}>
-        📅 Workshop & Training
+        Workshop & Training
       </h1>
 
       {msg && (
@@ -92,10 +92,10 @@ export default function EventsPage() {
               )}
 
               <div className="mt-3 space-y-1 text-sm" style={{ color: "#292524" }}>
-                <p>🕐 {fmt(e.startAt)} → {fmt(e.endAt)}</p>
-                {e.location && <p>📍 {e.location}</p>}
-                {e.zoomLink && <p>💻 <a href={e.zoomLink} target="_blank" style={{ color: "#15B5B0" }}>Zoom link</a></p>}
-                <p>🎟️ Đã đăng ký: {e.registrationsCount}{e.capacity > 0 ? `/${e.capacity}` : ""}{e.slotsLeft !== null && e.slotsLeft === 0 ? " (đã đủ)" : ""}</p>
+                <p>{fmt(e.startAt)} → {fmt(e.endAt)}</p>
+                {e.location && <p>{e.location}</p>}
+                {e.zoomLink && <p><a href={e.zoomLink} target="_blank" style={{ color: "#15B5B0" }}>Zoom link</a></p>}
+                <p>Đã đăng ký: {e.registrationsCount}{e.capacity > 0 ? `/${e.capacity}` : ""}{e.slotsLeft !== null && e.slotsLeft === 0 ? " (đã đủ)" : ""}</p>
               </div>
 
               <div className="mt-4">

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { AppShell, Card, Badge, Button } from "@/components/ui";
+import { AppShell, Card, Badge, Button, LineIcon } from "@/components/ui";
 
 type Match = {
   id: string;
@@ -112,7 +112,7 @@ export default function WorkspacePage() {
 
               {m.goalText && (
                 <div className="mt-3 p-3 rounded-lg text-sm" style={{ background: "#F2F9F4", color: "#292524" }}>
-                  🎯 <b>Mục tiêu:</b> {m.goalText}
+                  <LineIcon name="target" size={14} /> <b>Mục tiêu:</b> {m.goalText}
                 </div>
               )}
 
@@ -133,13 +133,13 @@ export default function WorkspacePage() {
                   if (!canAct) {
                     return (
                       <p className="mt-3 text-xs italic" style={{ color: "#94A3B8" }}>
-                        ⏳ Đang chờ đối phương xác nhận.
+                        <LineIcon name="clock" size={14} /> Đang chờ đối phương xác nhận.
                       </p>
                     );
                   }
                   return (
                     <div className="mt-3 flex gap-2">
-                      <Button onClick={() => respond(m.id, true)}>💚 Đồng ý</Button>
+                      <Button onClick={() => respond(m.id, true)}><span className="inline-flex items-center gap-2"><LineIcon name="check" size={16} /> Đồng ý</span></Button>
                       <Button variant="danger" onClick={() => respond(m.id, false)}>Từ chối</Button>
                     </div>
                   );

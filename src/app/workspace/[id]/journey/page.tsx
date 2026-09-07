@@ -3,15 +3,15 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { Card, Button } from "@/components/ui";
+import { Card, Button, LineIcon } from "@/components/ui";
 
 const CATEGORIES: { id: string; icon: string; label: string }[] = [
-  { id: "met", icon: "👥", label: "Người đã gặp" },
-  { id: "explored", icon: "🔍", label: "Điều đã cùng khám phá" },
-  { id: "realized", icon: "💡", label: "Điều đã nhận ra" },
-  { id: "changed", icon: "🔄", label: "Điều đã thay đổi" },
-  { id: "tried", icon: "🧪", label: "Điều đã thử" },
-  { id: "next", icon: "🚀", label: "Điều tiếp theo" },
+  { id: "met", icon: "users", label: "Người đã gặp" },
+  { id: "explored", icon: "compass", label: "Điều đã cùng khám phá" },
+  { id: "realized", icon: "bulb", label: "Điều đã nhận ra" },
+  { id: "changed", icon: "spark", label: "Điều đã thay đổi" },
+  { id: "tried", icon: "check", label: "Điều đã thử" },
+  { id: "next", icon: "rocket", label: "Điều tiếp theo" },
 ];
 
 type Entry = {
@@ -97,7 +97,7 @@ export default function JourneyPage() {
                     color: category === c.id ? "#fff" : "#292524",
                   }}
                 >
-                  {c.icon} {c.label}
+                  <LineIcon name={c.icon as any} size={14} /> {c.label}
                 </button>
               ))}
             </div>
@@ -123,7 +123,7 @@ export default function JourneyPage() {
           return (
             <div key={cat.id} className="mb-6">
               <h3 className="font-bold mb-2 flex items-center gap-2" style={{ color: "#0F766E" }}>
-                <span>{cat.icon}</span> {cat.label}
+                <LineIcon name={cat.icon as any} size={16} /> {cat.label}
                 <span className="text-xs font-normal" style={{ color: "#94A3B8" }}>
                   ({items.length})
                 </span>

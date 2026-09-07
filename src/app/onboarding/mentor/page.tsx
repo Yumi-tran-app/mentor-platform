@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import { Card, Button } from "@/components/ui";
 
 const FOCUS_OPTIONS = [
-  ["learning", "📚 Học tập"],
-  ["career", "💼 Nghề nghiệp"],
-  ["personal_dev", "🌱 Phát triển bản thân"],
-  ["life_transition", "🔄 Chuyển tiếp giai đoạn"],
+  ["learning", "Học tập"],
+  ["career", "Nghề nghiệp"],
+  ["personal_dev", "Phát triển bản thân"],
+  ["life_transition", "Chuyển tiếp giai đoạn"],
 ] as const;
 
 const COMMITMENTS = [
@@ -208,7 +208,7 @@ export default function MentorOnboardingPage() {
             <h2 className="font-bold mb-2" style={{ color: "#0F766E" }}>1. Thông tin định danh & liên hệ</h2>
             <p className="text-sm mb-4" style={{ color: "#94A3B8" }}>Thông tin dùng cho xác thực nội bộ.</p>
             <div className="mb-4 flex gap-3 p-3 rounded-lg" style={{ background: "#EEF2F9", border: "1px solid #D9E2F2" }}>
-              <span className="text-lg">🔒</span>
+              <span className="text-lg"></span>
               <p className="text-sm" style={{ color: "#292524" }}>
                 Dữ liệu chỉ dùng nội bộ, không hiển thị công khai (ngoại trừ tên và chức danh khi đề xuất ghép cặp).
               </p>

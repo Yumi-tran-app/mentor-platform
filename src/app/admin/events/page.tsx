@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AppShell, Card, Button, Badge } from "@/components/ui";
+import { AppShell, Card, Button, Badge, LineIcon } from "@/components/ui";
 
 type EventItem = {
   id: string;
@@ -139,7 +139,7 @@ export default function AdminEventsPage() {
     <AppShell title="Quản lý Workshop/Training">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold" style={{ color: "#0F766E" }}>
-          📅 Workshop / Training
+          Workshop / Training
         </h1>
         <Button onClick={openCreate}>+ Tạo Workshop/Training</Button>
       </div>
@@ -200,14 +200,14 @@ export default function AdminEventsPage() {
                   </p>
                 </div>
                 <div className="flex items-center gap-2 text-xs font-medium" style={{ color: "#292524" }}>
-                  🎟️ {e._count.registrations}{e.capacity > 0 ? `/${e.capacity}` : ""}
+                  {e._count.registrations}{e.capacity > 0 ? `/${e.capacity}` : ""}
                 </div>
                 <div className="flex items-center gap-1">
-                  <IconBtn title="Xem chi tiết" onClick={() => viewDetail(e.id)}>👁️</IconBtn>
-                  <IconBtn title="Chỉnh sửa" onClick={() => openEdit(e)}>✏️</IconBtn>
-                  <IconBtn title="Xóa" onClick={() => setConfirmDelete(e.id)}>🗑️</IconBtn>
+                  <IconBtn title="Xem chi tiết" onClick={() => viewDetail(e.id)}><LineIcon name="eye" size={16} /></IconBtn>
+                  <IconBtn title="Chỉnh sửa" onClick={() => openEdit(e)}><LineIcon name="edit" size={16} /></IconBtn>
+                  <IconBtn title="Xóa" onClick={() => setConfirmDelete(e.id)}><LineIcon name="trash" size={16} /></IconBtn>
                   {e.status === "open" && e.checkInCode && (
-                    <IconBtn title={`Mã check-in: ${e.checkInCode}`} onClick={() => viewDetail(e.id)}>🔳</IconBtn>
+                    <IconBtn title={`Mã check-in: ${e.checkInCode}`} onClick={() => viewDetail(e.id)}><LineIcon name="shield" size={16} /></IconBtn>
                   )}
                 </div>
               </div>
@@ -258,8 +258,8 @@ export default function AdminEventsPage() {
               <input type="number" className={inputCls} value={form.capacity} onChange={(e) => setForm({ ...form, capacity: Number(e.target.value) })} />
             </Field>
             <div className="flex gap-3 pt-2">
-              <Button variant="secondary" onClick={() => save("draft")}>💾 Lưu nháp</Button>
-              <Button onClick={() => save("publish")}>🚀 Xuất bản / Đăng</Button>
+              <Button variant="secondary" onClick={() => save("draft")}>Lưu nháp</Button>
+              <Button onClick={() => save("publish")}>Xuất bản / Đăng</Button>
             </div>
           </div>
         </Modal>

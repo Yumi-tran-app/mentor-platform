@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { AppShell, Card, Badge, Button } from "@/components/ui";
+import { AppShell, Card, Badge, Button, LineIcon } from "@/components/ui";
 import { useCurrentUser, isStaff } from "@/lib/use-current-user";
 
 type Application = {
@@ -80,7 +80,7 @@ export default function DashboardPage() {
   return (
     <AppShell title="Trang chủ">
       <h1 className="text-2xl font-bold mb-1" style={{ color: "#0F766E" }}>
-        Xin chào{user.fullName ? `, ${user.fullName}` : ""} 👋
+        Xin chào{user.fullName ? `, ${user.fullName}` : ""}
       </h1>
       <p className="text-sm mb-4" style={{ color: "#94A3B8" }}>
         {roleGreeting ? `Bạn đang đồng hành với vai trò ${roleGreeting}.` : "Chào mừng bạn đến với chương trình mentoring cộng đồng."}
@@ -89,8 +89,8 @@ export default function DashboardPage() {
       {/* Staff: shortcut đến bảng điều phối */}
       {staff && (
         <div className="mb-6 flex flex-wrap gap-3">
-          <Link href="/coordinator"><Button>🎯 Bảng điều phối</Button></Link>
-          <Link href="/coordinator/review"><Button variant="secondary">📋 Duyệt đơn</Button></Link>
+          <Link href="/coordinator"><Button><span className="inline-flex items-center gap-2"><LineIcon name="target" size={16} /> Bảng điều phối</span></Button></Link>
+          <Link href="/coordinator/review"><Button variant="secondary"><span className="inline-flex items-center gap-2"><LineIcon name="checkCircle" size={16} /> Duyệt đơn</span></Button></Link>
         </div>
       )}
 
@@ -163,9 +163,9 @@ export default function DashboardPage() {
         <Card className="mt-6">
           <h2 className="font-bold mb-3" style={{ color: "#0F766E" }}>Bắt đầu từ đâu?</h2>
           <div className="space-y-2 text-sm" style={{ color: "#292524" }}>
-            <p>1️⃣ Chọn vai trò Mentor hoặc Mentee ở trên để đăng ký.</p>
-            <p>2️⃣ Hoàn thành đơn đăng ký và chờ đội ngũ điều phối duyệt.</p>
-            <p>3️⃣ Sau khi được duyệt, bạn sẽ được ghép cặp và bắt đầu hành trình.</p>
+            <p><span className="inline-flex items-center gap-1"><LineIcon name="checkCircle" size={14} /> Chọn vai trò Mentor hoặc Mentee ở trên để đăng ký.</span></p>
+            <p>Hoàn thành đơn đăng ký và chờ đội ngũ điều phối duyệt.</p>
+            <p>Sau khi được duyệt, bạn sẽ được ghép cặp và bắt đầu hành trình.</p>
           </div>
         </Card>
       )}
@@ -175,8 +175,8 @@ export default function DashboardPage() {
         <Card className="mt-6">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-bold" style={{ color: "#0F766E" }}>
-                🗺️ Lộ trình mentoring của bạn
+              <h2 className="font-bold flex items-center gap-2" style={{ color: "#0F766E" }}>
+                <LineIcon name="map" size={18} /> Lộ trình mentoring của bạn
               </h2>
               <p className="text-sm mt-1" style={{ color: "#94A3B8" }}>
                 Đăng ký → Tham gia đào tạo → Tham gia mentoring → Hoàn thành mentoring → Cấp chứng nhận

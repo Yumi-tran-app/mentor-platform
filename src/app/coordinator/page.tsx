@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { AppShell, Card, Badge, Button } from "@/components/ui";
+import { AppShell, Card, Badge, Button, LineIcon } from "@/components/ui";
 
 export default function CoordinatorPage() {
   const [matches, setMatches] = useState<any[]>([]);
@@ -46,13 +46,13 @@ export default function CoordinatorPage() {
 
       <div className="flex gap-3 mb-8">
         <Link href="/coordinator/matchmaking">
-          <Button variant="secondary">🔗 Ghép cặp & duyệt kết nối</Button>
+          <Button variant="secondary"><span className="inline-flex items-center gap-2"><LineIcon name="link" size={16} /> Ghép cặp & duyệt kết nối</span></Button>
         </Link>
         <Link href="/coordinator/review">
-          <Button variant="secondary">📋 Duyệt đơn đăng ký</Button>
+          <Button variant="secondary"><span className="inline-flex items-center gap-2"><LineIcon name="checkCircle" size={16} /> Duyệt đơn đăng ký</span></Button>
         </Link>
         <Link href="/coordinator/interviews">
-          <Button variant="secondary">🗓️ Quản lý phỏng vấn</Button>
+          <Button variant="secondary"><span className="inline-flex items-center gap-2"><LineIcon name="calendar" size={16} /> Quản lý phỏng vấn</span></Button>
         </Link>
       </div>
 

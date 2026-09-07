@@ -365,7 +365,7 @@ export default function MatchDetailPage() {
                   <p className="text-xs mt-1" style={{ color: "#94A3B8" }}>
                     {log.author.fullName} ·{" "}
                     {new Date(log.createdAt).toLocaleString("vi-VN")}
-                    {log.visibility === "private" && " · 🔒 Riêng tư"}
+                    {log.visibility === "private" && " · Riêng tư"}
                   </p>
                 </div>
               ))}
@@ -378,7 +378,7 @@ export default function MatchDetailPage() {
         <div className="mt-6">
           <Card>
             <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
-              📝 Báo cáo cuối khóa
+              Báo cáo cuối khóa
             </h2>
             {report ? (
               <p className="text-sm" style={{ color: "#15803D" }}>

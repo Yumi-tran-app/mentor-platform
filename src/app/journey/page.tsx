@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { AppShell, Card, Button } from "@/components/ui";
+import { AppShell, Card, Button, LineIcon } from "@/components/ui";
 
 type Journey = {
   audience: "mentor" | "mentee";
@@ -73,7 +73,7 @@ export default function JourneyPage() {
   return (
     <AppShell title="Lộ trình mentoring">
       <h1 className="text-2xl font-bold mb-1" style={{ color: "#0F766E" }}>
-        🗺️ Lộ trình mentoring của bạn
+        Lộ trình mentoring của bạn
       </h1>
       <p className="text-sm mb-6" style={{ color: "#94A3B8" }}>
         Vai trò: <b style={{ color: "#15B5B0" }}>{data.audience === "mentor" ? "Mentor" : "Mentee"}</b>
@@ -123,8 +123,8 @@ export default function JourneyPage() {
 
       {/* Tiến độ đào tạo */}
       <Card className="mb-6">
-        <h2 className="font-bold mb-3" style={{ color: "#0F766E" }}>
-          📚 Tiến độ đào tạo
+        <h2 className="font-bold mb-3 flex items-center gap-2" style={{ color: "#0F766E" }}>
+          <LineIcon name="book" size={18} /> Tiến độ đào tạo
         </h2>
         <p className="text-sm" style={{ color: "#292524" }}>
           {data.trainingStatus.modulesCompleted}/{data.trainingStatus.modulesTotal} module{" "}
@@ -143,8 +143,8 @@ export default function JourneyPage() {
 
       {/* Giấy chứng nhận mentoring */}
       <Card>
-        <h2 className="font-bold mb-3" style={{ color: "#0F766E" }}>
-          🏅 Chứng nhận hoàn thành mentoring
+        <h2 className="font-bold mb-3 flex items-center gap-2" style={{ color: "#0F766E" }}>
+          <LineIcon name="award" size={18} /> Chứng nhận hoàn thành mentoring
         </h2>
 
         {data.mentoringCert ? (
@@ -159,7 +159,7 @@ export default function JourneyPage() {
         ) : data.completedMatch ? (
           <div className="flex items-center justify-between">
             <p className="text-sm" style={{ color: "#292524" }}>
-              🎉 Bạn đã hoàn thành mentoring, đủ điều kiện nhận chứng nhận.
+              Bạn đã hoàn thành mentoring, đủ điều kiện nhận chứng nhận.
             </p>
             <Button onClick={issueCert}>Nhận chứng nhận</Button>
           </div>
@@ -170,7 +170,7 @@ export default function JourneyPage() {
         )}
 
         {error && (
-          <p className="text-sm mt-3" style={{ color: "#B42318" }}>⚠️ {error}</p>
+          <p className="text-sm mt-3 flex items-center gap-1" style={{ color: "#B42318" }}><LineIcon name="alert" size={14} /> {error}</p>
         )}
 
         {/* Bảng danh sách chứng nhận */}

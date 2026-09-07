@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AppShell, Card, Button, Badge } from "@/components/ui";
+import { AppShell, Card, Button, Badge, LineIcon } from "@/components/ui";
 
 type Stats = {
   totalUsers: number;
@@ -101,7 +101,7 @@ export default function AdminPage() {
   return (
     <AppShell title="Quản trị hệ thống">
       <h1 className="text-2xl font-bold mb-1" style={{ color: "#0F766E" }}>
-        🛠️ Bảng quản trị (Admin)
+        Bảng quản trị (Admin)
       </h1>
       <p className="text-sm mb-6" style={{ color: "#94A3B8" }}>
         Mùa hiện tại: {stats.season ? `${stats.season.name} (${stats.season.status})` : "—"}
@@ -122,7 +122,7 @@ export default function AdminPage() {
       {/* Quản lý chương trình đào tạo */}
       <Card>
         <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
-          📚 Quản lý chương trình đào tạo
+          Quản lý chương trình đào tạo
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">

@@ -71,8 +71,8 @@ export default function TrainingPage() {
       <div className="flex gap-2 mb-6">
         {(
           [
-            ["training", "🎓 Đào tạo"],
-            ["events", "📅 Workshop/Training"],
+            ["training", "Đào tạo"],
+            ["events", "Workshop/Training"],
           ] as const
         ).map(([key, label]) => (
           <button
@@ -178,7 +178,7 @@ export default function TrainingPage() {
                       </span>
                     ) : (
                       <Link href="/training/test">
-                        <Button>📝 Làm bài kiểm tra</Button>
+                        <Button>Làm bài kiểm tra</Button>
                       </Link>
                     )
                   ) : !done ? (
@@ -299,10 +299,10 @@ function EventsTab() {
               </div>
               {e.description && <p className="text-sm mt-2" style={{ color: "#292524" }}>{e.description}</p>}
               <div className="mt-3 space-y-1 text-sm" style={{ color: "#292524" }}>
-                <p>🕐 {fmt(e.startAt)} → {fmt(e.endAt)}</p>
-                {e.location && <p>📍 {e.location}</p>}
-                {e.zoomLink && <p>💻 <a href={e.zoomLink} target="_blank" style={{ color: "#15B5B0" }}>Zoom link</a></p>}
-                <p>🎟️ Đã đăng ký: {e.registrationsCount}{e.capacity > 0 ? `/${e.capacity}` : ""}</p>
+                <p>{fmt(e.startAt)} → {fmt(e.endAt)}</p>
+                {e.location && <p>{e.location}</p>}
+                {e.zoomLink && <p><a href={e.zoomLink} target="_blank" style={{ color: "#15B5B0" }}>Zoom link</a></p>}
+                <p>Đã đăng ký: {e.registrationsCount}{e.capacity > 0 ? `/${e.capacity}` : ""}</p>
               </div>
               <div className="mt-4">
                 {e.status === "open" ? (
@@ -347,7 +347,7 @@ function TrainingCertificateSection({
   return (
     <Card className="mt-6">
       <h2 className="font-bold mb-3" style={{ color: "#0F766E" }}>
-        🏅 Chứng nhận đào tạo
+        Chứng nhận đào tạo
       </h2>
       {certExisting ? (
         <div className="flex items-center justify-between">
@@ -361,7 +361,7 @@ function TrainingCertificateSection({
       ) : cert.eligible ? (
         <div className="flex items-center justify-between">
           <p className="text-sm" style={{ color: "#292524" }}>
-            🎉 Bạn đã đủ điều kiện nhận chứng nhận đào tạo.
+            Bạn đã đủ điều kiện nhận chứng nhận đào tạo.
           </p>
           <Button
             onClick={async () => {

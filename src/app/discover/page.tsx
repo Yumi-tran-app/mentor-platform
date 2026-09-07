@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { AppShell, Card, Badge, Button } from "@/components/ui";
+import { AppShell, Card, Badge, Button, LineIcon } from "@/components/ui";
 
 type Mentor = {
   id: string;
@@ -143,17 +143,17 @@ export default function DiscoverPage() {
                   </div>
                 </div>
                 <div className="space-y-1 text-sm" style={{ color: "#292524" }}>
-                  <p>🏢 {ph(m.professionalJson, "company")}</p>
-                  <p>💼 {ph(m.professionalJson, "yearsExperience")} năm KN</p>
-                  <p>📍 {ph(m.identityJson, "city") || "—"}</p>
+                  <p className="flex items-center gap-1.5"><LineIcon name="briefcase" size={14} /> {ph(m.professionalJson, "company")}</p>
+                  <p className="flex items-center gap-1.5"><LineIcon name="clock" size={14} /> {ph(m.professionalJson, "yearsExperience")} năm KN</p>
+                  <p className="flex items-center gap-1.5"><LineIcon name="pin" size={14} /> {ph(m.identityJson, "city") || "—"}</p>
                   <p>
-                    🪑 Slot: {m.connected ?? 0} đã kết nối /{" "}
+                    <span className="inline-flex items-center gap-1"><LineIcon name="users" size={14} /> Slot:</span> {m.connected ?? 0} đã kết nối /{" "}
                     {m.capacityMax} · còn {m.slotsLeft ?? "—"} chỗ
                     {m.pendingCount ? ` · ${m.pendingCount} đang chờ` : ""}
                   </p>
                   {m.certified === false && (
                     <p style={{ color: "#F2A93B" }}>
-                      ⏳ Chưa hoàn thành đào tạo &amp; kiểm tra
+                      <span className="inline-flex items-center gap-1"><LineIcon name="clock" size={14} /> Chưa hoàn thành đào tạo &amp; kiểm tra</span>
                     </p>
                   )}
                 </div>
@@ -188,7 +188,7 @@ export default function DiscoverPage() {
                 </div>
               </div>
               <div className="space-y-1 text-sm" style={{ color: "#292524" }}>
-                <p>📍 {ph(m.profileJson, "city") || "—"}</p>
+                <p className="flex items-center gap-1.5"><LineIcon name="pin" size={14} /> {ph(m.profileJson, "city") || "—"}</p>
               </div>
               {m.needs?.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-2">
@@ -198,7 +198,7 @@ export default function DiscoverPage() {
                 </div>
               )}
               {m.goalText && (
-                <p className="mt-2 text-xs leading-relaxed" style={{ color: "#94A3B8" }}>🎯 {m.goalText}</p>
+                <p className="mt-2 text-xs leading-relaxed" style={{ color: "#94A3B8" }}>{m.goalText}</p>
               )}
               <div className="mt-4 flex gap-2">
                 <Button variant="secondary" onClick={() => setSelectedMentee(m)}>Xem chi tiết</Button>
@@ -234,7 +234,7 @@ export default function DiscoverPage() {
           )}
           <div className="mt-4">
             <Button onClick={() => { requestConnect(selectedMentor.id); setSelectedMentor(null); }} disabled={busy}>
-              💚 Gửi yêu cầu kết nối
+              <span className="inline-flex items-center gap-2"><LineIcon name="heart" size={16} /> Gửi yêu cầu kết nối</span>
             </Button>
           </div>
         </DetailModal>
@@ -264,11 +264,11 @@ export default function DiscoverPage() {
             </div>
           )}
           {selectedMentee.goalText && (
-            <p className="mt-3 text-sm" style={{ color: "#292524" }}>🎯 <b>Mục tiêu:</b> {selectedMentee.goalText}</p>
+            <p className="mt-3 text-sm" style={{ color: "#292524" }}><b>Mục tiêu:</b> {selectedMentee.goalText}</p>
           )}
           <div className="mt-4">
             <Button onClick={() => { requestConnect(selectedMentee.id); setSelectedMentee(null); }} disabled={busy}>
-              💚 Gửi yêu cầu kết nối
+              <span className="inline-flex items-center gap-2"><LineIcon name="heart" size={16} /> Gửi yêu cầu kết nối</span>
             </Button>
           </div>
         </DetailModal>

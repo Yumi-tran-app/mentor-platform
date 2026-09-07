@@ -228,7 +228,7 @@ function EventCard({ event }: { event: Event }) {
             {event.title}
           </h3>
           <p className="text-sm mt-1" style={{ color: "#292524" }}>
-            🗓️ {dateStr} · 🕐 {timeStr}
+            {dateStr} · {timeStr}
           </p>
           <p className="text-xs mt-1" style={{ color: "#94A3B8" }}>
             {event.match.mentorApplication.user.fullName} ↔{" "}
@@ -236,7 +236,7 @@ function EventCard({ event }: { event: Event }) {
           </p>
           {event.location && (
             <p className="text-xs mt-1" style={{ color: "#94A3B8" }}>
-              📍 {event.location}
+              {event.location}
             </p>
           )}
         </div>

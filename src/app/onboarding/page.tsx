@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
+import { LineIcon } from "@/components/ui";
 
 export default function OnboardingPage() {
   const { user } = useUser();
@@ -9,7 +10,7 @@ export default function OnboardingPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center" style={{ background: "#F5F2EC" }}>
       <h1 className="text-3xl font-bold" style={{ color: "#0F766E" }}>
-        Chào {user?.firstName ?? "bạn"} 👋
+        Chào {user?.firstName ?? "bạn"}
       </h1>
       <p className="mt-3 text-lg max-w-md" style={{ color: "#292524" }}>
         Bạn muốn tham gia chương trình với vai trò nào?
@@ -21,7 +22,7 @@ export default function OnboardingPage() {
           className="rounded-2xl p-8 text-left shadow-sm border hover:shadow-md transition"
           style={{ background: "#fff", borderColor: "#F5F2EC" }}
         >
-          <div className="text-3xl mb-3">🧑‍🏫</div>
+          <div className="text-3xl mb-3"><LineIcon name="award" size={30} /></div>
           <h2 className="text-xl font-bold" style={{ color: "#0F766E" }}>
             Tôi là Mentor
           </h2>
@@ -35,7 +36,7 @@ export default function OnboardingPage() {
           className="rounded-2xl p-8 text-left shadow-sm border hover:shadow-md transition"
           style={{ background: "#fff", borderColor: "#F5F2EC" }}
         >
-          <div className="text-3xl mb-3">🌱</div>
+          <div className="text-3xl mb-3"><LineIcon name="spark" size={30} /></div>
           <h2 className="text-xl font-bold" style={{ color: "#15B5B0" }}>
             Tôi là Mentee
           </h2>

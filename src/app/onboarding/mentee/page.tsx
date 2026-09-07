@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import { Card, Button } from "@/components/ui";
 
 const NEEDS = [
-  ["learning", "📚 Học tập"],
-  ["career", "💼 Nghề nghiệp"],
-  ["personal_dev", "🌱 Phát triển bản thân"],
-  ["life_transition", "🔄 Chuyển tiếp giai đoạn"],
+  ["learning", "Học tập"],
+  ["career", "Nghề nghiệp"],
+  ["personal_dev", "Phát triển bản thân"],
+  ["life_transition", "Chuyển tiếp giai đoạn"],
 ] as const;
 
 const CONSENTS = [
@@ -160,7 +160,7 @@ export default function MenteeOnboardingPage() {
             </p>
 
             <div className="mb-4 flex gap-3 p-3 rounded-lg" style={{ background: "#F2F9F4", border: "1px solid #D1E7D9" }}>
-              <span className="text-lg">🛡️</span>
+              <span className="text-lg"></span>
               <p className="text-sm" style={{ color: "#292524" }}>
                 Khuyến khích sử dụng email có đuôi <b>@edu</b> hoặc <b>@*.edu.vn</b> để xác thực diễn ra thuận lợi. Thông tin này <b>không hiển thị công khai</b>.
               </p>

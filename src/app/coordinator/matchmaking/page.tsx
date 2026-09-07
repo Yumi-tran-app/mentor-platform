@@ -239,27 +239,27 @@ export default function MatchmakingPage() {
                         )}
                       </div>
                       <div className="mt-3 grid grid-cols-2 gap-2 text-sm" style={{ color: "#292524" }}>
-                        <span>🧑‍🏫 <b>Mentor:</b> {m.mentorApplication.user.fullName}</span>
-                        <span>🎓 <b>Mentee:</b> {m.menteeApplication.user.fullName}</span>
+                        <span><b>Mentor:</b> {m.mentorApplication.user.fullName}</span>
+                        <span><b>Mentee:</b> {m.menteeApplication.user.fullName}</span>
                       </div>
                       {m.goalText && (
                         <p className="mt-2 text-sm" style={{ color: "#292524" }}>
-                          🎯 <b>Mục tiêu:</b> {m.goalText}
+                          <b>Mục tiêu:</b> {m.goalText}
                         </p>
                       )}
                     </div>
                     <div className="flex flex-col gap-2 shrink-0">
                       {!assigned && pendingReview ? (
                         <Button onClick={() => assign(m.id)} disabled={busy === m.id}>
-                          👤 Phân công duyệt
+                          Phân công duyệt
                         </Button>
                       ) : (
                         <>
                           <Button onClick={() => decide(m.id, "approved")} disabled={busy === m.id}>
-                            ✓ Duyệt kết nối
+                            Duyệt kết nối
                           </Button>
                           <Button variant="danger" onClick={() => decide(m.id, "needs_more_info")} disabled={busy === m.id}>
-                            ↻ Cần bổ sung
+                            Cần bổ sung
                           </Button>
                         </>
                       )}
@@ -301,7 +301,7 @@ export default function MatchmakingPage() {
                       )}
                     </div>
                     <Button onClick={() => recommend(m.id)} disabled={busy === m.id || m.hasActiveMatch}>
-                      🔗 Đề xuất
+                      Đề xuất
                     </Button>
                   </div>
                 </Card>

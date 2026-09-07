@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
-import { AppShell, Card, Button, Badge } from "@/components/ui";
+import { AppShell, Card, Button, Badge, LineIcon } from "@/components/ui";
 
 const ROLE_LABEL: Record<string, string> = {
   admin: "Quản trị viên",
@@ -125,8 +125,8 @@ export default function ProfilePage() {
         {mentor && (
           <>
             <Card>
-              <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
-                👤 Thông tin cá nhân (Mentor)
+              <h2 className="font-bold mb-4 flex items-center gap-2" style={{ color: "#0F766E" }}>
+                <LineIcon name="user" size={18} /> Thông tin cá nhân (Mentor)
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm" style={{ color: "#292524" }}>
                 <Field label="Họ và tên" value={mIdentity.fullName} />
@@ -141,8 +141,8 @@ export default function ProfilePage() {
             </Card>
 
             <Card>
-              <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
-                💼 Kinh nghiệm nghề nghiệp
+              <h2 className="font-bold mb-4 flex items-center gap-2" style={{ color: "#0F766E" }}>
+                <LineIcon name="briefcase" size={18} /> Kinh nghiệm nghề nghiệp
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm" style={{ color: "#292524" }}>
                 <Field label="Công ty" value={mProf.company} />
@@ -157,15 +157,15 @@ export default function ProfilePage() {
             </Card>
 
             <Card>
-              <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
-                🌱 Mức độ sẵn sàng & cam kết
+              <h2 className="font-bold mb-4 flex items-center gap-2" style={{ color: "#0F766E" }}>
+                <LineIcon name="spark" size={18} /> Mức độ sẵn sàng & cam kết
               </h2>
               <div className="space-y-2 text-sm" style={{ color: "#292524" }}>
-                <p>🔹 Đã từng làm mentor: <b>{mReadiness.hasMentoredBefore ? "Có" : "Chưa"}</b></p>
-                <p>🔹 Đã mentor SME/startup: <b>{mReadiness.hasMentoredStartup ? "Có" : "Chưa"}</b></p>
+                <p>Đã từng làm mentor: <b>{mReadiness.hasMentoredBefore ? "Có" : "Chưa"}</b></p>
+                <p>Đã mentor SME/startup: <b>{mReadiness.hasMentoredStartup ? "Có" : "Chưa"}</b></p>
                 {mReadiness.mentoringFocus?.length > 0 && (
                   <div>
-                    <p className="font-medium mb-1">🔹 Định hướng đồng hành:</p>
+                    <p className="font-medium mb-1">Định hướng đồng hành:</p>
                     <div className="flex flex-wrap gap-2">
                       {mReadiness.mentoringFocus.map((f: string) => (
                         <Badge key={f} color="#0F766E">{NEED_LABEL[f] ?? f}</Badge>
@@ -174,21 +174,21 @@ export default function ProfilePage() {
                   </div>
                 )}
                 {mReadiness.reason && <p><b>Lý do muốn làm mentor:</b> {mReadiness.reason}</p>}
-                <p>🔹 Số mentee muốn đồng hành: <b>{mentor.capacityMax}</b></p>
+                <p>Số mentee muốn đồng hành: <b>{mentor.capacityMax}</b></p>
               </div>
             </Card>
 
             {mDocs && (mDocs.cvUrl || mDocs.photoUrl || mDocs.references || mDocs.source || mDocs.notes) && (
               <Card>
-                <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
-                  📎 Hồ sơ bổ sung
+                <h2 className="font-bold mb-4 flex items-center gap-2" style={{ color: "#0F766E" }}>
+                  <LineIcon name="folder" size={18} /> Hồ sơ bổ sung
                 </h2>
                 <div className="space-y-2 text-sm" style={{ color: "#292524" }}>
                   {mDocs.photoUrl && <img src={mDocs.photoUrl} alt="Profile" style={{ width: 96, height: 96, borderRadius: "50%", objectFit: "cover" }} />}
-                  {mDocs.cvUrl && <p>🔗 CV: <a href={mDocs.cvUrl} target="_blank" style={{ color: "#15B5B0" }}>{mDocs.cvUrl}</a></p>}
-                  {mDocs.references && <p>👥 Người giới thiệu: {mDocs.references}</p>}
+                  {mDocs.cvUrl && <p>CV: <a href={mDocs.cvUrl} target="_blank" style={{ color: "#15B5B0" }}>{mDocs.cvUrl}</a></p>}
+                  {mDocs.references && <p>Người giới thiệu: {mDocs.references}</p>}
                   {mDocs.source && <p>ℹ️ Biết đến chương trình từ: {mDocs.source}</p>}
-                  {mDocs.notes && <p>📝 Ghi chú Core Team: {mDocs.notes}</p>}
+                  {mDocs.notes && <p>Ghi chú Core Team: {mDocs.notes}</p>}
                 </div>
               </Card>
             )}
@@ -199,8 +199,8 @@ export default function ProfilePage() {
         {mentee && (
           <>
             <Card>
-              <h2 className="font-bold mb-4" style={{ color: "#15B5B0" }}>
-                🪪 Thông tin xác thực (Mentee)
+              <h2 className="font-bold mb-4 flex items-center gap-2" style={{ color: "#15B5B0" }}>
+                <LineIcon name="shield" size={18} /> Thông tin xác thực (Mentee)
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm" style={{ color: "#292524" }}>
                 <Field label="Họ và tên" value={eIdentity.fullName} />
@@ -211,8 +211,8 @@ export default function ProfilePage() {
             </Card>
 
             <Card>
-              <h2 className="font-bold mb-4" style={{ color: "#15B5B0" }}>
-                🎓 Thông tin học tập (Mentee)
+              <h2 className="font-bold mb-4 flex items-center gap-2" style={{ color: "#15B5B0" }}>
+                <LineIcon name="graduation" size={18} /> Thông tin học tập (Mentee)
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm" style={{ color: "#292524" }}>
                 <Field label="Ngành học" value={eProfile.major} />
@@ -223,8 +223,8 @@ export default function ProfilePage() {
             </Card>
 
             <Card>
-              <h2 className="font-bold mb-4" style={{ color: "#15B5B0" }}>
-                🎯 Mục tiêu & nhu cầu
+              <h2 className="font-bold mb-4 flex items-center gap-2" style={{ color: "#15B5B0" }}>
+                <LineIcon name="target" size={18} /> Mục tiêu & nhu cầu
               </h2>
               <div className="space-y-2 text-sm" style={{ color: "#292524" }}>
                 {mentee.goalText && (
