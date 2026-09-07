@@ -230,3 +230,135 @@ export async function getMentoringJourney(
     mentoringCert,
   };
 }
+
+/**
+ * Lộ trình mentoring V2 — tách Mùa (Cohort) vs từng Mentee + timeline.
+ * Dùng cho trang /journey tái cấu trúc IA.
+ */
+export async function getJourneyV2(
+  userId: string,
+  seasonId: string,
+  audience: "mentor" | "mentee"
+) {
+  // 1. Danh sách tất cả mùa (để dropdown lọc lịch sử)
+  const seasons = await prisma.season.findMany({
+    orderBy: { startDate: "desc" },
+    select: {
+      id: true,
+      name: true,
+      cohort: true,
+      status: true,
+      startDate: true,
+      endDate: true,
+      registrationDeadline: true,
+    },
+  });
+
+  // 2. Mùa đang xem
+  const season = await prisma.season.findUnique({
+    where: { id: seasonId },
+    select: {
+      id: true,
+      name: true,
+      cohort: true,
+      status: true,
+      startDate: true,
+      endDate: true,
+      registrationDeadline: true,
+    },
+  });
+  if (!season) return null;
+
+  // 3. Các match của user trong mùa này (dùng cho milestone + per-mentee)
+  const matches = await prisma.match.findMany({
+    where: {
+      seasonId,
+      ...(audience === "mentor"
+        ? { mentorApplication: { userId } }
+        : { menteeApplication: { userId } }),
+    },
+    include: {
+      mentorApplication: { include: { user: { select: { fullName: true } } } },
+      menteeApplication: { include: { user: { select: { fullName: true, id: true } } } },
+    },
+  });
+
+  // Chứng nhận mentoring + training (theo mùa này)
+  const mentoringCert = await prisma.certificate.findFirst({
+    where: { userId, seasonId, type: "mentoring" },
+    select: { id: true, certificateNo: true, issuedAt: true },
+  });
+  const trainingStatus = await getTrainingStatus(userId, seasonId, audience);
+
+  // 4. Milestone mùa (enrich trạng thái theo dữ liệu cá nhân)
+  const milestonesRaw = await prisma.seasonMilestone.findMany({
+    where: { seasonId },
+    orderBy: { sortOrder: "asc" },
+  });
+
+  const myApplications = audience === "mentor"
+    ? await prisma.mentorApplication.findMany({ where: { userId, seasonId }, select: { submittedAt: true } })
+    : await prisma.menteeApplication.findMany({ where: { userId, seasonId }, select: { submittedAt: true } });
+  const registeredAt = myApplications.find((a) => a.submittedAt)?.submittedAt ?? null;
+
+  const milestones = milestonesRaw.map((ms) => {
+    let doneAt: Date | null = ms.completedAt;
+    let done = !!ms.completedAt;
+    if (!done) {
+      if (ms.key === "registration" && registeredAt) { done = true; doneAt = registeredAt; }
+      else if (ms.key === "training" && trainingStatus.eligible) { done = true; doneAt = null; }
+      else if (ms.key === "matching" && matches.length > 0) {
+        const anyProposed = matches.some((m) =>
+          ["proposed_to_parties", "mentor_accepted", "mutual_accepted", "first_connection_done", "active", "paused", "ended"].includes(m.status)
+        );
+        if (anyProposed) { done = true; doneAt = matches[0]?.createdAt ?? null; }
+      }
+      else if (ms.key === "wrapup" && mentoringCert) { done = true; doneAt = mentoringCert.issuedAt ?? null; }
+    }
+    return { ...ms, done, doneAt };
+  });
+
+  // 5. Per-mentee
+  const mentees = await Promise.all(
+    matches.map(async (m) => {
+      const menteeUserId = m.menteeApplication.userId;
+      // Số buổi = đếm nhật ký hành trình của mentee (mỗi buổi 1 entry)
+      const sessionCount = await prisma.journeyEntry.count({
+        where: { matchId: m.id, authorUserId: menteeUserId },
+      });
+      const scheduleCount = await prisma.meetingEvent.count({ where: { matchId: m.id } });
+      const report = await prisma.endOfProgramReport.findFirst({
+        where: { matchId: m.id, authorRole: "mentee" },
+        select: { submittedAt: true },
+      });
+
+      const partnerName =
+        audience === "mentor"
+          ? m.menteeApplication.user.fullName
+          : m.mentorApplication.user.fullName;
+
+      return {
+        matchId: m.id,
+        partnerName,
+        status: m.status,
+        kickoffAt: m.firstConnectionAt,
+        agreementAt: m.agreementConfirmedAt,
+        sessionCount,
+        scheduleCount,
+        reportSubmittedAt: report?.submittedAt ?? null,
+        completedAt: m.endedAt,
+        targetSessions: 6,
+      };
+    })
+  );
+
+  return {
+    audience,
+    seasons,
+    season,
+    milestones,
+    mentees,
+    mentoringCert,
+    trainingStatus,
+  };
+}

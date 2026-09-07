@@ -2,32 +2,80 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { AppShell, Card, Button, LineIcon } from "@/components/ui";
+import { AppShell, Card, Button, LineIcon, Badge } from "@/components/ui";
 
-type Journey = {
-  audience: "mentor" | "mentee";
-  steps: { key: string; label: string; done: boolean; active: boolean }[];
-  trainingStatus: { modulesCompleted: number; modulesTotal: number; testPassed: boolean };
-  hasMatch: boolean;
-  activeMatch: boolean;
-  completedMatch: boolean;
-  mentoringCert: { id: string; certificateNo: string } | null;
-  certificates: { id: string; certificateNo: string; role: string; issuedAt: string; orgName: string }[];
+type Season = {
+  id: string;
+  name: string;
+  cohort: string | null;
+  status: string;
+  startDate: string;
+  endDate: string;
+  registrationDeadline: string | null;
 };
 
-export default function JourneyPage() {
-  const [data, setData] = useState<Journey | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+type Milestone = {
+  id: string;
+  key: string;
+  title: string;
+  sortOrder: number;
+  deadline: string | null;
+  done: boolean;
+  doneAt: string | null;
+};
 
-  async function load() {
+type Mentee = {
+  matchId: string;
+  partnerName: string;
+  status: string;
+  kickoffAt: string | null;
+  agreementAt: string | null;
+  sessionCount: number;
+  scheduleCount: number;
+  reportSubmittedAt: string | null;
+  completedAt: string | null;
+  targetSessions: number;
+};
+
+type JourneyV2 = {
+  audience: "mentor" | "mentee";
+  seasons: Season[];
+  season: Season;
+  milestones: Milestone[];
+  mentees: Mentee[];
+  mentoringCert: { id: string; certificateNo: string; issuedAt: string } | null;
+  trainingStatus: { modulesCompleted: number; modulesTotal: number; testPassed: boolean };
+};
+
+const fmtDate = (s: string | null) =>
+  s ? new Date(s).toLocaleDateString("vi-VN") : "—";
+
+function daysRemaining(endDate: string): number {
+  const diff = new Date(endDate).getTime() - Date.now();
+  return Math.ceil(diff / (1000 * 60 * 60 * 24));
+}
+
+export default function JourneyPage() {
+  const [data, setData] = useState<JourneyV2 | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [seasonId, setSeasonId] = useState<string | null>(null);
+  const [activeMentee, setActiveMentee] = useState<string | null>(null);
+
+  async function load(selected?: string) {
     setLoading(true);
     try {
-      const res = await fetch("/api/journey").then((r) => r.json());
+      const q = selected ? `?seasonId=${selected}` : "";
+      const res = await fetch(`/api/journey${q}`).then((r) => r.json());
       if (res.error) {
         setData(null);
       } else {
         setData(res);
+        if (!selected && res.seasons?.length > 0) {
+          setSeasonId(res.season.id);
+        }
+        if (res.mentees?.length > 0 && !activeMentee) {
+          setActiveMentee(res.mentees[0].matchId);
+        }
       }
     } finally {
       setLoading(false);
@@ -36,15 +84,8 @@ export default function JourneyPage() {
 
   useEffect(() => {
     load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  async function issueCert() {
-    setError(null);
-    const res = await fetch("/api/journey", { method: "POST" });
-    const d = await res.json();
-    if (!res.ok) setError(d.error ?? "Có lỗi khi cấp chứng nhận");
-    await load();
-  }
 
   if (loading) {
     return (
@@ -59,7 +100,7 @@ export default function JourneyPage() {
       <AppShell title="Lộ trình mentoring">
         <Card>
           <p className="text-sm" style={{ color: "#94A3B8" }}>
-            Bạn chưa đăng ký vai trò mentor hoặc mentee. Hãy đăng ký để bắt đầu lộ trình.
+            Bạn chưa đăng ký vai trò mentor hoặc mentee.
           </p>
           <div className="mt-4 flex gap-3">
             <Link href="/onboarding/mentor"><Button>Đăng ký Mentor</Button></Link>
@@ -70,141 +111,251 @@ export default function JourneyPage() {
     );
   }
 
+  const remaining = daysRemaining(data.season.endDate);
+  const isActiveSeason = data.season.status !== "closed";
+
   return (
     <AppShell title="Lộ trình mentoring">
-      <h1 className="text-2xl font-bold mb-1" style={{ color: "#0F766E" }}>
-        Lộ trình mentoring của bạn
-      </h1>
-      <p className="text-sm mb-6" style={{ color: "#94A3B8" }}>
-        Vai trò: <b style={{ color: "#15B5B0" }}>{data.audience === "mentor" ? "Mentor" : "Mentee"}</b>
-      </p>
+      {/* TOP BAR — Bộ lọc mùa + thời gian */}
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl font-bold flex items-center gap-2" style={{ color: "#0F766E" }}>
+            <LineIcon name="map" size={22} /> Lộ trình mentoring
+          </h1>
+        </div>
+        <div className="flex items-center gap-3">
+          <select
+            value={seasonId ?? data.season.id}
+            onChange={(e) => { setSeasonId(e.target.value); load(e.target.value); }}
+            className="px-4 py-2 rounded-lg border text-sm font-semibold"
+            style={{ borderColor: "#E5E0D5", color: "#292524", background: "#fff" }}
+          >
+            {data.seasons.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.cohort || s.name} ({s.status === "closed" ? "Đã kết thúc" : "Đang diễn ra"})
+              </option>
+            ))}
+          </select>
+          <Badge color={isActiveSeason ? "#0F766E" : "#94A3B8"}>
+            {isActiveSeason ? "Đang diễn ra" : "Lịch sử"}
+          </Badge>
+        </div>
+      </div>
 
-      {/* Các bước lộ trình */}
+      {/* Badge thời gian toàn mùa */}
+      <Card className="mb-6" >
+        <div className="flex flex-wrap items-center gap-2 text-sm">
+          <LineIcon name="clock" size={16} />
+          <b style={{ color: "#292524" }}>Thời gian chương trình:</b>
+          <span style={{ color: "#292524" }}>
+            {fmtDate(data.season.startDate)} – {fmtDate(data.season.endDate)}
+          </span>
+          {isActiveSeason && (
+            <span
+              className="text-xs font-semibold px-2 py-0.5 rounded-full"
+              style={{ background: remaining > 30 ? "#E6F4EA" : "#FEF9E7", color: remaining > 30 ? "#15803D" : "#B45309" }}
+            >
+              {remaining > 0 ? `Còn ${remaining} ngày` : "Đã quá hạn tổng kết"}
+            </span>
+          )}
+        </div>
+      </Card>
+
+      {/* KHUNG A — Tiến độ chung của Mùa */}
       <Card className="mb-6">
+        <h2 className="font-bold mb-4 flex items-center gap-2" style={{ color: "#0F766E" }}>
+          <LineIcon name="calendar" size={18} /> Tiến độ chung của Mùa
+        </h2>
         <div className="space-y-1">
-          {data.steps.map((s, i) => (
-            <div key={s.key} className="flex items-center gap-4">
+          {data.milestones.map((ms, i) => (
+            <div key={ms.id} className="flex items-center gap-4">
               <div className="flex flex-col items-center">
                 <div
                   className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0"
                   style={{
-                    background: s.done ? "#15803D" : s.active ? "#15B5B0" : "#CBD5E1",
+                    background: ms.done ? "#15803D" : i === data.milestones.findIndex((m) => !m.done) ? "#15B5B0" : "#CBD5E1",
                   }}
                 >
-                  {s.done ? "✓" : i + 1}
+                  {ms.done ? <LineIcon name="check" size={16} /> : i + 1}
                 </div>
-                {i < data.steps.length - 1 && (
-                  <div className="w-0.5 h-6" style={{ background: s.done ? "#15803D" : "#E5E0D5" }} />
+                {i < data.milestones.length - 1 && (
+                  <div className="w-0.5 h-7" style={{ background: ms.done ? "#15803D" : "#E5E0D5" }} />
                 )}
               </div>
               <div className="flex-1">
-                <p
-                  className="font-medium"
-                  style={{
-                    color: s.done ? "#292524" : s.active ? "#0F766E" : "#94A3B8",
-                  }}
-                >
-                  {s.label}
-                </p>
-              </div>
-              <div>
-                {s.done ? (
-                  <span className="text-xs font-medium" style={{ color: "#15803D" }}>Đã xong</span>
-                ) : s.active ? (
-                  <span className="text-xs font-medium" style={{ color: "#15B5B0" }}>Đang thực hiện</span>
-                ) : (
-                  <span className="text-xs" style={{ color: "#94A3B8" }}>Chờ</span>
-                )}
+                <p className="font-medium" style={{ color: ms.done ? "#292524" : "#0F766E" }}>{ms.title}</p>
+                <MilestoneTimestamp ms={ms} now={new Date()} />
               </div>
             </div>
           ))}
         </div>
       </Card>
 
-      {/* Tiến độ đào tạo */}
-      <Card className="mb-6">
-        <h2 className="font-bold mb-3 flex items-center gap-2" style={{ color: "#0F766E" }}>
-          <LineIcon name="book" size={18} /> Tiến độ đào tạo
+      {/* KHUNG B — Tiến độ theo từng Mentee */}
+      <Card>
+        <h2 className="font-bold mb-4 flex items-center gap-2" style={{ color: "#0F766E" }}>
+          <LineIcon name="users" size={18} /> Tiến độ đồng hành theo Mentee
         </h2>
-        <p className="text-sm" style={{ color: "#292524" }}>
-          {data.trainingStatus.modulesCompleted}/{data.trainingStatus.modulesTotal} module{" "}
-          {data.audience === "mentor" && (
-            <> · Bài test:{" "}
-              <b style={{ color: data.trainingStatus.testPassed ? "#15803D" : "#B45309" }}>
-                {data.trainingStatus.testPassed ? "Đạt" : "Chưa đạt"}
-              </b>
-            </>
-          )}
-        </p>
-        <div className="mt-3 flex gap-3">
-          <Link href="/training"><Button variant="secondary">Đến trang đào tạo</Button></Link>
-        </div>
+
+        {data.mentees.length === 0 ? (
+          <p className="text-sm" style={{ color: "#94A3B8" }}>
+            Chưa có mentee nào được ghép cặp trong mùa này.
+          </p>
+        ) : (
+          <>
+            {/* Tabs */}
+            <div className="flex flex-wrap gap-2 mb-4">
+              {data.mentees.map((m) => (
+                <button
+                  key={m.matchId}
+                  onClick={() => setActiveMentee(m.matchId)}
+                  className="px-4 py-2 rounded-full text-sm font-semibold transition"
+                  style={{
+                    background: activeMentee === m.matchId ? "#0F766E" : "#F5F2EC",
+                    color: activeMentee === m.matchId ? "#fff" : "#292524",
+                  }}
+                >
+                  {m.partnerName}
+                </button>
+              ))}
+            </div>
+
+            {data.mentees
+              .filter((m) => m.matchId === activeMentee)
+              .map((m) => (
+                <div key={m.matchId}>
+                  {/* Trạng thái + header */}
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <Badge color={m.status === "ended" ? "#15803D" : "#0F766E"}>
+                        {m.status === "ended" ? "Hoàn thành" : "Đang thực hiện"}
+                      </Badge>
+                    </div>
+                    {m.reportSubmittedAt && (
+                      <span className="text-xs" style={{ color: "#94A3B8" }}>
+                        Báo cáo nghiệm thu: {fmtDate(m.reportSubmittedAt)}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Per-mentee milestones */}
+                  <div className="space-y-2">
+                    <PerMenteeRow
+                      icon="spark"
+                      label="Gặp Kick-off"
+                      done={!!m.kickoffAt}
+                      doneDate={m.kickoffAt}
+                      deadline={m.kickoffAt ? null : null}
+                    />
+                    <PerMenteeRow
+                      icon="chat"
+                      label={`Thực hiện Mentoring (${m.sessionCount}/${m.targetSessions} buổi)`}
+                      done={m.sessionCount >= m.targetSessions}
+                      doneDate={m.sessionCount > 0 ? m.kickoffAt : null}
+                      deadline={null}
+                      inProgress={m.sessionCount > 0 && m.sessionCount < m.targetSessions}
+                    />
+                    <PerMenteeRow
+                      icon="checkCircle"
+                      label="Đánh giá giữa kỳ"
+                      done={m.sessionCount >= Math.ceil(m.targetSessions / 2)}
+                      doneDate={null}
+                    />
+                    <PerMenteeRow
+                      icon="edit"
+                      label="Nộp báo cáo nghiệm thu"
+                      done={!!m.reportSubmittedAt}
+                      doneDate={m.reportSubmittedAt}
+                      deadline={data.season.endDate}
+                    />
+                  </div>
+                </div>
+              ))}
+          </>
+        )}
       </Card>
 
-      {/* Giấy chứng nhận mentoring */}
-      <Card>
-        <h2 className="font-bold mb-3 flex items-center gap-2" style={{ color: "#0F766E" }}>
-          <LineIcon name="award" size={18} /> Chứng nhận hoàn thành mentoring
-        </h2>
-
-        {data.mentoringCert ? (
+      {/* Chứng nhận mentoring */}
+      {data.mentoringCert && (
+        <Card className="mt-6">
+          <h2 className="font-bold mb-3 flex items-center gap-2" style={{ color: "#0F766E" }}>
+            <LineIcon name="award" size={18} /> Chứng nhận hoàn thành
+          </h2>
           <div className="flex items-center justify-between">
             <p className="text-sm" style={{ color: "#292524" }}>
-              Bạn đã được cấp chứng nhận mentoring (Mã: {data.mentoringCert.certificateNo}).
+              Mã: {data.mentoringCert.certificateNo} · Cấp {fmtDate(data.mentoringCert.issuedAt)}
             </p>
             <Link href={`/certificate/${data.mentoringCert.id}`}>
               <Button>Xem chứng nhận</Button>
             </Link>
           </div>
-        ) : data.completedMatch ? (
-          <div className="flex items-center justify-between">
-            <p className="text-sm" style={{ color: "#292524" }}>
-              Bạn đã hoàn thành mentoring, đủ điều kiện nhận chứng nhận.
-            </p>
-            <Button onClick={issueCert}>Nhận chứng nhận</Button>
-          </div>
-        ) : (
-          <p className="text-sm" style={{ color: "#94A3B8" }}>
-            Hoàn thành hành trình mentoring (kết thúc match) để nhận giấy chứng nhận.
-          </p>
-        )}
-
-        {error && (
-          <p className="text-sm mt-3 flex items-center gap-1" style={{ color: "#B42318" }}><LineIcon name="alert" size={14} /> {error}</p>
-        )}
-
-        {/* Bảng danh sách chứng nhận */}
-        {data.certificates.length > 0 && (
-          <div className="mt-5 overflow-x-auto">
-            <table className="w-full text-sm" style={{ color: "#292524" }}>
-              <thead>
-                <tr style={{ borderBottom: "2px solid #F5F2EC" }}>
-                  <th className="text-left py-2 font-semibold">Mã chứng nhận</th>
-                  <th className="text-left py-2 font-semibold">Vai trò</th>
-                  <th className="text-left py-2 font-semibold">Ngày cấp</th>
-                  <th className="text-left py-2 font-semibold">Tổ chức</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.certificates.map((c) => (
-                  <tr key={c.id} style={{ borderBottom: "1px solid #F5F2EC" }}>
-                    <td className="py-3">{c.certificateNo}</td>
-                    <td className="py-3">{c.role === "mentor" ? "Mentor" : "Mentee"}</td>
-                    <td className="py-3">{new Date(c.issuedAt).toLocaleDateString("vi-VN")}</td>
-                    <td className="py-3">{c.orgName}</td>
-                    <td className="py-3 text-right">
-                      <Link href={`/certificate/${c.id}`}>
-                        <span style={{ color: "#15B5B0", fontWeight: 600 }}>Xem</span>
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </Card>
+        </Card>
+      )}
     </AppShell>
+  );
+}
+
+function MilestoneTimestamp({ ms, now }: { ms: Milestone; now: Date }) {
+  if (ms.done && ms.doneAt) {
+    return (
+      <span className="text-xs" style={{ color: "#15803D" }}>
+        Đã hoàn thành: {fmtDate(ms.doneAt)}
+      </span>
+    );
+  }
+  if (ms.done) {
+    return <span className="text-xs" style={{ color: "#15803D" }}>Đã hoàn thành</span>;
+  }
+  if (ms.deadline) {
+    const overdue = new Date(ms.deadline) < now;
+    return (
+      <span className="text-xs" style={{ color: overdue ? "#B42318" : "#94A3B8" }}>
+        {overdue ? `Trễ hạn` : "Dự kiến"}: {fmtDate(ms.deadline)}
+      </span>
+    );
+  }
+  return null;
+}
+
+function PerMenteeRow({
+  icon,
+  label,
+  done,
+  doneDate,
+  deadline,
+  inProgress,
+}: {
+  icon: any;
+  label: string;
+  done: boolean;
+  doneDate?: string | null;
+  deadline?: string | null;
+  inProgress?: boolean;
+}) {
+  return (
+    <div className="flex items-center gap-3 py-1.5">
+      <div
+        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-white"
+        style={{ background: done ? "#15803D" : inProgress ? "#15B5B0" : "#CBD5E1" }}
+      >
+        {done ? <LineIcon name="check" size={15} /> : <LineIcon name={icon} size={15} />}
+      </div>
+      <div className="flex-1">
+        <p className="text-sm font-medium" style={{ color: done ? "#292524" : "#0F766E" }}>{label}</p>
+        <div>
+          {done && doneDate ? (
+            <span className="text-xs" style={{ color: "#15803D" }}>Đã xong · {fmtDate(doneDate)}</span>
+          ) : done ? (
+            <span className="text-xs" style={{ color: "#15803D" }}>Đã xong</span>
+          ) : inProgress ? (
+            <span className="text-xs" style={{ color: "#15B5B0" }}>Đang diễn ra</span>
+          ) : deadline ? (
+            <span className="text-xs" style={{ color: "#94A3B8" }}>Dự kiến: {fmtDate(deadline)}</span>
+          ) : (
+            <span className="text-xs" style={{ color: "#B42318" }}>Chưa thực hiện</span>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

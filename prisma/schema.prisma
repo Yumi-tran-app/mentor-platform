@@ -210,12 +210,14 @@ model User {
 }
 
 model Season {
-  id        String       @id @default(uuid()) @db.Uuid
-  name      String
-  startDate DateTime     @map("start_date") @db.Date
-  endDate   DateTime     @map("end_date") @db.Date
-  status    SeasonStatus @default(draft)
-  createdAt DateTime     @default(now()) @map("created_at")
+  id                   String       @id @default(uuid()) @db.Uuid
+  name                 String
+  cohort               String? // VD: "Cohort 5"
+  startDate            DateTime     @map("start_date") @db.Date
+  endDate              DateTime     @map("end_date") @db.Date
+  registrationDeadline DateTime?    @map("registration_deadline") @db.Date // hạn đăng ký & xét duyệt
+  status               SeasonStatus @default(draft)
+  createdAt            DateTime     @default(now()) @map("created_at")
 
   mentorApplications MentorApplication[]
   menteeApplications MenteeApplication[]
@@ -226,8 +228,24 @@ model Season {
   trainingModules    TrainingModule[]
   trainingTests      TrainingTest[]
   certificates       Certificate[]
+  milestones         SeasonMilestone[]
 
   @@map("seasons")
+}
+
+// Mốc thời gian chung của một mùa (Kh/tc trị theo admin tạo + tự ghi ngày hoàn thành)
+model SeasonMilestone {
+  id          String    @id @default(uuid()) @db.Uuid
+  seasonId    String    @map("season_id") @db.Uuid
+  season      Season    @relation(fields: [seasonId], references: [id])
+  key         String // định danh nghiệp vụ: registration / training / matching / wrapup
+  title       String
+  sortOrder   Int       @default(0) @map("sort_order")
+  deadline    DateTime? @map("deadline") @db.Date
+  completedAt DateTime? @map("completed_at")
+
+  @@index([seasonId])
+  @@map("season_milestones")
 }
 
 model SeasonCriteria {
