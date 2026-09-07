@@ -51,6 +51,7 @@ export default function DiscoverPage() {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [cityFilter, setCityFilter] = useState<string>(""); // "" = mặc định (tự chọn city của mình); "ALL" = tất cả
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -121,8 +122,7 @@ export default function DiscoverPage() {
   const cities = VIETNAM_PROVINCES.filter((c) => availableCities.includes(c));
 
   // Filter theo city (mặc định dùng city của chính mình nếu có)
-  const [cityFilter, setCityFilter] = useState<string>("");
-  const effectiveCity = cityFilter || myCity || "";
+  const effectiveCity = cityFilter === "ALL" ? "" : cityFilter || myCity || "";
   const filteredMentors = effectiveCity
     ? mentors.filter((m) => m.city === effectiveCity)
     : mentors;
@@ -145,12 +145,12 @@ export default function DiscoverPage() {
         <div className="flex items-center gap-2">
           <LineIcon name="pin" size={16} />
           <select
-            value={effectiveCity}
+            value={cityFilter === "ALL" ? "ALL" : effectiveCity}
             onChange={(e) => { setCityFilter(e.target.value); setVisibleCount(PAGE_SIZE); }}
             className="px-3 py-2 rounded-lg border text-sm"
             style={{ borderColor: "#E5E0D5", color: "#292524", background: "#fff" }}
           >
-            <option value="">Tất cả tỉnh/thành</option>
+            <option value="ALL">Tất cả tỉnh/thành</option>
             {cities.map((c) => (
               <option key={c} value={c}>{c}</option>
             ))}
