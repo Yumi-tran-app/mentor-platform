@@ -27,9 +27,11 @@ export const POST = withErrorHandling(async (req: Request) => {
   const sid = await getActiveSeasonId();
   if (!sid) return NextResponse.json({ error: "No active season" }, { status: 400 });
 
-  // Xác định user là mentor hay mentee
-  const myMentorApp = await prisma.mentorApplication.findFirst({ where: { userId: user.id, seasonId: sid } });
-  const myMenteeApp = await prisma.menteeApplication.findFirst({ where: { userId: user.id, seasonId: sid } });
+  // Xác định user là mentor hay mentee (song song hoá 2 query độc lập)
+  const [myMentorApp, myMenteeApp] = await Promise.all([
+    prisma.mentorApplication.findFirst({ where: { userId: user.id, seasonId: sid } }),
+    prisma.menteeApplication.findFirst({ where: { userId: user.id, seasonId: sid } }),
+  ]);
 
   let mentorAppId: string | null = null;
   let menteeAppId: string | null = null;
