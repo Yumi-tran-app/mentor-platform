@@ -32,6 +32,7 @@ export default function AdminSeasonsPage() {
     startDate: "",
     endDate: "",
     registrationDays: 45,
+    sessionTarget: 6,
   });
 
   async function load() {
@@ -53,13 +54,14 @@ export default function AdminSeasonsPage() {
       body: JSON.stringify({
         ...form,
         registrationDays: Number(form.registrationDays) || 45,
+        sessionTarget: Number(form.sessionTarget) || 6,
       }),
     });
     const d = await res.json();
     if (res.ok) {
       setMsg("✅ Đã tạo mùa mới.");
       setShowForm(false);
-      setForm({ name: "", cohort: "", startDate: "", endDate: "", registrationDays: 45 });
+      setForm({ name: "", cohort: "", startDate: "", endDate: "", registrationDays: 45, sessionTarget: 6 });
     } else {
       setMsg(d.error ?? "Có lỗi khi tạo mùa.");
     }
@@ -109,6 +111,11 @@ export default function AdminSeasonsPage() {
               <label className="text-xs font-medium block mb-1" style={{ color: "#292524" }}>Hạn đăng ký & xét duyệt (ngày)</label>
               <input type="number" className={inputCls} style={inputStyle} value={form.registrationDays} onChange={(e) => setForm({ ...form, registrationDays: Number(e.target.value) })} />
               <p className="text-xs mt-1" style={{ color: "#94A3B8" }}>Tự tính = ngày bắt đầu + số ngày này (mặc định 45).</p>
+            </div>
+            <div>
+              <label className="text-xs font-medium block mb-1" style={{ color: "#292524" }}>Số buổi mentoring chuẩn</label>
+              <input type="number" className={inputCls} style={inputStyle} value={form.sessionTarget} onChange={(e) => setForm({ ...form, sessionTarget: Number(e.target.value) })} />
+              <p className="text-xs mt-1" style={{ color: "#94A3B8" }}>Số buổi mentoring tối thiểu mỗi cặp (mặc định 6).</p>
             </div>
           </div>
           <div className="flex gap-3 mt-4">

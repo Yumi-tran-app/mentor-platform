@@ -301,6 +301,12 @@ export async function getJourneyV2(
     : await prisma.menteeApplication.findMany({ where: { userId, seasonId }, select: { submittedAt: true } });
   const registeredAt = myApplications.find((a) => a.submittedAt)?.submittedAt ?? null;
 
+  // Số buổi mục tiêu theo mùa (SeasonCriteria) — fallback 6
+  const sessionCriterion = await prisma.seasonCriteria.findUnique({
+    where: { seasonId_key: { seasonId, key: "mentoring_session_target" } },
+  });
+  const targetSessions = sessionCriterion ? parseInt(sessionCriterion.value, 10) : 6;
+
   const milestones = milestonesRaw.map((ms) => {
     let doneAt: Date | null = ms.completedAt;
     let done = !!ms.completedAt;
@@ -347,7 +353,7 @@ export async function getJourneyV2(
         scheduleCount,
         reportSubmittedAt: report?.submittedAt ?? null,
         completedAt: m.endedAt,
-        targetSessions: 6,
+        targetSessions,
       };
     })
   );

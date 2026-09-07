@@ -10,6 +10,7 @@ const SeasonSchema = z.object({
   startDate: z.string().min(1), // yyyy-mm-dd
   endDate: z.string().min(1),
   registrationDays: z.number().int().min(1).default(45),
+  sessionTarget: z.number().int().min(1).default(6),
   milestones: z
     .array(
       z.object({
@@ -75,6 +76,13 @@ export const POST = withErrorHandling(async (req: Request) => {
       registrationDeadline: regDeadline,
       status: "draft",
       milestones: { create: milestonesInput },
+      criteria: {
+        create: {
+          key: "mentoring_session_target",
+          value: String(parsed.sessionTarget),
+          valueType: "number",
+        },
+      },
     },
     include: { milestones: { orderBy: { sortOrder: "asc" } } },
   });

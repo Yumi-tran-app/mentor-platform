@@ -256,12 +256,6 @@ export default function JourneyPage() {
                       inProgress={m.sessionCount > 0 && m.sessionCount < m.targetSessions}
                     />
                     <PerMenteeRow
-                      icon="checkCircle"
-                      label="Đánh giá giữa kỳ"
-                      done={m.sessionCount >= Math.ceil(m.targetSessions / 2)}
-                      doneDate={null}
-                    />
-                    <PerMenteeRow
                       icon="edit"
                       label="Nộp báo cáo nghiệm thu"
                       done={!!m.reportSubmittedAt}
