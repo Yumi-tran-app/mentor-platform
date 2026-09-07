@@ -185,11 +185,24 @@ export default function ProfilePage() {
           <>
             <Card>
               <h2 className="font-bold mb-4" style={{ color: "#15B5B0" }}>
+                🪪 Thông tin xác thực (Mentee)
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm" style={{ color: "#2C335D" }}>
+                <Field label="Họ và tên" value={eIdentity.fullName} />
+                <Field label="Mã số sinh viên" value={eIdentity.studentId} />
+                <Field label="Email trường" value={eIdentity.email} full />
+                <Field label="Số điện thoại" value={eIdentity.phone} />
+              </div>
+            </Card>
+
+            <Card>
+              <h2 className="font-bold mb-4" style={{ color: "#15B5B0" }}>
                 🎓 Thông tin học tập (Mentee)
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm" style={{ color: "#2C335D" }}>
                 <Field label="Ngành học" value={eProfile.major} />
                 <Field label="Trường" value={eProfile.school} />
+                <Field label="Năm học" value={eProfile.yearOfStudy ? `Năm ${eProfile.yearOfStudy}` : undefined} />
                 <Field label="Thành phố" value={eProfile.city} />
               </div>
             </Card>

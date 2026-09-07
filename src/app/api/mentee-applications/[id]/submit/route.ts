@@ -23,6 +23,12 @@ export async function PATCH(
 
     const updated = await transitionMenteeApplication(id, "submitted", user.id);
 
+    // Lưu thời điểm đồng thuận (bước 5 consent) khi submit
+    await prisma.menteeApplication.update({
+      where: { id },
+      data: { consentedAt: new Date() },
+    });
+
     sendEmail({
       to: user.email,
       subject: "Đã nhận đơn đăng ký Mentee của bạn",
