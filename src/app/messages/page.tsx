@@ -5,8 +5,8 @@ import { AppShell, Card, Button } from "@/components/ui";
 
 type Match = {
   id: string;
-  mentorApplication: { user: { fullName: string } };
-  menteeApplication: { user: { fullName: string } };
+  mentorApplication: { user: { fullName: string; id: string } };
+  menteeApplication: { user: { fullName: string; id: string } };
 };
 
 type Message = {
@@ -71,6 +71,13 @@ export default function MessagesPage() {
     );
   }
 
+  // Lấy tên đối phương (partner) từ góc nhìn người dùng hiện tại
+  function partnerOf(m: Match): { name: string; role: string } {
+    const isMentor = myId === m.mentorApplication.user.id;
+    if (isMentor) return { name: m.menteeApplication.user.fullName, role: "Mentee" };
+    return { name: m.mentorApplication.user.fullName, role: "Mentor" };
+  }
+
   return (
     <AppShell title="Tin nhắn">
       <h1 className="text-2xl font-bold mb-6" style={{ color: "#0F766E" }}>
@@ -85,23 +92,27 @@ export default function MessagesPage() {
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-[260px_1fr] gap-5">
-          {/* Danh sách cặp */}
+          {/* Danh sách đối phương */}
           <div className="space-y-2">
-            {matches.map((m) => (
-              <button
-                key={m.id}
-                onClick={() => setActiveId(m.id)}
-                className="w-full text-left p-3 rounded-lg border transition"
-                style={{
-                  borderColor: activeId === m.id ? "#15B5B0" : "#F5F2EC",
-                  background: activeId === m.id ? "#F2F9F4" : "#fff",
-                }}
-              >
-                <p className="text-sm font-semibold truncate" style={{ color: "#0F766E" }}>
-                  {m.mentorApplication.user.fullName} ↔ {m.menteeApplication.user.fullName}
-                </p>
-              </button>
-            ))}
+            {matches.map((m) => {
+              const p = partnerOf(m);
+              return (
+                <button
+                  key={m.id}
+                  onClick={() => setActiveId(m.id)}
+                  className="w-full text-left p-3 rounded-lg border transition"
+                  style={{
+                    borderColor: activeId === m.id ? "#15B5B0" : "#F5F2EC",
+                    background: activeId === m.id ? "#F2F9F4" : "#fff",
+                  }}
+                >
+                  <p className="text-sm font-semibold truncate" style={{ color: "#0F766E" }}>
+                    {p.name}
+                  </p>
+                  <p className="text-xs" style={{ color: "#94A3B8" }}>{p.role}</p>
+                </button>
+              );
+            })}
           </div>
 
           {/* Khung chat */}

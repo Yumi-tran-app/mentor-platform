@@ -78,7 +78,6 @@ export default function MatchDetailPage() {
   // post form
   const [content, setContent] = useState("");
   const [visibility, setVisibility] = useState<"shared" | "private">("shared");
-  const [postTags, setPostTags] = useState<string[]>([]);
   const [posting, setPosting] = useState(false);
 
   // milestones
@@ -146,10 +145,6 @@ export default function MatchDetailPage() {
     load();
   }, [load]);
 
-  function toggleTag(key: string) {
-    setPostTags((s) => (s.includes(key) ? s.filter((k) => k !== key) : [...s, key]));
-  }
-
   async function post(e: React.FormEvent) {
     e.preventDefault();
     if (!content.trim()) return;
@@ -158,10 +153,9 @@ export default function MatchDetailPage() {
       await fetch("/api/timeline", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ matchId, content, visibility, tags: postTags }),
+        body: JSON.stringify({ matchId, content, visibility, tags: [] }),
       });
       setContent("");
-      setPostTags([]);
       await load();
     } finally {
       setPosting(false);
@@ -290,20 +284,6 @@ export default function MatchDetailPage() {
                     </button>
                   ))}
                 </div>
-
-                {/* Tags: Phản tư / Nhật ký */}
-                <TagChip
-                  label="Phản tư"
-                  icon="bulb"
-                  active={postTags.includes("reflection")}
-                  onClick={() => toggleTag("reflection")}
-                />
-                <TagChip
-                  label="Nhật ký"
-                  icon="map"
-                  active={postTags.includes("journey")}
-                  onClick={() => toggleTag("journey")}
-                />
 
                 <div className="ml-auto">
                   <Button type="submit" disabled={posting || !content.trim()}>
@@ -455,6 +435,24 @@ export default function MatchDetailPage() {
 
         {/* CỘT PHỤ (30%) — Thông tin & Quản trị */}
         <div className="lg:col-span-3 space-y-4">
+          {/* Điều hướng phản tư / nhật ký */}
+          <Card className="space-y-2">
+            <Link
+              href={`/workspace/${matchId}/reflect`}
+              className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-semibold hover:bg-stone-50"
+              style={{ color: "#D97706" }}
+            >
+              <LineIcon name="bulb" size={16} /> Phản tư tháng
+            </Link>
+            <Link
+              href={`/workspace/${matchId}/journey`}
+              className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-semibold hover:bg-stone-50"
+              style={{ color: "#15B5B0" }}
+            >
+              <LineIcon name="map" size={16} /> Nhật ký hành trình
+            </Link>
+          </Card>
+
           {/* Hồ sơ nhanh đối tác */}
           <Card>
             <h2 className="font-bold mb-3" style={{ color: "#0F766E" }}>Đối tác của bạn</h2>
@@ -536,32 +534,3 @@ const AGREEMENT_ROWS: [string, string][] = [
 
 const inputCls =
   "w-full px-3 py-2 rounded-lg border text-sm";
-
-function TagChip({
-  label,
-  icon,
-  active,
-  onClick,
-}: {
-  label: string;
-  icon: string;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 transition"
-      style={{
-        background: active ? "#15B5B0" : "#F5F2EC",
-        color: active ? "#fff" : "#292524",
-        border: active ? "1px solid #15B5B0" : "1px solid transparent",
-      }}
-    >
-      <LineIcon name={icon as any} size={13} />
-      {active ? "✓ " : ""}
-      {label}
-    </button>
-  );
-}
