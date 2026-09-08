@@ -642,6 +642,8 @@ model TrainingRegistration {
   user         User           @relation(fields: [userId], references: [id])
   registeredAt DateTime       @default(now()) @map("registered_at")
   checkedInAt  DateTime?      @map("checked_in_at")
+  confirmation String         @default("pending") @map("confirmation") // "pending" | "accepted" | "declined"
+  confirmedAt  DateTime?      @map("confirmed_at")
 
   @@unique([moduleId, userId])
   @@index([moduleId])

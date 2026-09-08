@@ -20,7 +20,7 @@ export const GET = withErrorHandling(async (req: Request) => {
   const events = await prisma.trainingModule.findMany({
     where: {
       seasonId,
-      type: "event",
+      type: { in: ["event", "interview"] },
       OR: [
         { status: "open" },
         { status: "completed" },
@@ -30,7 +30,7 @@ export const GET = withErrorHandling(async (req: Request) => {
     orderBy: [{ status: "asc" }, { startAt: "asc" }],
     include: {
       _count: { select: { registrations: true } },
-      registrations: { where: { userId: user.id }, select: { id: true, checkedInAt: true } },
+      registrations: { where: { userId: user.id }, select: { id: true, checkedInAt: true, confirmation: true } },
     },
   });
 
@@ -38,6 +38,7 @@ export const GET = withErrorHandling(async (req: Request) => {
     ...e,
     registered: e.registrations.length > 0,
     checkedIn: e.registrations[0]?.checkedInAt ?? null,
+    confirmation: e.registrations[0]?.confirmation ?? null,
     slotsLeft: e.capacity > 0 ? Math.max(0, e.capacity - e._count.registrations) : null,
     registrationsCount: e._count.registrations,
   }));
@@ -58,7 +59,7 @@ export const POST = withErrorHandling(async (req: Request) => {
   if (!eventId) return NextResponse.json({ error: "eventId required" }, { status: 400 });
 
   const event = await prisma.trainingModule.findUnique({ where: { id: eventId } });
-  if (!event || event.type !== "event" || event.status !== "open") {
+  if (!event || (event.type !== "event" && event.type !== "interview") || event.status !== "open") {
     return NextResponse.json({ error: "Event không khả dụng" }, { status: 400 });
   }
 

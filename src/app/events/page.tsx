@@ -9,6 +9,7 @@ type EventItem = {
   description: string | null;
   audience: string;
   status: string;
+  type: string;
   startAt: string | null;
   endAt: string | null;
   location: string | null;
@@ -18,6 +19,7 @@ type EventItem = {
   checkInCode: string | null;
   registered: boolean;
   checkedIn: string | null;
+  confirmation: string | null;
   slotsLeft: number | null;
   registrationsCount: number;
 };
@@ -54,6 +56,22 @@ export default function EventsPage() {
     await load();
   }
 
+  async function confirm(id: string, confirmation: "accepted" | "declined") {
+    setMsg(null);
+    const res = await fetch("/api/events/confirm", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ eventId: id, confirmation }),
+    });
+    const d = await res.json();
+    if (res.ok) {
+      setMsg(confirmation === "accepted" ? "✅ Bạn đã xác nhận tham gia." : "Đã ghi nhận: bạn không tham gia.");
+    } else {
+      setMsg(d.error ?? "Có lỗi khi xác nhận");
+    }
+    await load();
+  }
+
   const money = (n: number) => (n > 0 ? n.toLocaleString("vi-VN") + "đ" : "Miễn phí");
   const fmt = (s: string | null) => (s ? new Date(s).toLocaleString("vi-VN") : "—");
 
@@ -79,7 +97,9 @@ export default function EventsPage() {
             <Card key={e.id}>
               <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="font-bold" style={{ color: "#0F766E" }}>{e.title}</h3>
+                  <h3 className="font-bold" style={{ color: "#0F766E" }}>
+                    {e.type === "interview" && <Badge color="#D97706">Buổi định hướng</Badge>} {e.title}
+                  </h3>
                   <p className="text-xs mt-1" style={{ color: "#94A3B8" }}>
                     {e.status === "open" ? "Đang mở đăng ký" : "Đã tổ chức"}
                   </p>
@@ -99,7 +119,29 @@ export default function EventsPage() {
               </div>
 
               <div className="mt-4">
-                {e.status === "open" ? (
+                {e.type === "interview" ? (
+                  e.registered ? (
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {e.confirmation === "accepted" ? (
+                        <Badge color="#15803D">✓ Sẽ tham dự</Badge>
+                      ) : e.confirmation === "declined" ? (
+                        <Badge color="#94A3B8">Không tham dự</Badge>
+                      ) : (
+                        <>
+                          <Button variant="secondary" onClick={() => confirm(e.id, "accepted")}>✓ Có</Button>
+                          <Button variant="danger" onClick={() => confirm(e.id, "declined")}>✗ Không</Button>
+                        </>
+                      )}
+                      {e.confirmation && e.confirmation !== "pending" && (
+                        <button className="text-xs underline" style={{ color: "#15B5B0" }} onClick={() => confirm(e.id, e.confirmation === "accepted" ? "declined" : "accepted")}>
+                          Đổi
+                        </button>
+                      )}
+                    </div>
+                  ) : (
+                    <Button onClick={() => register(e.id)}>Đăng ký tham dự</Button>
+                  )
+                ) : e.status === "open" ? (
                   e.registered ? (
                     <div className="flex items-center gap-3">
                       <Badge color="#15803D">✓ Đã đăng ký</Badge>
