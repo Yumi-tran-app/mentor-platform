@@ -121,7 +121,7 @@ export default function DashboardPage() {
               <StatItem label="Đã tham gia (mùa)" value={stats.stats.seasons ?? 0} />
               <StatItem label="Kết nối (mentee)" value={stats.stats.mentees ?? 0} />
               <StatItem label="Tham gia (khoá đào tạo)" value={stats.stats.trainingCourses ?? 0} />
-              <StatItem label="Triển khai (khoá đào tạo)" value={stats.stats.eventsDelivered ?? 0} />
+              <StatItem label="Đã làm diễn giả (khoá đào tạo)" value={stats.stats.eventsDelivered ?? 0} />
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">

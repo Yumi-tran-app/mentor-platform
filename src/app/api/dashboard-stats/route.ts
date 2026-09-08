@@ -15,12 +15,12 @@ export const GET = withErrorHandling(async (req: Request) => {
   const audience = await resolveApplicantAudience(user.id);
 
   if (audience === "mentor") {
-    const [seasonsCount, menteesCount, trainingCount, eventsCount, certCount] =
+    const [seasonsCount, menteesCount, trainingCount, eventsDeliveredCount, certCount] =
       await Promise.all([
         prisma.mentorApplication.count({ where: { userId: user.id } }),
         prisma.match.count({ where: { mentorApplication: { userId: user.id } } }),
         prisma.trainingProgress.count({ where: { userId: user.id } }),
-        prisma.trainingRegistration.count({ where: { userId: user.id } }),
+        prisma.trainingSpeaker.count({ where: { userId: user.id } }),
         prisma.certificate.count({ where: { userId: user.id } }),
       ]);
 
@@ -30,7 +30,7 @@ export const GET = withErrorHandling(async (req: Request) => {
         seasons: seasonsCount,
         mentees: menteesCount,
         trainingCourses: trainingCount,
-        eventsDelivered: eventsCount,
+        eventsDelivered: eventsDeliveredCount,
         certificates: certCount,
       },
     });

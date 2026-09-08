@@ -205,6 +205,7 @@ model User {
   certificates            Certificate[]
   trainingRegistrations   TrainingRegistration[]
   endOfProgramReports     EndOfProgramReport[]
+  trainingSpeakers        TrainingSpeaker[]
 
   @@map("users")
 }
@@ -623,6 +624,7 @@ model TrainingModule {
 
   progress      TrainingProgress[]
   registrations TrainingRegistration[]
+  speakers      TrainingSpeaker[]
   createdAt     DateTime               @default(now()) @map("created_at")
 
   @@index([seasonId, audience])
@@ -643,6 +645,21 @@ model TrainingRegistration {
   @@unique([moduleId, userId])
   @@index([moduleId])
   @@map("training_registrations")
+}
+
+// Diễn giả của một khoá đào tạo / workshop (thường là mentor) — ghi nhận đóng góp
+model TrainingSpeaker {
+  id       String         @id @default(uuid()) @db.Uuid
+  moduleId String         @map("module_id") @db.Uuid
+  module   TrainingModule @relation(fields: [moduleId], references: [id])
+  userId   String         @map("user_id") @db.Uuid
+  user     User           @relation(fields: [userId], references: [id])
+  role     String? // nhãn vai trò (VD: "Diễn giả chính", "Đồng diễn giả")
+  createdAt DateTime      @default(now()) @map("created_at")
+
+  @@unique([moduleId, userId])
+  @@index([userId])
+  @@map("training_speakers")
 }
 
 model TrainingProgress {

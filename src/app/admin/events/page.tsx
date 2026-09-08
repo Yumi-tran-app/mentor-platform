@@ -49,6 +49,11 @@ export default function AdminEventsPage() {
   const [detail, setDetail] = useState<any>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
+  // diễn giả (gán mentor làm diễn giả của khoá đào tạo)
+  const [speakers, setSpeakers] = useState<any[]>([]);
+  const [mentors, setMentors] = useState<any[]>([]);
+  const [speakerUserId, setSpeakerUserId] = useState("");
+
   async function load() {
     setLoading(true);
     const params = new URLSearchParams();
@@ -115,6 +120,35 @@ export default function AdminEventsPage() {
   async function viewDetail(id: string) {
     const res = await fetch(`/api/admin/events/${id}`).then((r) => r.json());
     setDetail(res);
+    // load diễn giả + danh sách mentor
+    const [sp, mt] = await Promise.all([
+      fetch(`/api/admin/training-speakers?moduleId=${id}`).then((r) => r.json()),
+      fetch("/api/admin/training-speakers/mentors").then((r) => r.json()),
+    ]);
+    setSpeakers(sp.speakers ?? []);
+    setMentors(mt.mentors ?? []);
+    setSpeakerUserId("");
+  }
+
+  async function addSpeaker() {
+    if (!speakerUserId || !detail) return;
+    await fetch("/api/admin/training-speakers", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ moduleId: detail.event.id, userId: speakerUserId }),
+    });
+    const sp = await fetch(`/api/admin/training-speakers?moduleId=${detail.event.id}`).then((r) => r.json());
+    setSpeakers(sp.speakers ?? []);
+    setSpeakerUserId("");
+  }
+
+  async function removeSpeaker(userId: string) {
+    if (!detail) return;
+    await fetch(`/api/admin/training-speakers?moduleId=${detail.event.id}&userId=${userId}`, {
+      method: "DELETE",
+    });
+    const sp = await fetch(`/api/admin/training-speakers?moduleId=${detail.event.id}`).then((r) => r.json());
+    setSpeakers(sp.speakers ?? []);
   }
 
   async function doDelete(id: string) {
@@ -286,6 +320,37 @@ export default function AdminEventsPage() {
                 />
               </div>
             )}
+            <div>
+              <p className="font-bold mb-1">Diễn giả ({speakers.length}):</p>
+              {speakers.length === 0 ? (
+                <p className="text-xs" style={{ color: "#94A3B8" }}>Chưa gán diễn giả.</p>
+              ) : (
+                <div className="space-y-1 mb-2">
+                  {speakers.map((s: any) => (
+                    <div key={s.id} className="flex items-center justify-between text-xs">
+                      <span>{s.user.fullName} ({s.user.email}){s.role ? ` · ${s.role}` : ""}</span>
+                      <button onClick={() => removeSpeaker(s.user.id)} style={{ color: "#B45309" }}>Gỡ</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className="flex gap-2 mt-2">
+                <select
+                  value={speakerUserId}
+                  onChange={(e) => setSpeakerUserId(e.target.value)}
+                  className="flex-1 px-3 py-1.5 rounded-lg border text-xs"
+                  style={{ borderColor: "#E5E0D5", color: "#292524" }}
+                >
+                  <option value="">— Chọn mentor làm diễn giả —</option>
+                  {mentors.map((m) => (
+                    <option key={m.userId} value={m.userId}>
+                      {m.fullName} ({m.email})
+                    </option>
+                  ))}
+                </select>
+                <Button variant="secondary" onClick={addSpeaker} disabled={!speakerUserId}>Gán</Button>
+              </div>
+            </div>
             <div>
               <p className="font-bold mb-1">Học viên đã đăng ký ({detail.event.registrations?.length ?? 0}):</p>
               {detail.event.registrations?.length === 0 ? (
