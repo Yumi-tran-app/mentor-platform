@@ -1,62 +1,57 @@
 /**
- * Nhật ký hành trình — hệ thống nhãn (tags) theo 3 giai đoạn phản tư.
- * Người dùng viết tự do, sau đó gắn 1 hoặc nhiều tag trước khi lưu.
+ * Nhật ký hành trình — hệ thống nhãn (tags).
+ * Người dùng viết tự do, sau đó gắn 1 hoặc nhiều nhãn trước khi lưu.
+ * Có 3 nhãn gợi ý + cho phép thêm nhãn tuỳ chỉnh.
  */
 
-export type JourneyStage = "fact" | "insight" | "action";
-
-export type JourneyTag = {
+export type JourneyTagDef = {
   key: string;
+  emoji: string;
   label: string;
-  stage: JourneyStage;
 };
 
-export const JOURNEY_STAGES: { key: JourneyStage; label: string; hint: string }[] =
-  [
-    { key: "fact", label: "Thực tế", hint: "Đã làm gì / Đã gặp ai" },
-    { key: "insight", label: "Nhận thức", hint: "Đã nhận ra / Đã học được" },
-    { key: "action", label: "Hành động", hint: "Bước tiếp theo / To-do" },
-  ];
-
-export const JOURNEY_TAGS: JourneyTag[] = [
-  { key: "met", label: "Đã gặp ai", stage: "fact" },
-  { key: "done", label: "Đã làm gì", stage: "fact" },
-  { key: "realized", label: "Đã nhận ra", stage: "insight" },
-  { key: "learned", label: "Đã học được", stage: "insight" },
-  { key: "next", label: "Bước tiếp theo", stage: "action" },
-  { key: "todo", label: "To-do", stage: "action" },
+// 3 nhãn gợi ý (presets)
+export const JOURNEY_TAGS: JourneyTagDef[] = [
+  { key: "insight", emoji: "💡", label: "Đúc kết" },
+  { key: "action", emoji: "🚀", label: "Bước tiếp theo" },
+  { key: "memory", emoji: "🎯", label: "Kỷ niệm" },
 ];
 
-/** Một entry có thể gắn nhiều tag ở nhiều giai đoạn. */
-export type JourneyTagKey = string;
+/** Tên hiển thị của một tag key (kể cả tag tuỳ chỉnh không nằm trong presets). */
+export function tagLabel(key: string): string {
+  const preset = JOURNEY_TAGS.find((t) => t.key === key);
+  if (preset) return `${preset.emoji} ${preset.label}`;
+  return key;
+}
 
-/** Map một tag key -> category enum (JourneyCategory hiện có trong DB). */
-export function stageToCategory(stage: JourneyStage): string {
-  switch (stage) {
-    case "fact":
-      return "met";
+/** Map tag key -> category enum (JourneyCategory hiện có trong DB). */
+export function stageToCategory(key: string): string {
+  switch (key) {
     case "insight":
       return "realized";
     case "action":
       return "next";
+    case "memory":
+      return "met";
+    default:
+      return "met";
   }
 }
 
-/** Lấy giai đoạn đầu (theo thứ tự fact -> insight -> action) từ danh sách tag key. */
+/**
+ * Lấy category cho 1 entry từ danh sách tag key.
+ * Ưu tiên tag preset đầu tiên; nếu không có preset thì dùng "met".
+ */
 export function resolveCategoryFromTags(tagKeys: string[]): string {
-  const stages: JourneyStage[] = [];
-  for (const k of tagKeys) {
-    const t = JOURNEY_TAGS.find((x) => x.key === k);
-    if (t && !stages.includes(t.stage)) stages.push(t.stage);
+  for (const preset of JOURNEY_TAGS) {
+    if (tagKeys.includes(preset.key)) return stageToCategory(preset.key);
   }
-  const order: JourneyStage[] = ["fact", "insight", "action"];
-  const first = order.find((s) => stages.includes(s)) ?? "fact";
-  return stageToCategory(first);
+  return "met";
 }
 
-/** Map category enum -> giai đoạn (để hiển thị tag khi load entry cũ). */
-export function categoryToStage(category: string): JourneyStage {
+/** Map category enum -> tag preset key (để hiển thị tag khi load entry cũ). */
+export function categoryToTagKey(category: string): string {
   if (category === "realized") return "insight";
   if (category === "next") return "action";
-  return "fact";
+  return "memory";
 }

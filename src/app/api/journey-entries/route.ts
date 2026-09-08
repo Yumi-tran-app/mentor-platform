@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentUser } from "@/lib/auth";
-import { resolveCategoryFromTags, JOURNEY_TAGS } from "@/lib/journey-tags";
+import { resolveCategoryFromTags } from "@/lib/journey-tags";
 import { withErrorHandling } from "@/lib/api-helpers";
 
 const EntrySchema = z.object({
@@ -72,9 +72,8 @@ export const POST = withErrorHandling(async (req: Request) => {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  // Lọc tag hợp lệ
-  const validKeys = new Set(JOURNEY_TAGS.map((t) => t.key));
-  const cleanTags = [...new Set(tags.filter((t) => validKeys.has(t)))];
+  // Lọc tag trùng, cho phép tag tuỳ chỉnh
+  const cleanTags = [...new Set(tags.map((t) => t.trim()).filter(Boolean))];
 
   const category = resolveCategoryFromTags(cleanTags);
 
