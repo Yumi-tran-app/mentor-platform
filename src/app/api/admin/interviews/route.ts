@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/auth";
+import { requireStaff } from "@/lib/auth";
 import { getActiveSeasonId } from "@/lib/domain";
 import { sendEmail, simpleHtml } from "@/lib/email";
 import { withErrorHandling } from "@/lib/api-helpers";
@@ -23,7 +23,7 @@ const CreateSchema = z.object({
  * Nếu có attendeeIds -> tạo registration cho từng người + gửi email chung.
  */
 export const POST = withErrorHandling(async (req: Request) => {
-  await requireAdmin();
+  await requireStaff();
 
   const seasonId = await getActiveSeasonId();
   if (!seasonId) return NextResponse.json({ error: "No active season" }, { status: 400 });
@@ -93,7 +93,7 @@ export const POST = withErrorHandling(async (req: Request) => {
  * GET /api/admin/interviews — danh sách buổi định hướng/phỏng vấn + số người xác nhận.
  */
 export const GET = withErrorHandling(async (req: Request) => {
-  await requireAdmin();
+  await requireStaff();
 
   const events = await prisma.trainingModule.findMany({
     where: { type: "interview" },

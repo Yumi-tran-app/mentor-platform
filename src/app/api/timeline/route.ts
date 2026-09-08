@@ -205,7 +205,7 @@ export const POST = withErrorHandling(async (req: Request) => {
         authorUserId: user.id,
         content,
         category: "met",
-        tags: ["done"],
+        tags: ["memory"],
       },
     });
   }
