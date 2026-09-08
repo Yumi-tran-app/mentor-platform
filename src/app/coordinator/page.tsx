@@ -45,27 +45,27 @@ export default function CoordinatorPage() {
       </h1>
 
       <div className="flex gap-3 mb-8">
-        <Link href="/coordinator/matchmaking">
-          <Button variant="secondary"><span className="inline-flex items-center gap-2"><LineIcon name="link" size={16} /> Ghép cặp & duyệt kết nối</span></Button>
-        </Link>
         <Link href="/coordinator/review">
           <Button variant="secondary"><span className="inline-flex items-center gap-2"><LineIcon name="checkCircle" size={16} /> Duyệt đơn đăng ký</span></Button>
         </Link>
         <Link href="/coordinator/interviews">
           <Button variant="secondary"><span className="inline-flex items-center gap-2"><LineIcon name="calendar" size={16} /> Quản lý phỏng vấn</span></Button>
         </Link>
+        <Link href="/coordinator/matchmaking">
+          <Button variant="secondary"><span className="inline-flex items-center gap-2"><LineIcon name="link" size={16} /> Ghép cặp</span></Button>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <StatCard label="Cặp chờ duyệt" value={matches.length} color="#0F766E" />
-        <StatCard label="Yêu cầu tạm dừng" value={pauses.length} color="#F2A93B" />
-        <StatCard label="Cần hỗ trợ" value={support.length} color="#B45309" />
+        <StatCard label="Cặp chờ ĐPV duyệt" value={matches.length} color="#0F766E" />
+        <StatCard label="Yêu cầu tạm dừng" value={pauses.length} color="#F2A93B" dark />
+        <StatCard label="Cần hỗ trợ" value={support.length} color="#FF6859" />
       </div>
 
       <div className="space-y-6">
         <Card>
           <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
-            Cặp đang chờ ĐPV duyệt
+            Cặp chờ ĐPV duyệt
           </h2>
           {matches.length === 0 ? (
             <p className="text-sm" style={{ color: "#94A3B8" }}>
@@ -90,8 +90,8 @@ export default function CoordinatorPage() {
         </Card>
 
         <Card>
-          <h2 className="font-bold mb-4" style={{ color: "#F2A93B" }}>
-            Yêu cầu tạm dừng (pending)
+          <h2 className="font-bold mb-4" style={{ color: "#B45309" }}>
+            Yêu cầu tạm dừng (đang chờ)
           </h2>
           {pauses.length === 0 ? (
             <p className="text-sm" style={{ color: "#94A3B8" }}>
@@ -108,7 +108,7 @@ export default function CoordinatorPage() {
                   <span className="text-sm" style={{ color: "#292524" }}>
                     {p.reasonText ?? "Không có lý do"}
                   </span>
-                  <Badge color="#F2A93B">pending_review</Badge>
+                  <Badge color="#F2A93B">đang chờ</Badge>
                 </div>
               ))}
             </div>
@@ -117,7 +117,7 @@ export default function CoordinatorPage() {
 
         <Card>
           <h2 className="font-bold mb-4" style={{ color: "#B45309" }}>
-            Yêu cầu hỗ trợ (open)
+            Yêu cầu hỗ trợ (mở)
           </h2>
           {support.length === 0 ? (
             <p className="text-sm" style={{ color: "#94A3B8" }}>
@@ -151,18 +151,20 @@ function StatCard({
   label,
   value,
   color,
+  dark,
 }: {
   label: string;
   value: number;
   color: string;
+  dark?: boolean;
 }) {
   return (
     <div
-      className="rounded-2xl p-6 text-white shadow-sm"
-      style={{ background: color }}
+      className="rounded-2xl p-6 shadow-sm"
+      style={{ background: color, color: dark ? "#3B2A24" : "#fff" }}
     >
       <p className="text-4xl font-bold">{value}</p>
-      <p className="mt-1 text-sm opacity-90">{label}</p>
+      <p className="mt-1 text-sm" style={{ opacity: 0.9 }}>{label}</p>
     </div>
   );
 }
