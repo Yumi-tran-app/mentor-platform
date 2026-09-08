@@ -31,6 +31,7 @@ export default function MenteeOnboardingPage() {
     studentId: "",
     schoolEmail: "",
     phone: "",
+    avatarUrl: "",
     // Bước 2: demographics
     major: "",
     school: "",
@@ -58,7 +59,7 @@ export default function MenteeOnboardingPage() {
   // Validate từng bước
   function stepValid(s: number): boolean {
     if (s === 1) {
-      return !!form.fullName.trim() && !!form.studentId.trim() && !!form.schoolEmail.trim() && !!form.phone.trim();
+      return !!form.fullName.trim() && !!form.studentId.trim() && !!form.schoolEmail.trim() && !!form.phone.trim() && !!form.avatarUrl.trim();
     }
     if (s === 2) {
       return !!form.major.trim() && !!form.school.trim() && !!form.yearOfStudy.trim() && !!form.city.trim();
@@ -90,6 +91,7 @@ export default function MenteeOnboardingPage() {
             studentId: form.studentId,
             email: form.schoolEmail,
             phone: form.phone,
+            avatarUrl: form.avatarUrl || undefined,
           },
           profile: {
             major: form.major,
@@ -183,6 +185,11 @@ export default function MenteeOnboardingPage() {
               <div>
                 <label className={labelCls}>Số điện thoại *</label>
                 <input className={inputCls} style={inputStyle} value={form.phone} onChange={(e) => set("phone", e.target.value)} placeholder="VD: 0987432567" />
+              </div>
+              <div>
+                <label className={labelCls}>Ảnh đại diện (URL) *</label>
+                <input className={inputCls} style={inputStyle} value={form.avatarUrl} onChange={(e) => set("avatarUrl", e.target.value)} placeholder="https://..." />
+                <p className="text-xs mt-1" style={{ color: "#94A3B8" }}>Dán link ảnh đại diện (để đối phương tin tưởng bạn hơn).</p>
               </div>
             </div>
           </Card>

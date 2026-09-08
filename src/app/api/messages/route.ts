@@ -37,7 +37,7 @@ export const GET = withErrorHandling(async (req: Request) => {
   const messages = await prisma.message.findMany({
     where: { matchId },
     orderBy: { createdAt: "asc" },
-    include: { sender: { select: { fullName: true, role: true } } },
+    include: { sender: { select: { fullName: true, role: true, avatarUrl: true } } },
   });
 
   return NextResponse.json({ messages });

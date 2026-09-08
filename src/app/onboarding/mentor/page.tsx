@@ -94,7 +94,7 @@ export default function MentorOnboardingPage() {
     }
     if (s === 3) return form.mentoringFocus.length > 0;
     if (s === 4) return form.reason.trim().length >= 100;
-    if (s === 5) return !!form.commitText.trim();
+    if (s === 5) return !!form.commitText.trim() && !!form.photoUrl.trim();
     if (s === 6) {
       return form.timePerMonth && form.infoAccuracy && form.crossIndustry && form.respectNoImpose;
     }
@@ -126,6 +126,7 @@ export default function MentorOnboardingPage() {
             email: form.email,
             phone: form.phone,
             linkedin: form.linkedin || undefined,
+            avatarUrl: form.photoUrl || undefined,
           },
           professional: {
             company: form.company,
@@ -307,7 +308,7 @@ export default function MentorOnboardingPage() {
                 </select>
               </div>
               <div><label className={labelCls}>Link CV/Bio</label><input className={inputCls} style={inputStyle} value={form.cvUrl} onChange={(e) => set("cvUrl", e.target.value)} /></div>
-              <div><label className={labelCls}>Ảnh profile (URL)</label><input className={inputCls} style={inputStyle} value={form.photoUrl} onChange={(e) => set("photoUrl", e.target.value)} placeholder="https://..." /></div>
+              <div><label className={labelCls}>Ảnh đại diện (URL) *</label><input className={inputCls} style={inputStyle} value={form.photoUrl} onChange={(e) => set("photoUrl", e.target.value)} placeholder="https://..." /></div>
               <div><label className={labelCls}>Người giới thiệu / tham chiếu</label><input className={inputCls} style={inputStyle} value={form.references} onChange={(e) => set("references", e.target.value)} /></div>
               <div><label className={labelCls}>Nguồn biết đến chương trình</label><input className={inputCls} style={inputStyle} value={form.source} onChange={(e) => set("source", e.target.value)} /></div>
               <div><label className={labelCls}>Ghi chú gửi Core Team</label><textarea className={inputCls} style={inputStyle} rows={3} value={form.notes} onChange={(e) => set("notes", e.target.value)} /></div>

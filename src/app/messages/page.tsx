@@ -1,19 +1,19 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
-import { AppShell, Card, Button } from "@/components/ui";
+import { AppShell, Card, Button, Avatar } from "@/components/ui";
 
 type Match = {
   id: string;
-  mentorApplication: { user: { fullName: string; id: string } };
-  menteeApplication: { user: { fullName: string; id: string } };
+  mentorApplication: { user: { fullName: string; id: string; avatarUrl: string | null } };
+  menteeApplication: { user: { fullName: string; id: string; avatarUrl: string | null } };
 };
 
 type Message = {
   id: string;
   content: string;
   createdAt: string;
-  sender: { fullName: string };
+  sender: { fullName: string; avatarUrl: string | null };
   senderUserId: string;
 };
 
@@ -71,11 +71,11 @@ export default function MessagesPage() {
     );
   }
 
-  // Lấy tên đối phương (partner) từ góc nhìn người dùng hiện tại
-  function partnerOf(m: Match): { name: string; role: string } {
+  // Lấy tên + avatar đối phương (partner) từ góc nhìn người dùng hiện tại
+  function partnerOf(m: Match): { name: string; role: string; avatarUrl: string | null } {
     const isMentor = myId === m.mentorApplication.user.id;
-    if (isMentor) return { name: m.menteeApplication.user.fullName, role: "Mentee" };
-    return { name: m.mentorApplication.user.fullName, role: "Mentor" };
+    if (isMentor) return { name: m.menteeApplication.user.fullName, role: "Mentee", avatarUrl: m.menteeApplication.user.avatarUrl };
+    return { name: m.mentorApplication.user.fullName, role: "Mentor", avatarUrl: m.mentorApplication.user.avatarUrl };
   }
 
   return (
@@ -100,16 +100,19 @@ export default function MessagesPage() {
                 <button
                   key={m.id}
                   onClick={() => setActiveId(m.id)}
-                  className="w-full text-left p-3 rounded-lg border transition"
+                  className="w-full text-left p-3 rounded-lg border transition flex items-center gap-3"
                   style={{
                     borderColor: activeId === m.id ? "#15B5B0" : "#F5F2EC",
                     background: activeId === m.id ? "#F2F9F4" : "#fff",
                   }}
                 >
-                  <p className="text-sm font-semibold truncate" style={{ color: "#0F766E" }}>
-                    {p.name}
-                  </p>
-                  <p className="text-xs" style={{ color: "#94A3B8" }}>{p.role}</p>
+                  <Avatar src={p.avatarUrl} name={p.name} size={40} />
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold truncate" style={{ color: "#0F766E" }}>
+                      {p.name}
+                    </p>
+                    <p className="text-xs" style={{ color: "#94A3B8" }}>{p.role}</p>
+                  </div>
                 </button>
               );
             })}
@@ -135,7 +138,10 @@ export default function MessagesPage() {
                     messages.map((msg) => {
                       const mine = msg.senderUserId === myId;
                       return (
-                        <div key={msg.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
+                        <div key={msg.id} className={`flex gap-2 ${mine ? "justify-end" : "justify-start"}`}>
+                          {!mine && (
+                            <Avatar src={msg.sender.avatarUrl} name={msg.sender.fullName} size={32} />
+                          )}
                           <div
                             className="max-w-[75%] px-4 py-2 rounded-2xl text-sm"
                             style={{

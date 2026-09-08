@@ -16,6 +16,7 @@ const MentorApplicationSchema = z.object({
     email: z.string().email().optional(),
     phone: z.string().optional(),
     linkedin: z.string().url().optional(),
+    avatarUrl: z.string().url().optional(),
   }),
   professional: z.object({
     company: z.string().min(1),
@@ -63,6 +64,17 @@ export const POST = withErrorHandling(async (req: Request) => {
   const user = await requireUser();
   const body = await req.json();
   const parsed = MentorApplicationSchema.parse(body);
+
+  // Cập nhật avatar (bắt buộc) + số điện thoại lên User
+  if (parsed.identity.avatarUrl || parsed.identity.phone) {
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        ...(parsed.identity.avatarUrl ? { avatarUrl: parsed.identity.avatarUrl } : {}),
+        ...(parsed.identity.phone ? { phone: parsed.identity.phone } : {}),
+      },
+    });
+  }
 
   const seasonId = parsed.seasonId ?? (await getActiveSeasonId());
   if (!seasonId) {

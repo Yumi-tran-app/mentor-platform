@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
-import { AppShell, Card, Button, Badge, LineIcon } from "@/components/ui";
+import { AppShell, Card, Button, Badge, LineIcon, Avatar } from "@/components/ui";
 
 const ROLE_LABEL: Record<string, string> = {
   admin: "Quản trị viên",
@@ -91,12 +91,7 @@ export default function ProfilePage() {
         {/* Header */}
         <Card>
           <div className="flex items-center gap-4 mb-4">
-            <div
-              className="w-16 h-16 rounded-full flex items-center justify-center text-2xl text-white font-bold"
-              style={{ background: "#0F766E" }}
-            >
-              {(profile.fullName?.[0] ?? "?").toUpperCase()}
-            </div>
+            <Avatar src={profile.avatarUrl} name={profile.fullName} size={64} />
             <div>
               <h2 className="text-xl font-bold" style={{ color: "#0F766E" }}>
                 {profile.fullName}

@@ -364,3 +364,35 @@ export function Badge({
     </span>
   );
 }
+
+export function Avatar({
+  src,
+  name,
+  size = 40,
+}: {
+  src?: string | null;
+  name: string;
+  size?: number;
+}) {
+  const initial = (name || "?").trim().charAt(0).toUpperCase();
+  if (src) {
+    return (
+      <img
+        src={src}
+        alt={name}
+        width={size}
+        height={size}
+        className="rounded-full object-cover shrink-0"
+        style={{ width: size, height: size }}
+      />
+    );
+  }
+  return (
+    <div
+      className="rounded-full flex items-center justify-center font-bold text-white shrink-0"
+      style={{ width: size, height: size, fontSize: size * 0.4, background: "#15B5B0" }}
+    >
+      {initial}
+    </div>
+  );
+}

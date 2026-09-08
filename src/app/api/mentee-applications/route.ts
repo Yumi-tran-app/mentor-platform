@@ -12,6 +12,7 @@ const MenteeApplicationSchema = z.object({
     studentId: z.string().optional(),
     email: z.string().email().optional(),
     phone: z.string().optional(),
+    avatarUrl: z.string().url().optional(),
   }),
   profile: z.object({
     major: z.string().min(1),
@@ -29,6 +30,14 @@ export const POST = withErrorHandling(async (req: Request) => {
   const user = await requireUser();
   const body = await req.json();
   const parsed = MenteeApplicationSchema.parse(body);
+
+  // Cập nhật avatar (bắt buộc) lên User
+  if (parsed.identity.avatarUrl) {
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { avatarUrl: parsed.identity.avatarUrl },
+    });
+  }
 
   const seasonId = parsed.seasonId ?? (await getActiveSeasonId());
   if (!seasonId) {

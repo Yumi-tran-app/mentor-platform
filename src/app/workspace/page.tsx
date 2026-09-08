@@ -3,15 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { AppShell, Card, Badge, LineIcon } from "@/components/ui";
+import { AppShell, Card, Badge, LineIcon, Avatar } from "@/components/ui";
 
 type Match = {
   id: string;
   status: string;
   fitScore: number | null;
   goalText: string | null;
-  mentorApplication: { user: { fullName: string; id: string } };
-  menteeApplication: { user: { fullName: string; id: string } };
+  mentorApplication: { user: { fullName: string; id: string; avatarUrl: string | null } };
+  menteeApplication: { user: { fullName: string; id: string; avatarUrl: string | null } };
 };
 
 const statusLabel: Record<string, string> = {
@@ -163,14 +163,19 @@ export default function WorkspacePage() {
                   )}
                 </div>
 
-                <p className="text-sm" style={{ color: "#292524" }}>
-                  <span className="font-semibold">Mentor:</span>{" "}
-                  {m.mentorApplication.user.fullName}
-                </p>
-                <p className="text-sm mt-1" style={{ color: "#292524" }}>
-                  <span className="font-semibold">Mentee:</span>{" "}
-                  {m.menteeApplication.user.fullName}
-                </p>
+                <div className="flex items-start gap-3">
+                  <Avatar src={m.mentorApplication.user.avatarUrl} name={m.mentorApplication.user.fullName} size={40} />
+                  <div className="min-w-0">
+                    <p className="text-sm" style={{ color: "#292524" }}>
+                      <span className="font-semibold">Mentor:</span>{" "}
+                      {m.mentorApplication.user.fullName}
+                    </p>
+                    <p className="text-sm mt-1" style={{ color: "#292524" }}>
+                      <span className="font-semibold">Mentee:</span>{" "}
+                      {m.menteeApplication.user.fullName}
+                    </p>
+                  </div>
+                </div>
 
                 {m.goalText && (
                   <div className="mt-3 p-3 rounded-lg text-sm" style={{ background: "#F2F9F4", color: "#292524" }}>

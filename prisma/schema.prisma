@@ -175,6 +175,7 @@ model User {
   fullName     String   @map("full_name")
   email        String   @unique
   phone        String?
+  avatarUrl    String?  @map("avatar_url")
   clerkUserId  String?  @unique @map("clerk_user_id")
   authProvider String   @default("clerk") @map("auth_provider")
   role         UserRole @default(mentee)

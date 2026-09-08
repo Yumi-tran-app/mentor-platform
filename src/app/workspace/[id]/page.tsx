@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { AppShell, Card, Badge, Button, LineIcon } from "@/components/ui";
+import { AppShell, Card, Badge, Button, LineIcon, Avatar } from "@/components/ui";
 
 type Match = {
   id: string;
@@ -11,8 +11,8 @@ type Match = {
   agreementConfirmedAt: string | null;
   firstConnectionAt: string | null;
   fitScore: number | null;
-  mentorApplication: { user: { fullName: string; id: string }; professionalJson: any };
-  menteeApplication: { user: { fullName: string; id: string }; profileJson: any };
+  mentorApplication: { user: { fullName: string; id: string; avatarUrl: string | null }; professionalJson: any };
+  menteeApplication: { user: { fullName: string; id: string; avatarUrl: string | null }; profileJson: any };
 };
 
 type TimelineItem = {
@@ -225,10 +225,12 @@ export default function MatchDetailPage() {
     ? {
         fullName: match.menteeApplication.user.fullName,
         title: match.menteeApplication.profileJson?.currentRole ?? "Mentee",
+        avatarUrl: match.menteeApplication.user.avatarUrl,
       }
     : {
         fullName: match.mentorApplication.user.fullName,
         title: match.mentorApplication.professionalJson?.title ?? "Mentor",
+        avatarUrl: match.mentorApplication.user.avatarUrl,
       };
 
   const agreementAllOn = Object.values(agreementItems).every(Boolean);
@@ -456,8 +458,13 @@ export default function MatchDetailPage() {
           {/* Hồ sơ nhanh đối tác */}
           <Card>
             <h2 className="font-bold mb-3" style={{ color: "#0F766E" }}>Đối tác của bạn</h2>
-            <p className="text-base font-bold" style={{ color: "#292524" }}>{partner.fullName}</p>
-            <p className="text-sm" style={{ color: "#94A3B8" }}>{partner.title}</p>
+            <div className="flex items-center gap-3">
+              <Avatar src={partner.avatarUrl} name={partner.fullName} size={48} />
+              <div>
+                <p className="text-base font-bold" style={{ color: "#292524" }}>{partner.fullName}</p>
+                <p className="text-sm" style={{ color: "#94A3B8" }}>{partner.title}</p>
+              </div>
+            </div>
           </Card>
 
           {/* Milestone actions */}
