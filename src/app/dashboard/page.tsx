@@ -12,6 +12,19 @@ type Application = {
   season?: { name: string };
 };
 
+type DashboardStats = {
+  role: "mentor" | "mentee" | null;
+  stats: {
+    seasons?: number;
+    mentees?: number;
+    trainingCourses?: number;
+    eventsDelivered?: number;
+    certificates?: number;
+    joinedAt?: string | null;
+    journeys?: number;
+  };
+};
+
 const statusColor: Record<string, string> = {
   draft: "#94A3B8",
   submitted: "#15B5B0",
@@ -36,17 +49,20 @@ export default function DashboardPage() {
   const user = useCurrentUser();
   const [mentorApps, setMentorApps] = useState<Application[]>([]);
   const [menteeApps, setMenteeApps] = useState<Application[]>([]);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
       try {
-        const [m, me] = await Promise.all([
+        const [m, me, s] = await Promise.all([
           fetch("/api/mentor-applications").then((r) => r.json()),
           fetch("/api/mentee-applications").then((r) => r.json()),
+          fetch("/api/dashboard-stats").then((r) => r.json()),
         ]);
         setMentorApps(m.applications ?? []);
         setMenteeApps(me.applications ?? []);
+        setStats(s);
       } catch (e) {
         console.error(e);
       } finally {
@@ -58,7 +74,7 @@ export default function DashboardPage() {
 
   if (loading || user === null) {
     return (
-      <AppShell title="Trang chủ">
+      <AppShell title="Tổng quan">
         <p style={{ color: "#292524" }}>Đang tải...</p>
       </AppShell>
     );
@@ -78,7 +94,7 @@ export default function DashboardPage() {
         : "";
 
   return (
-    <AppShell title="Trang chủ">
+    <AppShell title="Tổng quan">
       <h1 className="text-2xl font-bold mb-1" style={{ color: "#0F766E" }}>
         Xin chào{user.fullName ? `, ${user.fullName}` : ""}
       </h1>
@@ -92,6 +108,32 @@ export default function DashboardPage() {
           <Link href="/coordinator"><Button><span className="inline-flex items-center gap-2"><LineIcon name="target" size={16} /> Bảng điều phối</span></Button></Link>
           <Link href="/coordinator/review"><Button variant="secondary"><span className="inline-flex items-center gap-2"><LineIcon name="checkCircle" size={16} /> Duyệt đơn</span></Button></Link>
         </div>
+      )}
+
+      {/* Số liệu Tổng quan theo vai trò */}
+      {stats && stats.role && (
+        <Card className="mb-6">
+          <h2 className="font-bold mb-3" style={{ color: "#0F766E" }}>
+            Hoạt động của bạn
+          </h2>
+          {stats.role === "mentor" ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <StatItem label="Đã tham gia (mùa)" value={stats.stats.seasons ?? 0} />
+              <StatItem label="Kết nối (mentee)" value={stats.stats.mentees ?? 0} />
+              <StatItem label="Tham gia (khoá đào tạo)" value={stats.stats.trainingCourses ?? 0} />
+              <StatItem label="Triển khai (khoá đào tạo)" value={stats.stats.eventsDelivered ?? 0} />
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <StatItem
+                label="Đã tham gia"
+                value={stats.stats.joinedAt ? formatDate(stats.stats.joinedAt) : "—"}
+              />
+              <StatItem label="Hoàn thành (nhật ký hành trình)" value={stats.stats.journeys ?? 0} />
+              <StatItem label="Tham gia (khoá đào tạo)" value={stats.stats.trainingCourses ?? 0} />
+            </div>
+          )}
+        </Card>
       )}
 
       {/* Mentor card */}
@@ -169,25 +211,23 @@ export default function DashboardPage() {
           </div>
         </Card>
       )}
-
-      {/* Lộ trình mentoring (cho cả mentor & mentee) */}
-      {(hasMentorApp || hasMenteeApp) && (
-        <Card className="mt-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="font-bold flex items-center gap-2" style={{ color: "#0F766E" }}>
-                <LineIcon name="map" size={18} /> Lộ trình mentoring của bạn
-              </h2>
-              <p className="text-sm mt-1" style={{ color: "#94A3B8" }}>
-                Đăng ký → Tham gia đào tạo → Tham gia mentoring → Hoàn thành mentoring → Cấp chứng nhận
-              </p>
-            </div>
-            <Link href="/journey">
-              <Button>Xem lộ trình</Button>
-            </Link>
-          </div>
-        </Card>
-      )}
     </AppShell>
+  );
+}
+
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("vi-VN", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+}
+
+function StatItem({ label, value }: { label: string; value: number | string }) {
+  return (
+    <div className="rounded-xl p-4" style={{ background: "#F5F2EC" }}>
+      <p className="text-2xl font-bold" style={{ color: "#0F766E" }}>{value}</p>
+      <p className="text-xs mt-1" style={{ color: "#57534E" }}>{label}</p>
+    </div>
   );
 }

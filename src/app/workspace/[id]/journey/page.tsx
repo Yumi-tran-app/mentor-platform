@@ -4,54 +4,66 @@ import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Card, Button, LineIcon } from "@/components/ui";
-
-const CATEGORIES: { id: string; icon: string; label: string }[] = [
-  { id: "met", icon: "users", label: "Người đã gặp" },
-  { id: "explored", icon: "compass", label: "Điều đã cùng khám phá" },
-  { id: "realized", icon: "bulb", label: "Điều đã nhận ra" },
-  { id: "changed", icon: "spark", label: "Điều đã thay đổi" },
-  { id: "tried", icon: "check", label: "Điều đã thử" },
-  { id: "next", icon: "rocket", label: "Điều tiếp theo" },
-];
+import { JOURNEY_STAGES, JOURNEY_TAGS } from "@/lib/journey-tags";
 
 type Entry = {
   id: string;
   category: string;
   content: string;
+  tags: string[] | null;
   createdAt: string;
   author: { fullName: string };
+};
+
+const STAGE_ICON: Record<string, string> = {
+  fact: "users",
+  insight: "bulb",
+  action: "rocket",
 };
 
 export default function JourneyPage() {
   const params = useParams();
   const matchId = params.id as string;
   const [entries, setEntries] = useState<Entry[]>([]);
-  const [category, setCategory] = useState("met");
   const [content, setContent] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
 
   const load = useCallback(async () => {
-    const res = await fetch(`/api/journey?matchId=${matchId}`).then((r) => r.json());
-    setEntries(res.entries ?? []);
-    setLoading(false);
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/journey-entries?matchId=${matchId}`).then((r) =>
+        r.json()
+      );
+      setEntries(res.entries ?? []);
+    } finally {
+      setLoading(false);
+    }
   }, [matchId]);
 
   useEffect(() => {
     load();
   }, [load]);
 
+  function toggleTag(key: string) {
+    setSelectedTags((s) =>
+      s.includes(key) ? s.filter((k) => k !== key) : [...s, key]
+    );
+  }
+
   async function add(e: React.FormEvent) {
     e.preventDefault();
     if (!content.trim()) return;
     setSending(true);
     try {
-      await fetch("/api/journey", {
+      await fetch("/api/journey-entries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ matchId, category, content }),
+        body: JSON.stringify({ matchId, content, tags: selectedTags }),
       });
       setContent("");
+      setSelectedTags([]);
       await load();
     } finally {
       setSending(false);
@@ -76,7 +88,7 @@ export default function JourneyPage() {
           Nhật ký hành trình
         </h1>
         <p className="text-sm mb-6" style={{ color: "#292524" }}>
-          Ghi lại hành trình của hai bạn — những gì đã cùng nhau trải qua và nhận ra.
+          Viết tự do về buổi trò chuyện của bạn, sau đó gắn 1 hoặc nhiều nhãn trước khi lưu.
         </p>
 
         {/* Form thêm */}
@@ -85,30 +97,54 @@ export default function JourneyPage() {
             Thêm vào nhật ký
           </h2>
           <form onSubmit={add} className="space-y-3">
-            <div className="flex flex-wrap gap-2">
-              {CATEGORIES.map((c) => (
-                <button
-                  key={c.id}
-                  type="button"
-                  onClick={() => setCategory(c.id)}
-                  className="px-3 py-1.5 rounded-full text-xs font-semibold transition"
-                  style={{
-                    background: category === c.id ? "#0F766E" : "#F5F2EC",
-                    color: category === c.id ? "#fff" : "#292524",
-                  }}
-                >
-                  <LineIcon name={c.icon as any} size={14} /> {c.label}
-                </button>
-              ))}
-            </div>
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              rows={3}
+              rows={4}
               className="w-full px-4 py-2.5 rounded-lg border text-sm"
               style={{ borderColor: "#E5E0D5", color: "#292524" }}
-              placeholder={`Ghi ${CATEGORIES.find((c) => c.id === category)?.label.toLowerCase()}...`}
+              placeholder="Hôm nay bạn đã gặp ai, làm gì, nhận ra điều gì, và bước tiếp theo là gì?"
             />
+
+            {/* Tags theo 3 giai đoạn */}
+            <div className="space-y-3">
+              <p className="text-xs font-semibold" style={{ color: "#94A3B8" }}>
+                Gắn nhãn cho bài viết (có thể chọn nhiều):
+              </p>
+              {JOURNEY_STAGES.map((stage) => (
+                <div key={stage.key}>
+                  <p className="text-xs font-bold mb-1 flex items-center gap-1.5" style={{ color: "#0F766E" }}>
+                    <LineIcon name={STAGE_ICON[stage.key] as any} size={14} />
+                    {stage.label}
+                    <span className="font-normal" style={{ color: "#C0C5CE" }}>
+                      · {stage.hint}
+                    </span>
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {JOURNEY_TAGS.filter((t) => t.stage === stage.key).map((t) => {
+                      const on = selectedTags.includes(t.key);
+                      return (
+                        <button
+                          key={t.key}
+                          type="button"
+                          onClick={() => toggleTag(t.key)}
+                          className="px-3 py-1.5 rounded-full text-xs font-semibold transition"
+                          style={{
+                            background: on ? "#15B5B0" : "#F5F2EC",
+                            color: on ? "#fff" : "#292524",
+                            border: on ? "1px solid #15B5B0" : "1px solid transparent",
+                          }}
+                        >
+                          {on ? "✓ " : ""}
+                          {t.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+
             <div className="flex justify-end">
               <Button type="submit" disabled={sending || !content.trim()}>
                 {sending ? "Đang lưu..." : "Lưu vào nhật ký"}
@@ -117,13 +153,21 @@ export default function JourneyPage() {
           </form>
         </Card>
 
-        {/* Hiển thị theo category */}
-        {CATEGORIES.map((cat) => {
-          const items = entries.filter((e) => e.category === cat.id);
+        {/* Hiển thị theo 3 giai đoạn */}
+        {JOURNEY_STAGES.map((stage) => {
+          const stageTags = JOURNEY_TAGS.filter((t) => t.stage === stage.key).map(
+            (t) => t.key
+          );
+          const items = entries.filter((e) => {
+            const tags = (e.tags as string[] | null) ?? [];
+            if (tags.length > 0) return tags.some((k) => stageTags.includes(k));
+            // fallback: entry cũ chưa có tags -> dùng category
+            return stageCategoryMatch(e.category, stage.key);
+          });
           return (
-            <div key={cat.id} className="mb-6">
+            <div key={stage.key} className="mb-6">
               <h3 className="font-bold mb-2 flex items-center gap-2" style={{ color: "#0F766E" }}>
-                <LineIcon name={cat.icon as any} size={16} /> {cat.label}
+                <LineIcon name={STAGE_ICON[stage.key] as any} size={16} /> {stage.label}
                 <span className="text-xs font-normal" style={{ color: "#94A3B8" }}>
                   ({items.length})
                 </span>
@@ -143,6 +187,7 @@ export default function JourneyPage() {
                       <p className="text-sm" style={{ color: "#292524" }}>
                         {item.content}
                       </p>
+                      {renderEntryTags(item)}
                       <p className="text-xs mt-1" style={{ color: "#94A3B8" }}>
                         {item.author.fullName} ·{" "}
                         {new Date(item.createdAt).toLocaleDateString("vi-VN")}
@@ -155,6 +200,35 @@ export default function JourneyPage() {
           );
         })}
       </div>
+    </div>
+  );
+}
+
+function stageCategoryMatch(category: string, stage: string): boolean {
+  if (stage === "fact") return category === "met" || category === "tried";
+  if (stage === "insight") return category === "realized";
+  if (stage === "action") return category === "next";
+  return false;
+}
+
+function renderEntryTags(item: Entry) {
+  const tags = (item.tags as string[] | null) ?? [];
+  if (tags.length === 0) return null;
+  return (
+    <div className="flex flex-wrap gap-1 mt-1.5">
+      {tags.map((key) => {
+        const t = JOURNEY_TAGS.find((x) => x.key === key);
+        if (!t) return null;
+        return (
+          <span
+            key={key}
+            className="px-2 py-0.5 rounded-full text-[11px] font-semibold"
+            style={{ background: "#E4F4F1", color: "#0F766E" }}
+          >
+            {t.label}
+          </span>
+        );
+      })}
     </div>
   );
 }

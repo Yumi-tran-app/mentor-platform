@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentUser } from "@/lib/auth";
@@ -34,12 +35,32 @@ export default async function CertificateViewPage({
   const headingText = isMentoring
     ? "Certificate of Mentoring Completion"
     : "Certificate of Training Completion";
+  const isMentor = cert.role === "mentor";
   const descText = isMentoring
     ? "đã hoàn thành trọn vẹn hành trình đồng hành mentoring, thể hiện sự cam kết, trách nhiệm và trưởng thành trong suốt chương trình."
-    : "đã hoàn thành xuất sắc Chương trình đào tạo & kiểm tra năng lực đồng hành, đủ điều kiện tham gia dẫn dắt trong chương trình mentoring cộng đồng.";
+    : isMentor
+      ? "đã hoàn thành xuất sắc Chương trình đào tạo & kiểm tra năng lực đồng hành, đủ điều kiện tham gia dẫn dắt trong chương trình mentoring cộng đồng."
+      : "đã hoàn thành xuất sắc Chương trình đào tạo & kiểm tra năng lực đồng hành, đủ điều kiện tham gia chương trình mentoring cộng đồng.";
 
   return (
-    <div style={{ minHeight: "100vh", background: "#134E4A", padding: 40, display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <div style={{ minHeight: "100vh", background: "#134E4A", padding: 40, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 24 }}>
+      <Link
+        href="/dashboard"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 8,
+          color: "#F6F1E9",
+          fontSize: 15,
+          fontWeight: 600,
+          textDecoration: "none",
+          padding: "10px 22px",
+          borderRadius: 999,
+          border: "1px solid rgba(255,255,255,.35)",
+        }}
+      >
+        ← Quay lại Tổng quan
+      </Link>
       <div
         style={{
           width: 1050,

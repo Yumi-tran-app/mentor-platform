@@ -703,6 +703,7 @@ model JourneyEntry {
   author       User            @relation(fields: [authorUserId], references: [id])
   category     JourneyCategory
   content      String
+  tags         Json?   // mảng nhãn theo 3 giai đoạn phản tư (thực tế / nhận thức / hành động)
   createdAt    DateTime        @default(now()) @map("created_at")
 
   @@index([matchId, category])

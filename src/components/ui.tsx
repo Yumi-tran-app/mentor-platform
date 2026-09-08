@@ -13,7 +13,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     title: "Khám phá & Tổng quan",
     items: [
-      { href: "/dashboard", icon: "home", label: "Trang chủ" },
+      { href: "/dashboard", icon: "home", label: "Tổng quan" },
       { href: "/discover", icon: "compass", label: "Khám phá" },
     ],
   },
@@ -92,7 +92,7 @@ export function AppShell({
         style={{ background: "#134E4A", color: "#fff" }}
       >
         <div className="px-5 py-6 border-b" style={{ borderColor: "rgba(255,255,255,.1)" }}>
-          <Link href="/dashboard" className="block hover:opacity-80">
+          <Link href="/" className="block hover:opacity-80">
             <div className="flex items-center gap-2">
               <div className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white font-bold text-sm">
                 MVS
