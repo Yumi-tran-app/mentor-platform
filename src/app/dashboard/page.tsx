@@ -136,82 +136,90 @@ export default function DashboardPage() {
         </Card>
       )}
 
-      {/* Mentor card */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bold" style={{ color: "#0F766E" }}>Vai trò Mentor</h2>
-            {!hasMentorApp ? (
-              <Link href="/onboarding/mentor"><Button variant="secondary">Đăng ký</Button></Link>
-            ) : (
-              <Badge color="#15B5B0">Đã đăng ký</Badge>
-            )}
-          </div>
-          {!hasMentorApp ? (
-            <p className="text-sm" style={{ color: "#94A3B8" }}>
-              Chia sẻ kinh nghiệm và đồng hành cùng mentee trong 9 tháng.
-            </p>
-          ) : (
-            <div className="space-y-2">
-              {mentorApps.map((a) => (
-                <div key={a.id} className="flex items-center justify-between p-3 rounded-lg border" style={{ borderColor: "#F5F2EC" }}>
-                  <div>
-                    <p className="text-sm font-medium" style={{ color: "#292524" }}>{a.season?.name ?? "—"}</p>
-                    <p className="text-xs" style={{ color: "#94A3B8" }}>
-                      {a.submittedAt ? `Nộp ${new Date(a.submittedAt).toLocaleDateString("vi-VN")}` : "Chưa nộp"}
-                    </p>
-                  </div>
-                  <Badge color={statusColor[a.status] ?? "#94A3B8"}>{statusLabelMap[a.status] ?? a.status}</Badge>
-                </div>
-              ))}
-            </div>
+      {/* Trạng thái của bạn (thay cho 2 ô đăng ký vai trò song song) */}
+      <Card className="mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-bold" style={{ color: "#0F766E" }}>Trạng thái của bạn</h2>
+          {!hasMentorApp && !hasMenteeApp && !staff && (
+            <Link href="/onboarding"><Button>Đăng ký tham gia</Button></Link>
           )}
-        </Card>
+        </div>
 
-        {/* Mentee card */}
-        <Card>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bold" style={{ color: "#15B5B0" }}>Vai trò Mentee</h2>
-            {!hasMenteeApp ? (
-              <Link href="/onboarding/mentee"><Button variant="secondary">Đăng ký</Button></Link>
-            ) : (
-              <Badge color="#15B5B0">Đã đăng ký</Badge>
-            )}
+        {staff ? (
+          <p className="text-sm" style={{ color: "#94A3B8" }}>
+            Bạn là {roleGreeting} — không cần đăng ký vai trò mentor/mentee.
+          </p>
+        ) : !hasMentorApp && !hasMenteeApp ? (
+          <p className="text-sm" style={{ color: "#94A3B8" }}>
+            Bạn chưa đăng ký tham gia. Đăng ký làm Mentor hoặc Mentee để bắt đầu hành trình.
+          </p>
+        ) : (
+          <div className="space-y-3">
+            {mentorApps.map((a) => (
+              <StatusRow
+                key={a.id}
+                roleLabel="Mentor"
+                color="#0F766E"
+                season={a.season?.name}
+                submittedAt={a.submittedAt}
+                status={a.status}
+              />
+            ))}
+            {menteeApps.map((a) => (
+              <StatusRow
+                key={a.id}
+                roleLabel="Mentee"
+                color="#15B5B0"
+                season={a.season?.name}
+                submittedAt={a.submittedAt}
+                status={a.status}
+              />
+            ))}
           </div>
-          {!hasMenteeApp ? (
-            <p className="text-sm" style={{ color: "#94A3B8" }}>
-              Được mentor có kinh nghiệm dẫn dắt trên hành trình phát triển của bạn.
-            </p>
-          ) : (
-            <div className="space-y-2">
-              {menteeApps.map((a) => (
-                <div key={a.id} className="flex items-center justify-between p-3 rounded-lg border" style={{ borderColor: "#F5F2EC" }}>
-                  <div>
-                    <p className="text-sm font-medium" style={{ color: "#292524" }}>{a.season?.name ?? "—"}</p>
-                    <p className="text-xs" style={{ color: "#94A3B8" }}>
-                      {a.submittedAt ? `Nộp ${new Date(a.submittedAt).toLocaleDateString("vi-VN")}` : "Chưa nộp"}
-                    </p>
-                  </div>
-                  <Badge color={statusColor[a.status] ?? "#94A3B8"}>{statusLabelMap[a.status] ?? a.status}</Badge>
-                </div>
-              ))}
-            </div>
-          )}
-        </Card>
-      </div>
+        )}
+      </Card>
 
       {/* Hướng dẫn nhanh cho người mới */}
       {!hasMentorApp && !hasMenteeApp && !staff && (
         <Card className="mt-6">
           <h2 className="font-bold mb-3" style={{ color: "#0F766E" }}>Bắt đầu từ đâu?</h2>
           <div className="space-y-2 text-sm" style={{ color: "#292524" }}>
-            <p><span className="inline-flex items-center gap-1"><LineIcon name="checkCircle" size={14} /> Chọn vai trò Mentor hoặc Mentee ở trên để đăng ký.</span></p>
+            <p><span className="inline-flex items-center gap-1"><LineIcon name="checkCircle" size={14} /> Đăng ký làm Mentor (chia sẻ kinh nghiệm) hoặc Mentee (được đồng hành).</span></p>
             <p>Hoàn thành đơn đăng ký và chờ đội ngũ điều phối duyệt.</p>
             <p>Sau khi được duyệt, bạn sẽ được ghép cặp và bắt đầu hành trình.</p>
           </div>
         </Card>
       )}
     </AppShell>
+  );
+}
+
+function StatusRow({
+  roleLabel,
+  color,
+  season,
+  submittedAt,
+  status,
+}: {
+  roleLabel: string;
+  color: string;
+  season?: string;
+  submittedAt: string | null;
+  status: string;
+}) {
+  return (
+    <div className="flex items-center justify-between p-3 rounded-lg border" style={{ borderColor: "#F5F2EC" }}>
+      <div className="flex items-center gap-3">
+        <Badge color={color}>{roleLabel}</Badge>
+        <div>
+          <p className="text-sm font-medium" style={{ color: "#292524" }}>{season ?? "—"}</p>
+          <p className="text-xs" style={{ color: "#94A3B8" }}>
+            {submittedAt ? `Nộp ${new Date(submittedAt).toLocaleDateString("vi-VN")}` : "Chưa nộp"}
+          </p>
+        </div>
+      </div>
+      <Badge color={statusColor[status] ?? "#94A3B8"}>{statusLabelMap[status] ?? status}</Badge>
+    </div>
   );
 }
 
