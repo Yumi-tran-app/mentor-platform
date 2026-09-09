@@ -3,8 +3,8 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
-  title: "Mentor Platform",
-  description: "Nền tảng mentoring cộng đồng",
+  title: "Tre Việt Mentoring",
+  description: "Nền tảng mentoring cộng đồng — Tre Việt Mentoring",
 };
 
 export default function RootLayout({

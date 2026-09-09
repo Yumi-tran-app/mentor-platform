@@ -46,7 +46,7 @@ export function simpleHtml(title: string, lines: string[]) {
     <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;color:#292524">
       <h2 style="color:#0F766E">${title}</h2>
       ${items}
-      <p style="margin-top:16px;color:#94A3B8;font-size:12px">Mentoring for Vietnamese Student</p>
+      <p style="margin-top:16px;color:#94A3B8;font-size:12px">Tre Việt Mentoring</p>
     </div>
   `;
 }
@@ -67,7 +67,7 @@ export function lateRegistrationEmailHtml(params: {
       <p>Xin chào ${name},</p>
       <p>
         Chúng tôi xin chân thành cảm ơn bạn đã quan tâm và đăng ký trở thành <strong>${role}</strong> trong chương trình
-        Mentoring for Vietnamese Student.
+        Tre Việt Mentoring.
       </p>
       <p>
         Rất tiếc, hiện tại công tác <strong>ghép cặp và kết nối</strong> của mùa <strong>${seasonLabel}</strong> đã hoàn tất.
@@ -81,7 +81,7 @@ export function lateRegistrationEmailHtml(params: {
       <p style="margin-top:20px">
         Một lần nữa, cảm ơn sự nhiệt huyết của bạn. Chúng tôi rất mong được gặp bạn trong mùa mentoring tiếp theo!
       </p>
-      <p style="margin-top:24px;color:#94A3B8;font-size:12px">— Ban tổ chức Mentoring for Vietnamese Student</p>
+      <p style="margin-top:24px;color:#94A3B8;font-size:12px">— Ban tổ chức Tre Việt Mentoring</p>
     </div>
   `;
 }

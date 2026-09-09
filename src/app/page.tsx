@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
-const ORG_NAME = "Mentoring for Vietnamese Student";
+const ORG_NAME = "Tre Việt Mentoring";
 
 export default function Home() {
   return (
@@ -14,7 +14,7 @@ export default function Home() {
           <div className="flex justify-between items-center h-20">
             <Link href="/" className="flex items-center gap-2 cursor-pointer">
               <div className="w-10 h-10 rounded-full bg-teal-700 flex items-center justify-center text-white font-bold text-lg">
-                MVS
+                TVM
               </div>
               <span className="font-bold text-lg tracking-tight text-teal-700 leading-tight">
                 {ORG_NAME}

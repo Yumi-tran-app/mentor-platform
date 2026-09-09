@@ -95,12 +95,12 @@ export function AppShell({
           <Link href="/" className="block hover:opacity-80">
             <div className="flex items-center gap-2">
               <div className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white font-bold text-sm">
-                MVS
+                TVM
               </div>
               <span className="font-bold text-sm leading-tight text-white">
-                Mentoring for
+                Tre Việt
                 <br />
-                Vietnamese Student
+                Mentoring
               </span>
             </div>
           </Link>

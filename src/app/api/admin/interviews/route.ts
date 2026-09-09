@@ -102,7 +102,7 @@ export const POST = withErrorHandling(async (req: Request) => {
           : `Mời tham dự: ${parsed.title}`;
         const intro = isPause
           ? `Chương trình trân trọng mời bạn tham dự buổi trao đổi về yêu cầu tạm dừng của cặp đồng hành: <strong>${parsed.title}</strong>.`
-          : `Chương trình Mentoring for Vietnamese Student trân trọng mời bạn tham dự buổi: <strong>${parsed.title}</strong>.`;
+          : `Chương trình Tre Việt Mentoring trân trọng mời bạn tham dự buổi: <strong>${parsed.title}</strong>.`;
         await sendEmail({
           to: u.email,
           subject,
