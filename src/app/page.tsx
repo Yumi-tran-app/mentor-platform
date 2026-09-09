@@ -308,9 +308,9 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-stone-800 text-center md:flex md:justify-between md:text-left text-stone-400 text-sm">
           <p>&copy; 2026 {ORG_NAME}. All rights reserved.</p>
           <div className="space-x-6 mt-4 md:mt-0 flex justify-center">
-            <a href="#" className="hover:text-white transition-colors">Chính sách bảo mật</a>
-            <a href="#" className="hover:text-white transition-colors">Điều khoản sử dụng</a>
-            <a href="#" className="hover:text-white transition-colors">Liên hệ hỗ trợ</a>
+            <a href="/privacy" className="hover:text-white transition-colors">Chính sách bảo mật</a>
+            <a href="/privacy#terms" className="hover:text-white transition-colors">Điều khoản sử dụng</a>
+            <a href="mailto:team.cloudncoral@gmail.com" className="hover:text-white transition-colors">Liên hệ hỗ trợ</a>
           </div>
         </div>
       </footer>

@@ -23,6 +23,16 @@ export async function PATCH(
 
     const updated = await transitionMentorApplication(id, "submitted", user.id);
 
+    // Ghi nhận sự đồng ý bảo vệ dữ liệu cá nhân (PDPD)
+    await prisma.consent.create({
+      data: {
+        userId: user.id,
+        seasonId: app.seasonId,
+        consentType: "privacy_policy",
+        version: "1.0",
+      },
+    });
+
     // Kiểm tra đăng ký muộn: sau khi đã hoàn tất đào tạo (start + 60 ngày) = đã vào kỳ ghép cặp & kết nối
     const [cutoff, season] = await Promise.all([
       getMentoringCutoffDate(app.seasonId),

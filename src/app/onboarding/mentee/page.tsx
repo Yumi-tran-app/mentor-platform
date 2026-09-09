@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Card, Button } from "@/components/ui";
 import { VIETNAM_PROVINCES } from "@/lib/vietnam-locations";
 
@@ -24,6 +25,7 @@ export default function MenteeOnboardingPage() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
 
   const [form, setForm] = useState({
     // Bước 1: thông tin xác thực
@@ -66,7 +68,8 @@ export default function MenteeOnboardingPage() {
     }
     if (s === 3) return form.needs.length > 0;
     if (s === 4) return !!form.goalText.trim();
-    return true; // bước 5 luôn cho phép xác nhận
+    if (s === 5) return privacyAccepted;
+    return true;
   }
 
   function next() {
@@ -299,6 +302,25 @@ export default function MenteeOnboardingPage() {
                 </li>
               ))}
             </ul>
+            <label className="flex items-start gap-3 p-3 rounded-lg cursor-pointer" style={{ background: "#F5F2EC" }}>
+              <input
+                type="checkbox"
+                className="mt-1"
+                checked={privacyAccepted}
+                onChange={(e) => setPrivacyAccepted(e.target.checked)}
+              />
+              <span className="text-sm" style={{ color: "#292524" }}>
+                Tôi đã đọc, hiểu và đồng ý với{" "}
+                <Link href="/privacy" target="_blank" style={{ color: "#0F766E", textDecoration: "underline" }}>
+                  Chính sách bảo vệ dữ liệu cá nhân
+                </Link>{" "}
+                và{" "}
+                <Link href="/privacy#terms" target="_blank" style={{ color: "#0F766E", textDecoration: "underline" }}>
+                  Điều khoản sử dụng
+                </Link>
+                .
+              </span>
+            </label>
           </Card>
         )}
 
@@ -331,7 +353,7 @@ export default function MenteeOnboardingPage() {
               Tiếp tục →
             </button>
           ) : (
-            <Button onClick={handleSubmit} disabled={loading}>
+            <Button onClick={handleSubmit} disabled={loading || !privacyAccepted}>
               {loading ? "Đang gửi..." : "Tôi đã hiểu và đồng ý"}
             </Button>
           )}

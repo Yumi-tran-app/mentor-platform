@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Card, Button } from "@/components/ui";
 import { VIETNAM_PROVINCES } from "@/lib/vietnam-locations";
 
@@ -24,6 +25,7 @@ export default function MentorOnboardingPage() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
 
   const [form, setForm] = useState({
     // Bước 1: định danh & liên hệ
@@ -96,7 +98,7 @@ export default function MentorOnboardingPage() {
     if (s === 4) return form.reason.trim().length >= 100;
     if (s === 5) return !!form.commitText.trim() && !!form.photoUrl.trim();
     if (s === 6) {
-      return form.timePerMonth && form.infoAccuracy && form.crossIndustry && form.respectNoImpose;
+      return form.timePerMonth && form.infoAccuracy && form.crossIndustry && form.respectNoImpose && privacyAccepted;
     }
     return true;
   }
@@ -334,6 +336,25 @@ export default function MentorOnboardingPage() {
                 </label>
               ))}
             </div>
+            <label className="flex items-start gap-3 p-3 rounded-lg cursor-pointer" style={{ background: "#F5F2EC" }}>
+              <input
+                type="checkbox"
+                className="mt-1"
+                checked={privacyAccepted}
+                onChange={(e) => setPrivacyAccepted(e.target.checked)}
+              />
+              <span className="text-sm" style={{ color: "#292524" }}>
+                Tôi đã đọc, hiểu và đồng ý với{" "}
+                <Link href="/privacy" target="_blank" style={{ color: "#0F766E", textDecoration: "underline" }}>
+                  Chính sách bảo vệ dữ liệu cá nhân
+                </Link>{" "}
+                và{" "}
+                <Link href="/privacy#terms" target="_blank" style={{ color: "#0F766E", textDecoration: "underline" }}>
+                  Điều khoản sử dụng
+                </Link>
+                .
+              </span>
+            </label>
           </Card>
         )}
 
@@ -350,7 +371,7 @@ export default function MentorOnboardingPage() {
               Tiếp tục →
             </button>
           ) : (
-            <Button onClick={handleSubmit} disabled={loading}>
+            <Button onClick={handleSubmit} disabled={loading || !privacyAccepted}>
               {loading ? "Đang gửi..." : "Hoàn tất & gửi hồ sơ"}
             </Button>
           )}
