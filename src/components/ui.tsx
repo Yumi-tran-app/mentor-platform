@@ -181,7 +181,7 @@ export function AppShell({
         >
           <div className="flex items-center gap-3">
             <Link
-              href="/dashboard"
+              href="/"
               className="text-sm font-semibold px-3 py-1.5 rounded-full transition hover:opacity-80"
               style={{ background: "#F5F2EC", color: "#0F766E" }}
             >

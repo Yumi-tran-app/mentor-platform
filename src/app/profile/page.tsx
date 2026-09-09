@@ -31,6 +31,7 @@ export default function ProfilePage() {
   const [mentee, setMentee] = useState<any>(null);
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState("");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -41,6 +42,7 @@ export default function ProfilePage() {
     setMentee(res.mentee);
     setFullName(res.user?.fullName ?? "");
     setPhone(res.user?.phone ?? "");
+    setAvatarUrl(res.user?.avatarUrl ?? "");
   }
 
   useEffect(() => {
@@ -53,7 +55,7 @@ export default function ProfilePage() {
     await fetch("/api/profile", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ fullName, phone }),
+      body: JSON.stringify({ fullName, phone, avatarUrl }),
     });
     setSaving(false);
     setSaved(true);
@@ -262,6 +264,21 @@ export default function ProfilePage() {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
               />
+            </div>
+            <div>
+              <label className="text-sm font-medium block mb-1">
+                Link ảnh đại diện (URL)
+              </label>
+              <div className="flex items-center gap-3">
+                <Avatar src={avatarUrl || null} name={fullName || profile.fullName} size={48} />
+                <input
+                  className={inputCls}
+                  style={inputStyle}
+                  value={avatarUrl}
+                  onChange={(e) => setAvatarUrl(e.target.value)}
+                  placeholder="https://..."
+                />
+              </div>
             </div>
             <div className="flex items-center gap-3">
               <Button onClick={save} disabled={saving}>

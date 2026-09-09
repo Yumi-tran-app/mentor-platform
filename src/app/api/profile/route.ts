@@ -7,6 +7,7 @@ import { withErrorHandling } from "@/lib/api-helpers";
 const UpdateSchema = z.object({
   fullName: z.string().min(1).optional(),
   phone: z.string().optional(),
+  avatarUrl: z.string().optional(),
 });
 
 /**
@@ -53,6 +54,7 @@ export const PATCH = withErrorHandling(async (req: Request) => {
     data: {
       ...(parsed.fullName ? { fullName: parsed.fullName } : {}),
       ...(parsed.phone !== undefined ? { phone: parsed.phone } : {}),
+      ...(parsed.avatarUrl !== undefined ? { avatarUrl: parsed.avatarUrl } : {}),
     },
   });
 
