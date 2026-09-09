@@ -14,7 +14,9 @@ const CreateSchema = z.object({
   endAt: z.string().datetime().optional().nullable(),
   location: z.string().optional().nullable(),
   zoomLink: z.string().optional().nullable(),
-  attendeeIds: z.array(z.string().uuid()).optional(), // danh sách userId tham dự
+  attendeeIds: z.array(z.string().uuid()).optional(), // danh sách userId tham dự (default: rỗng)
+  purpose: z.enum(["orientation", "pause_review"]).default("orientation"),
+  matchId: z.string().uuid().optional(), // chỉ dùng khi purpose=pause_review: tự lấy mentor+mentee
 });
 
 /**
@@ -30,6 +32,31 @@ export const POST = withErrorHandling(async (req: Request) => {
 
   const body = await req.json();
   const parsed = CreateSchema.parse(body);
+
+  // Khi purpose=pause_review, tự lấy mentor + mentee của cặp làm người tham dự
+  let attendeeIds = parsed.attendeeIds ?? [];
+  if (parsed.purpose === "pause_review") {
+    if (!parsed.matchId) {
+      return NextResponse.json(
+        { error: "matchId required for pause_review" },
+        { status: 400 }
+      );
+    }
+    const match = await prisma.match.findUnique({
+      where: { id: parsed.matchId },
+      include: {
+        mentorApplication: { select: { userId: true } },
+        menteeApplication: { select: { userId: true } },
+      },
+    });
+    if (!match) {
+      return NextResponse.json({ error: "Match not found" }, { status: 404 });
+    }
+    attendeeIds = [
+      match.mentorApplication.userId,
+      match.menteeApplication.userId,
+    ];
+  }
 
   const event = await prisma.trainingModule.create({
     data: {
@@ -50,7 +77,6 @@ export const POST = withErrorHandling(async (req: Request) => {
   });
 
   let mailed = 0;
-  const attendeeIds = parsed.attendeeIds ?? [];
 
   if (attendeeIds.length > 0) {
     // Tạo registration + gửi email cho từng người
@@ -70,12 +96,19 @@ export const POST = withErrorHandling(async (req: Request) => {
             })
           : "sẽ thông báo sau";
         const zoom = parsed.zoomLink ?? "sẽ gửi link trước buổi";
+        const isPause = parsed.purpose === "pause_review";
+        const subject = isPause
+          ? `Mời tham dự buổi trao đổi về tạm dừng: ${parsed.title}`
+          : `Mời tham dự: ${parsed.title}`;
+        const intro = isPause
+          ? `Chương trình trân trọng mời bạn tham dự buổi trao đổi về yêu cầu tạm dừng của cặp đồng hành: <strong>${parsed.title}</strong>.`
+          : `Chương trình Mentoring for Vietnamese Student trân trọng mời bạn tham dự buổi: <strong>${parsed.title}</strong>.`;
         await sendEmail({
           to: u.email,
-          subject: `Mời tham dự: ${parsed.title}`,
-          html: simpleHtml(`Thư mời tham dự "${parsed.title}"`, [
+          subject,
+          html: simpleHtml(subject, [
             `Xin chào ${u.fullName},`,
-            `Chương trình Mentoring for Vietnamese Student trân trọng mời bạn tham dự buổi: <strong>${parsed.title}</strong>.`,
+            intro,
             `⏰ Thời gian: ${when}`,
             `📍 Link tham dự (Zoom): ${zoom}`,
             `Vui lòng xác nhận tham gia (Có/Không) trong ứng dụng để chúng tôi sắp xếp.`,
@@ -86,7 +119,10 @@ export const POST = withErrorHandling(async (req: Request) => {
     }
   }
 
-  return NextResponse.json({ event, attendees: attendeeIds.length, mailed }, { status: 201 });
+  return NextResponse.json(
+    { event, attendees: attendeeIds.length, mailed, purpose: parsed.purpose },
+    { status: 201 }
+  );
 });
 
 /**

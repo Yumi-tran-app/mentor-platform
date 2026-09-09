@@ -612,8 +612,8 @@ model TrainingModule {
   sortOrder   Int     @default(0) @map("sort_order")
   required    Boolean @default(true)
 
-  // Mở rộng thành Workshop/Training: phân loại module học online vs event
-  type        String    @default("online_module") @map("type") // "online_module" | "event"
+  // Mở rộng thành Workshop/Training: phân loại module học online vs event vs buổi phỏng vấn/định hướng
+  type        String    @default("online_module") @map("type") // "online_module" | "event" | "interview"
   status      String    @default("open") @map("status") // "draft" | "open" | "completed"
   startAt     DateTime? @map("start_at")
   endAt       DateTime? @map("end_at")

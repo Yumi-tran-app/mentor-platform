@@ -10,23 +10,71 @@ export default function CoordinatorPage() {
   const [support, setSupport] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function load() {
-      try {
-        const [mp, ps, sp] = await Promise.all([
-          fetch("/api/coordinator/queue").then((r) => r.json()),
-          fetch("/api/matches/pause?status=pending_review").then((r) => r.json()),
-          fetch("/api/support-requests?status=open").then((r) => r.json()),
-        ]);
-        setMatches(mp.matches ?? []);
-        setPauses(ps.pauses ?? []);
-        setSupport(sp.supportRequests ?? []);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
+  // Form tạo buổi trao đổi cho yêu cầu tạm dừng
+  const [pauseForm, setPauseForm] = useState<{
+    pauseRequestId: string;
+    matchId: string;
+    title: string;
+    startAt: string;
+    zoomLink: string;
+  } | null>(null);
+  const [creatingPause, setCreatingPause] = useState(false);
+  const [pauseMsg, setPauseMsg] = useState<string | null>(null);
+
+  async function createPauseReview() {
+    if (!pauseForm) return;
+    if (!pauseForm.startAt) {
+      setPauseMsg("Vui lòng chọn thời gian.");
+      return;
     }
+    setCreatingPause(true);
+    setPauseMsg(null);
+    try {
+      const res = await fetch("/api/admin/interviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: pauseForm.title || "Buổi trao đổi về tạm dừng",
+          description: "Buổi trao đổi giữa ĐPV và cặp đồng hành về yêu cầu tạm dừng.",
+          audience: "all",
+          startAt: new Date(pauseForm.startAt).toISOString(),
+          zoomLink: pauseForm.zoomLink || undefined,
+          purpose: "pause_review",
+          matchId: pauseForm.matchId,
+        }),
+      });
+      const d = await res.json();
+      if (res.ok) {
+        setPauseMsg(`✅ Đã tạo buổi trao đổi + gửi email cho ${d.mailed} người.`);
+        setPauseForm(null);
+        await load();
+      } else {
+        setPauseMsg(d.error ?? "Có lỗi khi tạo buổi.");
+      }
+    } finally {
+      setCreatingPause(false);
+    }
+  }
+
+  async function load() {
+    setLoading(true);
+    try {
+      const [mp, ps, sp] = await Promise.all([
+        fetch("/api/coordinator/queue").then((r) => r.json()),
+        fetch("/api/matches/pause?status=pending_review").then((r) => r.json()),
+        fetch("/api/support-requests?status=open").then((r) => r.json()),
+      ]);
+      setMatches(mp.matches ?? []);
+      setPauses(ps.pauses ?? []);
+      setSupport(sp.supportRequests ?? []);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
     load();
   }, []);
 
@@ -108,12 +156,94 @@ export default function CoordinatorPage() {
                   <span className="text-sm" style={{ color: "#292524" }}>
                     {p.reasonText ?? "Không có lý do"}
                   </span>
-                  <Badge color="#F2A93B">đang chờ</Badge>
+                  <div className="flex items-center gap-2">
+                    <Badge color="#F2A93B">đang chờ</Badge>
+                    <button
+                      onClick={() =>
+                        setPauseForm({
+                          pauseRequestId: p.id,
+                          matchId: p.matchId,
+                          title: "Buổi trao đổi về tạm dừng",
+                          startAt: "",
+                          zoomLink: "",
+                        })
+                      }
+                      className="text-xs font-semibold px-3 py-1.5 rounded-full"
+                      style={{ background: "#0F766E", color: "#fff" }}
+                    >
+                      Tạo buổi trao đổi
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
           )}
         </Card>
+
+        {pauseForm && (
+          <Card>
+            <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
+              Tạo buổi trao đổi về tạm dừng
+            </h2>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-sm font-medium mb-1" style={{ color: "#292524" }}>
+                  Tên buổi
+                </label>
+                <input
+                  className="w-full px-3 py-2 rounded-lg border text-sm"
+                  style={{ borderColor: "#E5E0D5", color: "#292524" }}
+                  value={pauseForm.title}
+                  onChange={(e) => setPauseForm({ ...pauseForm, title: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1" style={{ color: "#292524" }}>
+                  Thời gian *
+                </label>
+                <input
+                  type="datetime-local"
+                  className="w-full px-3 py-2 rounded-lg border text-sm"
+                  style={{ borderColor: "#E5E0D5", color: "#292524" }}
+                  value={pauseForm.startAt}
+                  onChange={(e) => setPauseForm({ ...pauseForm, startAt: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1" style={{ color: "#292524" }}>
+                  Link tham dự (Zoom)
+                </label>
+                <input
+                  className="w-full px-3 py-2 rounded-lg border text-sm"
+                  style={{ borderColor: "#E5E0D5", color: "#292524" }}
+                  value={pauseForm.zoomLink}
+                  placeholder="https://zoom.us/j/..."
+                  onChange={(e) => setPauseForm({ ...pauseForm, zoomLink: e.target.value })}
+                />
+              </div>
+              {pauseMsg && (
+                <p className="text-sm" style={{ color: pauseMsg.startsWith("✅") ? "#15803D" : "#B45309" }}>
+                  {pauseMsg}
+                </p>
+              )}
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={() => {
+                    setPauseForm(null);
+                    setPauseMsg(null);
+                  }}
+                  className="px-4 py-2 rounded-full text-sm font-semibold"
+                  style={{ color: "#57534E", border: "1px solid #E5E0D5" }}
+                >
+                  Hủy
+                </button>
+                <Button onClick={createPauseReview} disabled={creatingPause}>
+                  {creatingPause ? "Đang tạo..." : "Tạo buổi & gửi email"}
+                </Button>
+              </div>
+            </div>
+          </Card>
+        )}
 
         <Card>
           <h2 className="font-bold mb-4" style={{ color: "#B45309" }}>
