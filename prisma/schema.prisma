@@ -212,6 +212,9 @@ model User {
   trainingRegistrations   TrainingRegistration[]
   endOfProgramReports     EndOfProgramReport[]
   trainingSpeakers        TrainingSpeaker[]
+  communityPosts          CommunityPost[]
+  communityComments       CommunityComment[]
+  reviewedCommunityPosts  CommunityPost[]          @relation("CommunityPostReviewer")
 
   @@map("users")
 }
@@ -888,4 +891,49 @@ model EndOfProgramReport {
   @@unique([matchId, authorUserId])
   @@index([matchId])
   @@map("end_of_program_reports")
+}
+
+// ============================================================
+// Cộng đồng (Feed chia sẻ chung)
+// ============================================================
+
+enum CommunityPostStatus {
+  pending
+  approved
+  rejected
+}
+
+model CommunityPost {
+  id             String              @id @default(uuid()) @db.Uuid
+  authorUserId   String              @map("author_user_id") @db.Uuid
+  author         User                @relation(fields: [authorUserId], references: [id])
+  content        String
+  tags           Json? // mảng nhãn lĩnh vực (key) — dùng INDUSTRIES
+  status         CommunityPostStatus @default(pending)
+  commentsLocked Boolean              @default(false) @map("comments_locked")
+  reviewedByUserId String?           @map("reviewed_by_user_id") @db.Uuid
+  reviewedBy     User?               @relation("CommunityPostReviewer", fields: [reviewedByUserId], references: [id])
+  reviewedAt     DateTime?           @map("reviewed_at")
+  createdAt      DateTime            @default(now()) @map("created_at")
+  deletedAt      DateTime?           @map("deleted_at")
+
+  comments CommunityComment[]
+
+  @@index([status, createdAt])
+  @@index([authorUserId])
+  @@map("community_posts")
+}
+
+model CommunityComment {
+  id           String        @id @default(uuid()) @db.Uuid
+  postId       String        @map("post_id") @db.Uuid
+  post         CommunityPost @relation(fields: [postId], references: [id])
+  authorUserId String        @map("author_user_id") @db.Uuid
+  author       User          @relation(fields: [authorUserId], references: [id])
+  content      String
+  createdAt    DateTime      @default(now()) @map("created_at")
+  deletedAt    DateTime?     @map("deleted_at")
+
+  @@index([postId, createdAt])
+  @@map("community_comments")
 }

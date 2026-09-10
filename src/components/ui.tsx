@@ -15,6 +15,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { href: "/dashboard", icon: "home", label: "Tổng quan" },
       { href: "/discover", icon: "compass", label: "Khám phá" },
+      { href: "/community", icon: "users", label: "Cộng đồng" },
     ],
   },
   {
