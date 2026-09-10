@@ -22,6 +22,7 @@ export default function Home() {
   const [fieldStats, setFieldStats] = useState<FieldStat[]>([]);
   const [totals, setTotals] = useState<{ mentorsReady: number; menteesWaiting: number } | null>(null);
   const [selected, setSelected] = useState<FieldStat | null>(null);
+  const [visibleCount, setVisibleCount] = useState(4);
 
   useEffect(() => {
     fetch("/api/public/field-stats")
@@ -297,7 +298,7 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {fieldStats.length > 0
-              ? fieldStats.map((x, idx) => (
+              ? fieldStats.slice(0, visibleCount).map((x, idx) => (
                   <button
                     key={x.key}
                     onClick={() => setSelected(x)}
@@ -310,7 +311,7 @@ export default function Home() {
                     <p className="text-xs mt-1 text-stone-500 group-hover:text-teal-100 transition-colors">{x.mentorsReady} mentor · {x.menteesWaiting} mentee</p>
                   </button>
                 ))
-              : INDUSTRIES.map((x, idx) => (
+              : INDUSTRIES.slice(0, visibleCount).map((x, idx) => (
                   <div
                     key={x.key}
                     className="group p-6 bg-[#F5F2EC] rounded-2xl flex flex-col items-center text-center"
@@ -322,6 +323,17 @@ export default function Home() {
                   </div>
                 ))}
           </div>
+
+          {fieldStats.length > visibleCount && (
+            <div className="flex justify-center mt-10">
+              <button
+                onClick={() => setVisibleCount((c) => c + 4)}
+                className="px-8 py-3 bg-white border-2 border-teal-700 text-teal-700 font-semibold rounded-full hover:bg-teal-700 hover:text-white transition-all shadow-sm"
+              >
+                Xem thêm lĩnh vực »
+              </button>
+            </div>
+          )}
 
           {totals && (
             <p className="text-center text-sm text-stone-500 mt-8">
