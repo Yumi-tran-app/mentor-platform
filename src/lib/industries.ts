@@ -1,37 +1,80 @@
-// Danh mục lĩnh vực chuẩn — dùng chung cho:
+// Danh mục chuyên ngành chuẩn (Tâm lý + Nhân sự) — dùng chung cho:
 // - Dropdown "Ngành nghề chính" trong đăng ký Mentor
-// - Bộ lọc nhu cầu trong đăng ký Mentee
-// - Landing page (ô "Khám phá các lĩnh vực") + API thống kê mentor/mentee
-// Mỗi phần tử: [key, label, icon-helper]
-export const INDUSTRIES = [
-  { key: "tech_it", label: "Công nghệ & IT" },
-  { key: "marketing_sales", label: "Marketing & Sales" },
-  { key: "finance_accounting", label: "Tài chính & Kế toán" },
-  { key: "hr_psychology", label: "Nhân sự & Tâm lý" },
-  { key: "design_creative", label: "Thiết kế & Sáng tạo" },
-  { key: "education_training", label: "Giáo dục & Đào tạo" },
-  { key: "healthcare", label: "Y tế & Sức khoẻ" },
-  { key: "manufacturing_engineering", label: "Sản xuất & Kỹ thuật" },
-  { key: "music_arts", label: "Âm nhạc & Nghệ thuật" },
-  { key: "supply_chain_logistics", label: "Supply Chain & Logistics" },
-  { key: "transport_warehousing", label: "Vận tải & Kho bãi" },
-  { key: "agriculture_processing", label: "Nông nghiệp & Chế biến" },
-  { key: "business_startup", label: "Kinh doanh & Khởi nghiệp" },
-  { key: "legal_compliance", label: "Pháp lý & Tuân thủ" },
-  { key: "other", label: "Lĩnh vực khác" },
-] as const;
+// - Dropdown "Lĩnh vực quan tâm" trong đăng ký Mentee
+// Không dùng cho feed cộng đồng (đã bỏ tag lĩnh vực ở feed).
 
-export type IndustryKey = (typeof INDUSTRIES)[number]["key"];
+export type IndustryKey = string;
 
-export const INDUSTRY_LABELS: Record<IndustryKey, string> = INDUSTRIES.reduce(
+export interface IndustryOption {
+  key: string;
+  label: string;
+}
+
+export interface IndustryGroup {
+  group: string;
+  options: IndustryOption[];
+}
+
+// Nhóm chuyên ngành (dùng cho optgroup trong dropdown)
+export const INDUSTRY_GROUPS: IndustryGroup[] = [
+  {
+    group: "Tâm lý",
+    options: [
+      { key: "psy_clinical", label: "Tâm lý học lâm sàng" },
+      { key: "psy_counseling", label: "Tham vấn tâm lý" },
+      { key: "psy_educational", label: "Tâm lý học giáo dục & học đường" },
+      { key: "psy_organizational", label: "Tâm lý học tổ chức – nhân sự" },
+      { key: "psy_social", label: "Tâm lý học xã hội" },
+      { key: "psy_developmental", label: "Tâm lý học phát triển" },
+    ],
+  },
+  {
+    group: "Nhân sự",
+    options: [
+      { key: "hr_recruitment", label: "Tuyển dụng & Thu hút tài năng" },
+      { key: "hr_ld", label: "Đào tạo & Phát triển (L&D)" },
+      { key: "hr_cb", label: "Lương thưởng & Phúc lợi (C&B)" },
+      { key: "hr_perf_er", label: "Quản lý hiệu suất & Quan hệ lao động" },
+      { key: "hr_bp", label: "Đối tác chiến lược nhân sự (HRBP)" },
+    ],
+  },
+  {
+    group: "Khác",
+    options: [
+      { key: "other", label: "Lĩnh vực khác" },
+    ],
+  },
+];
+
+// Danh sách phẳng (flatten) — dùng khi chỉ cần lặp 1 chiều
+export const INDUSTRIES: IndustryOption[] = INDUSTRY_GROUPS.flatMap(
+  (g) => g.options
+);
+
+export const INDUSTRY_LABELS: Record<string, string> = INDUSTRIES.reduce(
   (acc, i) => {
     acc[i.key] = i.label;
     return acc;
   },
-  {} as Record<IndustryKey, string>
+  {} as Record<string, string>
 );
 
 export function industryLabel(key: string | null | undefined): string {
   if (!key) return "";
-  return INDUSTRY_LABELS[key as IndustryKey] ?? key;
+  return INDUSTRY_LABELS[key] ?? key;
 }
+
+// Map key -> nhóm (group label), dùng để gộp thống kê theo ngành mẹ
+const INDUSTRY_GROUP_OF: Record<string, string> = {};
+for (const g of INDUSTRY_GROUPS) {
+  for (const o of g.options) {
+    INDUSTRY_GROUP_OF[o.key] = g.group;
+  }
+}
+
+export function industryGroupOf(key: string | null | undefined): string {
+  if (!key) return "Khác";
+  return INDUSTRY_GROUP_OF[key] ?? "Khác";
+}
+
+export const INDUSTRY_GROUP_NAMES = INDUSTRY_GROUPS.map((g) => g.group);

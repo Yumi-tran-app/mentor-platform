@@ -1,13 +1,12 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { withErrorHandling } from "@/lib/api-helpers";
-import { INDUSTRIES } from "@/lib/industries";
+import { INDUSTRY_GROUP_NAMES, industryGroupOf } from "@/lib/industries";
 
 /**
  * GET /api/public/field-stats
  * API công khai (không cần auth) phục vụ landing page:
- * Trả về per lĩnh vực số mentor sẵn sàng kết nối + số mentee đang chờ.
- * Dùng cho ô "Khám phá các lĩnh vực".
+ * Trả về số mentor sẵn sàng + mentee đang chờ, gộp theo ngành mẹ (Tâm lý / Nhân sự / Khác).
  */
 export const GET = withErrorHandling(async () => {
   // Mentor sẵn sàng = đã approved/in_pool, còn slot, program active
@@ -28,36 +27,34 @@ export const GET = withErrorHandling(async () => {
     select: { profileJson: true },
   });
 
-  // Đếm mentor theo industry (đã chuẩn hoá về key)
-  const mentorByField: Record<string, number> = {};
+  // Gộp theo ngành mẹ
+  const mentorByGroup: Record<string, number> = {};
   for (const m of mentors) {
-    const key = m.industry ?? "other";
     const slot = Math.max(0, (m.capacityMax || 0) - (m.capacityUsed || 0));
-    // Chỉ tính mentor thực sự còn slot trống
     if (slot <= 0) continue;
-    mentorByField[key] = (mentorByField[key] || 0) + 1;
+    const group = industryGroupOf(m.industry);
+    mentorByGroup[group] = (mentorByGroup[group] || 0) + 1;
   }
 
-  // Đếm mentee theo lĩnh vực quan tâm (profileJson.industry)
-  const menteeByField: Record<string, number> = {};
+  const menteeByGroup: Record<string, number> = {};
   for (const m of mentees) {
-    const key = (m.profileJson as any)?.industry ?? "other";
-    if (!key) continue;
-    menteeByField[key] = (menteeByField[key] || 0) + 1;
+    const key = (m.profileJson as any)?.industry;
+    const group = industryGroupOf(key);
+    menteeByGroup[group] = (menteeByGroup[group] || 0) + 1;
   }
   const totalMenteeWaiting = mentees.length;
 
-  const fields = INDUSTRIES.map((f) => ({
-    key: f.key,
-    label: f.label,
-    mentorsReady: mentorByField[f.key] ?? 0,
-    menteesWaiting: menteeByField[f.key] ?? 0,
+  const groups = INDUSTRY_GROUP_NAMES.map((g) => ({
+    key: g,
+    label: g,
+    mentorsReady: mentorByGroup[g] ?? 0,
+    menteesWaiting: menteeByGroup[g] ?? 0,
   }));
 
   return NextResponse.json({
-    fields,
+    groups,
     totals: {
-      mentorsReady: Object.values(mentorByField).reduce((a, b) => a + b, 0),
+      mentorsReady: Object.values(mentorByGroup).reduce((a, b) => a + b, 0),
       menteesWaiting: totalMenteeWaiting,
     },
   });

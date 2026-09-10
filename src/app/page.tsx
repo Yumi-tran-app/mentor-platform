@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { INDUSTRIES } from "@/lib/industries";
 
 const ORG_NAME = "Tre Việt Mentoring";
 
@@ -22,14 +21,12 @@ export default function Home() {
   const [fieldStats, setFieldStats] = useState<FieldStat[]>([]);
   const [totals, setTotals] = useState<{ mentorsReady: number; menteesWaiting: number } | null>(null);
   const [selected, setSelected] = useState<FieldStat | null>(null);
-  const [page, setPage] = useState(0);
-  const PAGE_SIZE = 4;
 
   useEffect(() => {
     fetch("/api/public/field-stats")
       .then((r) => r.json())
       .then((d) => {
-        setFieldStats(d.fields ?? []);
+        setFieldStats(d.groups ?? []);
         setTotals(d.totals ?? null);
       })
       .catch(() => {});
@@ -297,9 +294,9 @@ export default function Home() {
               <p className="text-stone-600">Tìm chuyên gia trong mảng bạn quan tâm</p>
             </div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 transition-transform duration-500">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {fieldStats.length > 0
-              ? fieldStats.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE).map((x, idx) => (
+              ? fieldStats.map((x, idx) => (
                   <button
                     key={x.key}
                     onClick={() => setSelected(x)}
@@ -312,36 +309,7 @@ export default function Home() {
                     <p className="text-xs mt-1 text-stone-500 group-hover:text-teal-100 transition-colors">{x.mentorsReady} mentor · {x.menteesWaiting} mentee</p>
                   </button>
                 ))
-              : INDUSTRIES.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE).map((x, idx) => (
-                  <div
-                    key={x.key}
-                    className="group p-6 bg-[#F5F2EC] rounded-2xl flex flex-col items-center text-center"
-                  >
-                    <div className={`w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 ${idx % 2 === 0 ? "text-teal-700" : "text-amber-700"}`}>
-                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={FIELD_ICON} /></svg>
-                    </div>
-                    <h3 className="font-semibold text-stone-800">{x.label}</h3>
-                  </div>
-                ))}
-          </div>
-
-          <div className="flex justify-center items-center gap-4 mt-10">
-            {page > 0 && (
-              <button
-                onClick={() => setPage((p) => p - 1)}
-                className="px-6 py-3 bg-white border-2 border-stone-300 text-stone-600 font-semibold rounded-full hover:border-teal-700 hover:text-teal-700 transition-all shadow-sm"
-              >
-                ‹ Quay lại
-              </button>
-            )}
-            {fieldStats.length > (page + 1) * PAGE_SIZE && (
-              <button
-                onClick={() => setPage((p) => p + 1)}
-                className="px-8 py-3 bg-white border-2 border-teal-700 text-teal-700 font-semibold rounded-full hover:bg-teal-700 hover:text-white transition-all shadow-sm"
-              >
-                Xem thêm »
-              </button>
-            )}
+              : null}
           </div>
 
           {totals && (

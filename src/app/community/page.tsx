@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { AppShell, Card, Button, Avatar } from "@/components/ui";
 import { useCurrentUser, isStaff } from "@/lib/use-current-user";
-import { INDUSTRIES } from "@/lib/industries";
 
 type Author = { fullName: string; avatarUrl: string | null; role: string };
 
@@ -24,10 +23,6 @@ type Comment = {
   createdAt: string;
   author: Author;
 };
-
-function tagLabel(key: string): string {
-  return INDUSTRIES.find((i) => i.key === key)?.label ?? key;
-}
 
 function statusLabel(status: string): string {
   if (status === "approved") return "Đã duyệt";
@@ -50,7 +45,6 @@ export default function CommunityPage() {
   const [myPosts, setMyPosts] = useState<Post[]>([]);
   const [showMine, setShowMine] = useState(false);
   const [draft, setDraft] = useState("");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [posting, setPosting] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
 
@@ -82,12 +76,6 @@ export default function CommunityPage() {
     load();
   }, [load]);
 
-  async function toggleTag(key: string) {
-    setSelectedTags((s) =>
-      s.includes(key) ? s.filter((k) => k !== key) : [...s, key]
-    );
-  }
-
   async function submitPost() {
     if (!draft.trim()) return;
     setPosting(true);
@@ -96,13 +84,12 @@ export default function CommunityPage() {
       const res = await fetch("/api/community/posts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: draft, tags: selectedTags }),
+        body: JSON.stringify({ content: draft, tags: [] }),
       });
       const d = await res.json();
       if (res.ok) {
         setNotice("✅ Bài viết đã gửi, chờ điều phối viên duyệt.");
         setDraft("");
-        setSelectedTags([]);
       } else {
         setNotice(d.error ?? "Có lỗi khi đăng bài.");
       }
@@ -185,25 +172,6 @@ export default function CommunityPage() {
           className="w-full px-4 py-3 rounded-lg border text-sm"
           style={{ borderColor: "#E5E0D5", color: "#292524" }}
         />
-        <div className="flex flex-wrap gap-2 mt-3">
-          {INDUSTRIES.map((i) => {
-            const on = selectedTags.includes(i.key);
-            return (
-              <button
-                key={i.key}
-                type="button"
-                onClick={() => toggleTag(i.key)}
-                className="px-3 py-1.5 rounded-full text-xs font-semibold transition"
-                style={{
-                  background: on ? "#15B5B0" : "#F5F2EC",
-                  color: on ? "#fff" : "#292524",
-                }}
-              >
-                {i.label}
-              </button>
-            );
-          })}
-        </div>
         <div className="flex justify-end mt-4">
           <Button onClick={submitPost} disabled={posting || !draft.trim()}>
             {posting ? "Đang gửi..." : "Đăng bài"}
@@ -272,13 +240,6 @@ export default function CommunityPage() {
                     <p className="text-sm mt-1 whitespace-pre-wrap" style={{ color: "#292524" }}>
                       {p.content}
                     </p>
-                    {p.tags?.length ? (
-                      <div className="flex flex-wrap gap-1.5 mt-2">
-                        {(p.tags as string[]).map((t) => (
-                          <span key={t} className="px-2 py-0.5 rounded-full text-[11px] font-semibold" style={{ background: "#E4F4F1", color: "#0F766E" }}>{tagLabel(t)}</span>
-                        ))}
-                      </div>
-                    ) : null}
                   </div>
                   <div className="flex gap-2 shrink-0">
                     <button
@@ -340,19 +301,6 @@ export default function CommunityPage() {
                 <p className="text-sm whitespace-pre-wrap" style={{ color: "#292524" }}>
                   {p.content}
                 </p>
-                {p.tags?.length ? (
-                  <div className="flex flex-wrap gap-1.5 mt-3">
-                    {(p.tags as string[]).map((t) => (
-                      <span
-                        key={t}
-                        className="px-2 py-0.5 rounded-full text-[11px] font-semibold"
-                        style={{ background: "#E4F4F1", color: "#0F766E" }}
-                      >
-                        {tagLabel(t)}
-                      </span>
-                    ))}
-                  </div>
-                ) : null}
 
                 <div className="flex items-center gap-4 mt-4 pt-3 border-t" style={{ borderColor: "#F5F2EC" }}>
                   <button

@@ -1,4 +1,5 @@
 import { prisma } from "./prisma";
+import { industryLabel } from "./industries";
 
 /**
  * Quản lý danh sách (roster) Mentor & Mentee cho màn Admin.
@@ -49,7 +50,7 @@ export const MENTOR_COLUMNS: CsvColumn[] = [
     label: "Trạng thái tham gia",
     get: (a) => a.programStatus ?? "",
   },
-  { key: "industry", label: "Ngành", get: (a) => a.industry ?? "" },
+  { key: "industry", label: "Ngành", get: (a) => industryLabel(a.industry) },
   // identity
   { key: "preferredName", label: "Tên gọi", get: (a) => a.identityJson?.preferredName ?? "" },
   { key: "gender", label: "Giới tính", get: (a) => a.identityJson?.gender ?? "" },

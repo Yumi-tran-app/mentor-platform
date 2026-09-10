@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Card, Button } from "@/components/ui";
 import { VIETNAM_PROVINCES } from "@/lib/vietnam-locations";
-import { INDUSTRIES } from "@/lib/industries";
+import { INDUSTRY_GROUPS } from "@/lib/industries";
 
 const NEEDS = [
   ["learning", "Học tập"],
@@ -235,8 +235,12 @@ export default function MenteeOnboardingPage() {
               <div className="sm:col-span-2">
                 <label className={labelCls}>Lĩnh vực quan tâm *</label>
                 <select className={inputCls} style={inputStyle} value={form.industry} onChange={(e) => set("industry", e.target.value)}>
-                  <option value="">— Chọn lĩnh vực —</option>
-                  {INDUSTRIES.map((i) => <option key={i.key} value={i.key}>{i.label}</option>)}
+                  <option value="">— Chọn chuyên ngành —</option>
+                  {INDUSTRY_GROUPS.map((g) => (
+                    <optgroup key={g.group} label={g.group}>
+                      {g.options.map((i) => <option key={i.key} value={i.key}>{i.label}</option>)}
+                    </optgroup>
+                  ))}
                 </select>
               </div>
             </div>
