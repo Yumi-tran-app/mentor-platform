@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Card, Button } from "@/components/ui";
 import { VIETNAM_PROVINCES } from "@/lib/vietnam-locations";
+import { INDUSTRIES } from "@/lib/industries";
 
 const NEEDS = [
   ["learning", "Học tập"],
@@ -39,6 +40,7 @@ export default function MenteeOnboardingPage() {
     school: "",
     yearOfStudy: "",
     city: "",
+    industry: "",
     // Bước 3: nhu cầu
     needs: [] as string[],
     // Bước 4: mục tiêu
@@ -64,7 +66,7 @@ export default function MenteeOnboardingPage() {
       return !!form.fullName.trim() && !!form.studentId.trim() && !!form.schoolEmail.trim() && !!form.phone.trim() && !!form.avatarUrl.trim();
     }
     if (s === 2) {
-      return !!form.major.trim() && !!form.school.trim() && !!form.yearOfStudy.trim() && !!form.city.trim();
+      return !!form.major.trim() && !!form.school.trim() && !!form.yearOfStudy.trim() && !!form.city.trim() && !!form.industry;
     }
     if (s === 3) return form.needs.length > 0;
     if (s === 4) return !!form.goalText.trim();
@@ -101,6 +103,7 @@ export default function MenteeOnboardingPage() {
             school: form.school,
             yearOfStudy: Number(form.yearOfStudy) || undefined,
             city: form.city,
+            industry: form.industry,
           },
           goalText: form.goalText,
           needs: form.needs,
@@ -227,6 +230,13 @@ export default function MenteeOnboardingPage() {
                 <select className={inputCls} style={inputStyle} value={form.city} onChange={(e) => set("city", e.target.value)}>
                   <option value="">— Chọn tỉnh/thành —</option>
                   {VIETNAM_PROVINCES.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+              <div className="sm:col-span-2">
+                <label className={labelCls}>Lĩnh vực quan tâm *</label>
+                <select className={inputCls} style={inputStyle} value={form.industry} onChange={(e) => set("industry", e.target.value)}>
+                  <option value="">— Chọn lĩnh vực —</option>
+                  {INDUSTRIES.map((i) => <option key={i.key} value={i.key}>{i.label}</option>)}
                 </select>
               </div>
             </div>

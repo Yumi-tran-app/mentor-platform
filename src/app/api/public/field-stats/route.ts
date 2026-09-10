@@ -25,7 +25,7 @@ export const GET = withErrorHandling(async () => {
       status: { in: ["approved", "in_pool"] },
       availabilityStatus: { in: ["waiting", "seeking_rematch"] },
     },
-    select: { needs: true },
+    select: { profileJson: true },
   });
 
   // Đếm mentor theo industry (đã chuẩn hoá về key)
@@ -38,16 +38,20 @@ export const GET = withErrorHandling(async () => {
     mentorByField[key] = (mentorByField[key] || 0) + 1;
   }
 
-  // Đếm mentee theo need category (học tập/nghề nghiệp/… → map thô về lĩnh vực)
-  // Vì cấu trúc hiện tại mentee không chọn "industry" mà chọn "nhóm nhu cầu",
-  // nên số mentee hiển thị theo lĩnh vực là con số ước lượng dựa trên tổng mentee
-  // chờ ghép được chia đều → ta trả về tổng + ánh xạ tạm.
+  // Đếm mentee theo lĩnh vực quan tâm (profileJson.industry)
+  const menteeByField: Record<string, number> = {};
+  for (const m of mentees) {
+    const key = (m.profileJson as any)?.industry ?? "other";
+    if (!key) continue;
+    menteeByField[key] = (menteeByField[key] || 0) + 1;
+  }
   const totalMenteeWaiting = mentees.length;
 
   const fields = INDUSTRIES.map((f) => ({
     key: f.key,
     label: f.label,
     mentorsReady: mentorByField[f.key] ?? 0,
+    menteesWaiting: menteeByField[f.key] ?? 0,
   }));
 
   return NextResponse.json({

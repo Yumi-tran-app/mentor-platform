@@ -19,6 +19,7 @@ const MenteeApplicationSchema = z.object({
     school: z.string().min(1),
     yearOfStudy: z.number().int().optional(),
     city: z.string().optional(),
+    industry: z.string().optional(),
   }),
   goalText: z.string().optional(),
   needs: z.array(

@@ -15,6 +15,7 @@ interface FieldStat {
   key: string;
   label: string;
   mentorsReady: number;
+  menteesWaiting: number;
 }
 
 export default function Home() {
@@ -306,7 +307,7 @@ export default function Home() {
                       <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={FIELD_ICON} /></svg>
                     </div>
                     <h3 className="font-semibold text-stone-800 group-hover:text-white transition-colors">{x.label}</h3>
-                    <p className="text-xs mt-1 text-stone-500 group-hover:text-teal-100 transition-colors">{x.mentorsReady} mentor sẵn sàng</p>
+                    <p className="text-xs mt-1 text-stone-500 group-hover:text-teal-100 transition-colors">{x.mentorsReady} mentor · {x.menteesWaiting} mentee</p>
                   </button>
                 ))
               : INDUSTRIES.map((x, idx) => (
@@ -347,7 +348,7 @@ export default function Home() {
                     <p className="text-sm text-stone-600 mt-1">Mentor sẵn sàng kết nối</p>
                   </div>
                   <div className="bg-amber-50 rounded-2xl p-5 text-center">
-                    <div className="text-3xl font-black text-amber-700">{totals?.menteesWaiting ?? 0}</div>
+                    <div className="text-3xl font-black text-amber-700">{selected.menteesWaiting}</div>
                     <p className="text-sm text-stone-600 mt-1">Mentee đang chờ kết nối</p>
                   </div>
                 </div>
