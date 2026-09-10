@@ -498,26 +498,26 @@ export default function MatchDetailPage() {
             ) : (
               <>
                 <p className="text-xs mb-2" style={{ color: "#94A3B8" }}>
-                  Cùng xác nhận những điều quan trọng trước khi bắt đầu.
+                  Đọc và xác nhận khung nguyên tắc chung trước khi bắt đầu.
                 </p>
                 <Button onClick={() => setShowAgreement(true)} variant="secondary">
                   Xem lại thoả thuận
                 </Button>
                 <div style={{ height: 8 }} />
-                {AGREEMENT_ROWS.map(([key, label]) => {
-                  const on = agreementItems[key];
-                  return (
-                    <button key={key} onClick={() => setAgreementItems((s) => ({ ...s, [key]: !s[key] }))}
-                      className="w-full text-left px-2 py-1.5 rounded flex items-center gap-2 text-sm"
-                      style={{ color: on ? "#292524" : "#94A3B8" }}>
-                      <span className="w-4 h-4 rounded-full border-2 flex items-center justify-center text-xs"
-                        style={{ borderColor: "#15B5B0", background: on ? "#15B5B0" : "transparent", color: "#fff", flexShrink: 0 }}>
-                        {on ? "✓" : ""}
-                      </span>
-                      {label}
-                    </button>
-                  );
-                })}
+                <label className="flex items-start gap-2 text-sm cursor-pointer" style={{ color: "#292524" }}>
+                  <input
+                    type="checkbox"
+                    className="mt-0.5"
+                    checked={agreementAllOn}
+                    onChange={() => setAgreementItems((s) => {
+                      const next = !Object.values(s).every(Boolean);
+                      const out: Record<string, boolean> = {};
+                      for (const k of Object.keys(s)) out[k] = next;
+                      return out;
+                    })}
+                  />
+                  <span>Tôi đã đọc &amp; đồng ý toàn bộ nội dung thoả thuận đồng hành</span>
+                </label>
                 <Button onClick={confirmAgreement} disabled={confirming || !agreementAllOn} variant="secondary">
                   {confirming ? "Đang xác nhận..." : "Xác nhận thoả thuận"}
                 </Button>
