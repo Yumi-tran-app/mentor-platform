@@ -407,3 +407,31 @@ export async function getSlaDays(seasonId: string): Promise<number> {
 }
 
 export type { Match };
+
+// ---------- ĐPV phụ trách match ----------
+
+/**
+ * Lấy ĐPV (điều phối viên) đang phụ trách 1 cặp, ưu tiên assignment mới nhất.
+ * Trả về User (để lấy tên/avatar) hoặc null nếu chưa có ĐPV được gán.
+ */
+export async function getMatchCoordinator(matchId: string) {
+  const assignment = await prisma.coordinatorAssignment.findFirst({
+    where: { matchReview: { matchId } },
+    orderBy: { assignedAt: "desc" },
+    include: {
+      coordinator: {
+        select: { id: true, fullName: true, avatarUrl: true, role: true },
+      },
+    },
+  });
+  return assignment?.coordinator ?? null;
+}
+
+/**
+ * Kiểm tra 1 user có phải ĐPV đang phụ trách match hay không.
+ */
+export async function isMatchCoordinator(matchId: string, userId: string): Promise<boolean> {
+  const c = await getMatchCoordinator(matchId);
+  return c?.id === userId;
+}
+

@@ -13,9 +13,16 @@ type Message = {
   id: string;
   content: string;
   createdAt: string;
-  sender: { fullName: string; avatarUrl: string | null };
+  sender: { fullName: string; avatarUrl: string | null; role: string };
   senderUserId: string;
 };
+
+type Coordinator = {
+  id: string;
+  fullName: string;
+  avatarUrl: string | null;
+  role: string;
+} | null;
 
 export default function MessagesPage() {
   const [matches, setMatches] = useState<Match[]>([]);
@@ -24,6 +31,8 @@ export default function MessagesPage() {
   const [draft, setDraft] = useState("");
   const [myId, setMyId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [tab, setTab] = useState<"match" | "coordinator">("match");
+  const [coordinator, setCoordinator] = useState<Coordinator>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -36,16 +45,30 @@ export default function MessagesPage() {
       .then((d) => setMyId(d.user?.id ?? null));
   }, []);
 
-  const loadMessages = useCallback(async (matchId: string) => {
-    const res = await fetch(`/api/messages?matchId=${matchId}`).then((r) => r.json());
-    setMessages(res.messages ?? []);
+  const loadMessages = useCallback(
+    async (matchId: string, kind: "match" | "coordinator") => {
+      const res = await fetch(`/api/messages?matchId=${matchId}&kind=${kind}`).then((r) => r.json());
+      setMessages(res.messages ?? []);
+    },
+    []
+  );
+
+  const loadCoordinator = useCallback(async (matchId: string) => {
+    const res = await fetch(`/api/messages/coordinator?matchId=${matchId}`).then((r) => r.json());
+    setCoordinator(res.coordinator ?? null);
   }, []);
 
   useEffect(() => {
     if (activeId) {
-      loadMessages(activeId);
+      setMessages([]);
+      if (tab === "match") {
+        loadMessages(activeId, "match");
+      } else {
+        loadMessages(activeId, "coordinator");
+        loadCoordinator(activeId);
+      }
     }
-  }, [activeId, loadMessages]);
+  }, [activeId, tab, loadMessages, loadCoordinator]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
@@ -57,10 +80,10 @@ export default function MessagesPage() {
     await fetch("/api/messages", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ matchId: activeId, content: draft }),
+      body: JSON.stringify({ matchId: activeId, content: draft, kind: tab }),
     });
     setDraft("");
-    await loadMessages(activeId);
+    await loadMessages(activeId, tab);
   }
 
   if (loading) {
@@ -71,10 +94,10 @@ export default function MessagesPage() {
     );
   }
 
-  // Lấy tên + avatar đối phương (partner) từ góc nhìn người dùng hiện tại
   function partnerOf(m: Match): { name: string; role: string; avatarUrl: string | null } {
     const isMentor = myId === m.mentorApplication.user.id;
-    if (isMentor) return { name: m.menteeApplication.user.fullName, role: "Mentee", avatarUrl: m.menteeApplication.user.avatarUrl };
+    if (isMentor)
+      return { name: m.menteeApplication.user.fullName, role: "Mentee", avatarUrl: m.menteeApplication.user.avatarUrl };
     return { name: m.mentorApplication.user.fullName, role: "Mentor", avatarUrl: m.mentorApplication.user.avatarUrl };
   }
 
@@ -83,6 +106,30 @@ export default function MessagesPage() {
       <h1 className="text-2xl font-bold mb-6" style={{ color: "#0F766E" }}>
         Tin nhắn
       </h1>
+
+      {/* Tabs */}
+      <div className="flex gap-2 mb-6">
+        <button
+          onClick={() => setTab("match")}
+          className="px-5 py-2 rounded-full font-semibold text-sm transition"
+          style={{
+            background: tab === "match" ? "#0F766E" : "#F5F2EC",
+            color: tab === "match" ? "#fff" : "#292524",
+          }}
+        >
+          Đồng hành
+        </button>
+        <button
+          onClick={() => setTab("coordinator")}
+          className="px-5 py-2 rounded-full font-semibold text-sm transition"
+          style={{
+            background: tab === "coordinator" ? "#0F766E" : "#F5F2EC",
+            color: tab === "coordinator" ? "#fff" : "#292524",
+          }}
+        >
+          Điều phối viên
+        </button>
+      </div>
 
       {matches.length === 0 ? (
         <Card>
@@ -119,20 +166,47 @@ export default function MessagesPage() {
           </div>
 
           {/* Khung chat */}
-          <Card className="flex flex-col" >
+          <Card className="flex flex-col">
             {!activeId ? (
               <p className="text-sm m-auto" style={{ color: "#94A3B8" }}>
                 Chọn một cặp để bắt đầu nhắn tin.
               </p>
             ) : (
               <>
+                {/* Header */}
+                <div className="flex items-center gap-3 pb-3 mb-3 border-b" style={{ borderColor: "#F5F2EC" }}>
+                  {tab === "coordinator" ? (
+                    <>
+                      <Avatar src={coordinator?.avatarUrl ?? null} name={coordinator?.fullName ?? "ĐPV"} size={40} />
+                      <div>
+                        <p className="text-sm font-semibold" style={{ color: "#0F766E" }}>
+                          {coordinator?.fullName ?? "Điều phối viên"}
+                        </p>
+                        <p className="text-xs" style={{ color: "#94A3B8" }}>Điều phối viên hỗ trợ</p>
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-sm" style={{ color: "#94A3B8" }}>
+                      Trao đổi với người đồng hành của bạn
+                    </p>
+                  )}
+                </div>
+
+                {tab === "coordinator" && !coordinator && (
+                  <p className="text-sm mb-3" style={{ color: "#94A3B8" }}>
+                    Chưa có điều phối viên được phân công cho cặp này.
+                  </p>
+                )}
+
                 <div
                   ref={scrollRef}
-                  className="flex-1 max-h-[420px] overflow-y-auto space-y-3 mb-4"
+                  className="flex-1 max-h-[380px] overflow-y-auto space-y-3 mb-4"
                 >
                   {messages.length === 0 ? (
                     <p className="text-sm" style={{ color: "#94A3B8" }}>
-                      Chưa có tin nhắn nào. Hãy bắt đầu trò chuyện!
+                      {tab === "coordinator"
+                        ? "Chưa có tin nhắn. Hãy gửi yêu cầu hỗ trợ cho điều phối viên."
+                        : "Chưa có tin nhắn nào. Hãy bắt đầu trò chuyện!"}
                     </p>
                   ) : (
                     messages.map((msg) => {
@@ -167,7 +241,11 @@ export default function MessagesPage() {
                   <input
                     value={draft}
                     onChange={(e) => setDraft(e.target.value)}
-                    placeholder="Nhập tin nhắn..."
+                    placeholder={
+                      tab === "coordinator"
+                        ? "Nhắn tin hỗ trợ cho điều phối viên..."
+                        : "Nhập tin nhắn..."
+                    }
                     className="flex-1 px-4 py-2.5 rounded-lg border text-sm"
                     style={{ borderColor: "#E5E0D5", color: "#292524" }}
                   />

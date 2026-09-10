@@ -166,6 +166,11 @@ enum SupportStatus {
   resolved
 }
 
+enum MessageKind {
+  match
+  coordinator
+}
+
 // ============================================================
 // Người dùng & Mùa hoạt động
 // ============================================================
@@ -678,13 +683,14 @@ model TrainingProgress {
 }
 
 model Message {
-  id           String   @id @default(uuid()) @db.Uuid
-  matchId      String   @map("match_id") @db.Uuid
-  match        Match    @relation(fields: [matchId], references: [id])
-  senderUserId String   @map("sender_user_id") @db.Uuid
-  sender       User     @relation(fields: [senderUserId], references: [id])
+  id           String      @id @default(uuid()) @db.Uuid
+  matchId      String      @map("match_id") @db.Uuid
+  match        Match       @relation(fields: [matchId], references: [id])
+  senderUserId String      @map("sender_user_id") @db.Uuid
+  sender       User        @relation(fields: [senderUserId], references: [id])
+  kind         MessageKind @default(match)
   content      String
-  createdAt    DateTime @default(now()) @map("created_at")
+  createdAt    DateTime    @default(now()) @map("created_at")
 
   @@index([matchId, createdAt])
   @@map("messages")
