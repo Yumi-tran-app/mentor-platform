@@ -22,10 +22,18 @@ export default function PrivacyPage() {
           Cập nhật lần cuối: Tháng 9/2026 · Tre Việt Mentoring
         </p>
 
-        <Section title="1. Giới thiệu">
+        <Section title="1. Giới thiệu & chủ thể vận hành">
           <p>
-            Tre Việt Mentoring (&quot;chương trình&quot;, &quot;chúng tôi&quot;) là một dự án mentoRing cộng đồng
+            <b>Tre Việt Mentoring</b> (&quot;chương trình&quot;, &quot;chúng tôi&quot;) là một dự án mentoring cộng đồng
             nhằm kết nối người giàu kinh nghiệm (Mentor) với người trẻ cần định hướng (Mentee).
+          </p>
+          <p>
+            Chương trình (bao gồm nền tảng website, diễn đàn cộng đồng và mọi hoạt động liên quan) được
+            vận hành bởi <b>Công ty TNHH Cloud &amp; Coral</b> — mã số thuế <b>0318906357</b>, địa chỉ 191 Hai Bà Trưng,
+            Phường Xuân Hoà, TP. Hồ Chí Minh. Cloud &amp; Coral là chủ thể pháp lý chịu trách nhiệm về việc thu thập,
+            xử lý và bảo vệ dữ liệu cá nhân trên nền tảng này.
+          </p>
+          <p>
             Chúng tôi cam kết bảo vệ dữ liệu cá nhân của bạn theo quy định của Nghị định 13/2023/NĐ-CP
             về bảo vệ dữ liệu cá nhân và các quy định pháp luật có liên quan tại Việt Nam.
           </p>
@@ -96,6 +104,8 @@ export default function PrivacyPage() {
           <p>
             Nếu bạn có câu hỏi về chính sách này hoặc cách chúng tôi xử lý dữ liệu, vui lòng liên hệ:
             <br />
+            <b>Công ty TNHH Cloud &amp; Coral</b> (vận hành Tre Việt Mentoring)
+            <br />
             Email: <a href="mailto:team.cloudncoral@gmail.com" style={{ color: "#0F766E" }}>team.cloudncoral@gmail.com</a>
           </p>
         </Section>
@@ -122,6 +132,42 @@ export default function PrivacyPage() {
           <p>
             Chương trình là cầu nối hỗ trợ định hướng, không thay thế tư vấn chuyên môn (pháp lý, tài chính,
             y tế...). Mọi quyết định cá nhân là trách nhiệm của người tham gia.
+          </p>
+        </Section>
+
+        <h2 className="text-2xl font-bold mt-10 mb-4" style={{ color: "#0F766E" }}>
+          Quy chế cộng đồng & Trách nhiệm nội dung
+        </h2>
+        <Section title="D. Nguyên tắc đăng tải nội dung">
+          <p>
+            Diễn đàn cộng đồng là không gian chia sẻ tri thức lành mạnh. Khi đăng bài hoặc bình luận, bạn cam kết:
+          </p>
+          <ul>
+            <li>Không đăng tải nội dung vi phạm pháp luật Việt Nam (tuyên truyền chống phá Nhà nước, kích động bạo lực, phân biệt chủng tộc/vùng miền, mua bán hàng cấm...).</li>
+            <li>Không phát tán thông tin sai sự thật, lừa đảo, spam hoặc quảng cáo trái phép.</li>
+            <li>Không chia sẻ thông tin cá nhân của người khác khi chưa được đồng ý.</li>
+            <li>Không quấy rối, xúc phạm, công kích cá nhân hoặc tổ chức.</li>
+            <li>Tôn trọng quyền sở hữu trí tuệ và ghi rõ nguồn khi chia sẻ nội dung không phải của mình.</li>
+          </ul>
+        </Section>
+        <Section title="E. Kiểm duyệt & xử lý vi phạm">
+          <p>
+            Bài viết sẽ được đội ngũ điều phối của chương trình xem xét (kiểm duyệt) trước khi hiển thị công khai.
+            Chúng tôi có quyền, tùy theo mức độ, thực hiện một trong các biện pháp sau đối với nội dung hoặc tài khoản vi phạm:
+          </p>
+          <ul>
+            <li>Từ chối hiển thị bài viết.</li>
+            <li>Xóa bài viết hoặc bình luận vi phạm.</li>
+            <li>Khóa chức năng bình luận của bài viết.</li>
+            <li>Cảnh báo, tạm khóa hoặc gỡ bỏ tài khoản người dùng.</li>
+            <li>Báo cáo lên cơ quan có thẩm quyền khi nội dung có dấu hiệu vi phạm pháp luật.</li>
+          </ul>
+        </Section>
+        <Section title="F. Cơ chế báo cáo">
+          <p>
+            Người dùng có trách nhiệm báo cáo nội dung nghi ngờ vi phạm thông qua nút <b>&quot;Báo cáo vi phạm&quot;</b> trên
+            từng bài viết/bình luận, hoặc gửi email trực tiếp đến <a href="mailto:team.cloudncoral@gmail.com" style={{ color: "#0F766E" }}>team.cloudncoral@gmail.com</a>.
+            Chúng tôi sẽ tiếp nhận, xem xét và xử lý trong thời gian sớm nhất.
           </p>
         </Section>
       </div>

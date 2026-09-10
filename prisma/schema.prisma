@@ -214,7 +214,8 @@ model User {
   trainingSpeakers        TrainingSpeaker[]
   communityPosts          CommunityPost[]
   communityComments       CommunityComment[]
-  reviewedCommunityPosts  CommunityPost[]          @relation("CommunityPostReviewer")
+  reviewedCommunityPosts  CommunityPost[]         @relation("CommunityPostReviewer")
+  communityReports        CommunityReport[]       @relation("ReportedBy")
 
   @@map("users")
 }
@@ -660,13 +661,13 @@ model TrainingRegistration {
 
 // Diễn giả của một khoá đào tạo / workshop (thường là mentor) — ghi nhận đóng góp
 model TrainingSpeaker {
-  id       String         @id @default(uuid()) @db.Uuid
-  moduleId String         @map("module_id") @db.Uuid
-  module   TrainingModule @relation(fields: [moduleId], references: [id])
-  userId   String         @map("user_id") @db.Uuid
-  user     User           @relation(fields: [userId], references: [id])
-  role     String? // nhãn vai trò (VD: "Diễn giả chính", "Đồng diễn giả")
-  createdAt DateTime      @default(now()) @map("created_at")
+  id        String         @id @default(uuid()) @db.Uuid
+  moduleId  String         @map("module_id") @db.Uuid
+  module    TrainingModule @relation(fields: [moduleId], references: [id])
+  userId    String         @map("user_id") @db.Uuid
+  user      User           @relation(fields: [userId], references: [id])
+  role      String? // nhãn vai trò (VD: "Diễn giả chính", "Đồng diễn giả")
+  createdAt DateTime       @default(now()) @map("created_at")
 
   @@unique([moduleId, userId])
   @@index([userId])
@@ -737,7 +738,7 @@ model JourneyEntry {
   author       User              @relation(fields: [authorUserId], references: [id])
   category     JourneyCategory
   content      String
-  tags         Json?   // mảng nhãn theo 3 giai đoạn phản tư (thực tế / nhận thức / hành động)
+  tags         Json? // mảng nhãn theo 3 giai đoạn phản tư (thực tế / nhận thức / hành động)
   visibility   JourneyVisibility @default(shared)
   createdAt    DateTime          @default(now()) @map("created_at")
 
@@ -904,20 +905,21 @@ enum CommunityPostStatus {
 }
 
 model CommunityPost {
-  id             String              @id @default(uuid()) @db.Uuid
-  authorUserId   String              @map("author_user_id") @db.Uuid
-  author         User                @relation(fields: [authorUserId], references: [id])
-  content        String
-  tags           Json? // mảng nhãn lĩnh vực (key) — dùng INDUSTRIES
-  status         CommunityPostStatus @default(pending)
-  commentsLocked Boolean              @default(false) @map("comments_locked")
-  reviewedByUserId String?           @map("reviewed_by_user_id") @db.Uuid
-  reviewedBy     User?               @relation("CommunityPostReviewer", fields: [reviewedByUserId], references: [id])
-  reviewedAt     DateTime?           @map("reviewed_at")
-  createdAt      DateTime            @default(now()) @map("created_at")
-  deletedAt      DateTime?           @map("deleted_at")
+  id               String              @id @default(uuid()) @db.Uuid
+  authorUserId     String              @map("author_user_id") @db.Uuid
+  author           User                @relation(fields: [authorUserId], references: [id])
+  content          String
+  tags             Json? // mảng nhãn lĩnh vực (key) — dùng INDUSTRIES
+  status           CommunityPostStatus @default(pending)
+  commentsLocked   Boolean             @default(false) @map("comments_locked")
+  reviewedByUserId String?             @map("reviewed_by_user_id") @db.Uuid
+  reviewedBy       User?               @relation("CommunityPostReviewer", fields: [reviewedByUserId], references: [id])
+  reviewedAt       DateTime?           @map("reviewed_at")
+  createdAt        DateTime            @default(now()) @map("created_at")
+  deletedAt        DateTime?           @map("deleted_at")
 
-  comments CommunityComment[]
+  comments        CommunityComment[]
+  CommunityReport CommunityReport[]
 
   @@index([status, createdAt])
   @@index([authorUserId])
@@ -925,15 +927,32 @@ model CommunityPost {
 }
 
 model CommunityComment {
-  id           String        @id @default(uuid()) @db.Uuid
-  postId       String        @map("post_id") @db.Uuid
-  post         CommunityPost @relation(fields: [postId], references: [id])
-  authorUserId String        @map("author_user_id") @db.Uuid
-  author       User          @relation(fields: [authorUserId], references: [id])
-  content      String
-  createdAt    DateTime      @default(now()) @map("created_at")
-  deletedAt    DateTime?     @map("deleted_at")
+  id              String            @id @default(uuid()) @db.Uuid
+  postId          String            @map("post_id") @db.Uuid
+  post            CommunityPost     @relation(fields: [postId], references: [id])
+  authorUserId    String            @map("author_user_id") @db.Uuid
+  author          User              @relation(fields: [authorUserId], references: [id])
+  content         String
+  createdAt       DateTime          @default(now()) @map("created_at")
+  deletedAt       DateTime?         @map("deleted_at")
+  CommunityReport CommunityReport[]
 
   @@index([postId, createdAt])
   @@map("community_comments")
+}
+
+model CommunityReport {
+  id               String            @id @default(uuid()) @db.Uuid
+  postId           String?           @map("post_id") @db.Uuid
+  post             CommunityPost?    @relation(fields: [postId], references: [id])
+  commentId        String?           @map("comment_id") @db.Uuid
+  comment          CommunityComment? @relation(fields: [commentId], references: [id])
+  reportedByUserId String            @map("reported_by_user_id") @db.Uuid
+  reportedBy       User              @relation("ReportedBy", fields: [reportedByUserId], references: [id])
+  reason           String
+  status           String            @default("open") // open | resolved
+  createdAt        DateTime          @default(now()) @map("created_at")
+
+  @@index([status, createdAt])
+  @@map("community_reports")
 }

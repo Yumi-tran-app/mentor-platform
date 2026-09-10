@@ -58,6 +58,8 @@ export default function CommunityPage() {
   const [comments, setComments] = useState<Record<string, Comment[]>>({});
   const [commentDraft, setCommentDraft] = useState<Record<string, string>>({});
   const [openPostId, setOpenPostId] = useState<string | null>(null);
+  // Báo cáo
+  const [reportNotice, setReportNotice] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -137,11 +139,41 @@ export default function CommunityPage() {
     await loadComments(postId);
   }
 
+  async function reportPost(postId: string) {
+    const reason = window.prompt("Lý do báo cáo bài viết này:");
+    if (!reason || !reason.trim()) return;
+    await fetch("/api/community/reports", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ postId, reason: reason.trim() }),
+    });
+    setReportNotice("Đã gửi báo cáo. Cảm ơn bạn!");
+    setTimeout(() => setReportNotice(null), 4000);
+  }
+
+  async function reportComment(commentId: string) {
+    const reason = window.prompt("Lý do báo cáo bình luận này:");
+    if (!reason || !reason.trim()) return;
+    await fetch("/api/community/reports", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ commentId, reason: reason.trim() }),
+    });
+    setReportNotice("Đã gửi báo cáo. Cảm ơn bạn!");
+    setTimeout(() => setReportNotice(null), 4000);
+  }
+
   return (
     <AppShell title="Cộng đồng">
       <h1 className="text-2xl font-bold mb-6" style={{ color: "#0F766E" }}>
         Cộng đồng
       </h1>
+
+      {reportNotice && (
+        <p className="text-sm mb-4 px-4 py-2 rounded-lg" style={{ background: "#E4F4F1", color: "#15803D" }}>
+          {reportNotice}
+        </p>
+      )}
 
       {/* Form đăng bài */}
       <Card className="mb-8">
@@ -337,6 +369,13 @@ export default function CommunityPage() {
                   >
                     💬 Bình luận ({p._count?.comments ?? 0})
                   </button>
+                  <button
+                    onClick={() => reportPost(p.id)}
+                    className="text-xs font-semibold"
+                    style={{ color: "#94A3B8" }}
+                  >
+                    🚩 Báo cáo
+                  </button>
                   {staff && (
                     <div className="flex gap-2">
                       <button
@@ -381,6 +420,13 @@ export default function CommunityPage() {
                               {c.author.fullName}
                             </p>
                             <p>{c.content}</p>
+                            <button
+                              onClick={() => reportComment(c.id)}
+                              className="text-[10px] font-semibold mt-1"
+                              style={{ color: "#94A3B8" }}
+                            >
+                              🚩 Báo cáo
+                            </button>
                           </div>
                         </div>
                       ))
