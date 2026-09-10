@@ -1,11 +1,37 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { INDUSTRIES } from "@/lib/industries";
 
 const ORG_NAME = "Tre Việt Mentoring";
 
+// Icon SVG đơn giản cho từng lĩnh vực (mặc định dùng icon puzzle)
+const FIELD_ICON =
+  "M11 4a4 4 0 100 8 4 4 0 000-8zM21 14a4 4 0 10-8 0 4 4 0 008 0zM3 13a2 2 0 100 4 2 2 0 000-4z";
+
+interface FieldStat {
+  key: string;
+  label: string;
+  mentorsReady: number;
+}
+
 export default function Home() {
+  const [fieldStats, setFieldStats] = useState<FieldStat[]>([]);
+  const [totals, setTotals] = useState<{ mentorsReady: number; menteesWaiting: number } | null>(null);
+  const [selected, setSelected] = useState<FieldStat | null>(null);
+
+  useEffect(() => {
+    fetch("/api/public/field-stats")
+      .then((r) => r.json())
+      .then((d) => {
+        setFieldStats(d.fields ?? []);
+        setTotals(d.totals ?? null);
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="bg-[#F5F2EC] text-stone-800 antialiased overflow-x-hidden">
       {/* NAVIGATION */}
@@ -269,20 +295,85 @@ export default function Home() {
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              { t: "Công nghệ & IT", c: "text-teal-700", d: "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" },
-              { t: "Marketing & Sales", c: "text-amber-700", d: "M11 3.055A9.001 9.001 0 1020.945 13H11V3.055zM20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" },
-              { t: "Kinh Doanh", c: "text-teal-700", d: "M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
-              { t: "Thiết kế & Sáng tạo", c: "text-amber-700", d: "M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" },
-            ].map((x) => (
-              <a key={x.t} href="#stats" className="group p-6 bg-[#F5F2EC] rounded-2xl hover:bg-teal-700 transition-colors duration-300 flex flex-col items-center text-center cursor-pointer">
-                <div className={`w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 ${x.c} group-hover:scale-110 transition-transform shadow-sm`}>
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={x.d} /></svg>
-                </div>
-                <h3 className="font-semibold text-stone-800 group-hover:text-white transition-colors">{x.t}</h3>
-              </a>
-            ))}
+            {fieldStats.length > 0
+              ? fieldStats.map((x, idx) => (
+                  <button
+                    key={x.key}
+                    onClick={() => setSelected(x)}
+                    className="group p-6 bg-[#F5F2EC] rounded-2xl hover:bg-teal-700 transition-colors duration-300 flex flex-col items-center text-center cursor-pointer"
+                  >
+                    <div className={`w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 ${idx % 2 === 0 ? "text-teal-700" : "text-amber-700"} group-hover:scale-110 transition-transform shadow-sm`}>
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={FIELD_ICON} /></svg>
+                    </div>
+                    <h3 className="font-semibold text-stone-800 group-hover:text-white transition-colors">{x.label}</h3>
+                    <p className="text-xs mt-1 text-stone-500 group-hover:text-teal-100 transition-colors">{x.mentorsReady} mentor sẵn sàng</p>
+                  </button>
+                ))
+              : INDUSTRIES.map((x, idx) => (
+                  <div
+                    key={x.key}
+                    className="group p-6 bg-[#F5F2EC] rounded-2xl flex flex-col items-center text-center"
+                  >
+                    <div className={`w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 ${idx % 2 === 0 ? "text-teal-700" : "text-amber-700"}`}>
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={FIELD_ICON} /></svg>
+                    </div>
+                    <h3 className="font-semibold text-stone-800">{x.label}</h3>
+                  </div>
+                ))}
           </div>
+
+          {totals && (
+            <p className="text-center text-sm text-stone-500 mt-8">
+              Hiện có <span className="font-semibold text-teal-700">{totals.mentorsReady} mentor</span> sẵn sàng kết nối và <span className="font-semibold text-teal-700">{totals.menteesWaiting} mentee</span> đang chờ được đồng hành.
+            </p>
+          )}
+
+          {/* Modal chi tiết lĩnh vực */}
+          {selected && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center px-4" onClick={() => setSelected(null)}>
+              <div className="absolute inset-0 bg-stone-900/50" />
+              <div className="relative bg-white rounded-3xl shadow-2xl max-w-md w-full p-8" onClick={(e) => e.stopPropagation()}>
+                <button
+                  onClick={() => setSelected(null)}
+                  className="absolute top-4 right-4 text-stone-400 hover:text-stone-600"
+                  aria-label="Đóng"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <h3 className="text-2xl font-bold text-stone-800 mb-6">{selected.label}</h3>
+                <div className="grid grid-cols-2 gap-4 mb-8">
+                  <div className="bg-teal-50 rounded-2xl p-5 text-center">
+                    <div className="text-3xl font-black text-teal-700">{selected.mentorsReady}</div>
+                    <p className="text-sm text-stone-600 mt-1">Mentor sẵn sàng kết nối</p>
+                  </div>
+                  <div className="bg-amber-50 rounded-2xl p-5 text-center">
+                    <div className="text-3xl font-black text-amber-700">{totals?.menteesWaiting ?? 0}</div>
+                    <p className="text-sm text-stone-600 mt-1">Mentee đang chờ kết nối</p>
+                  </div>
+                </div>
+                <SignedOut>
+                  <SignUpButton mode="modal">
+                    <button className="w-full px-8 py-4 bg-teal-700 text-white font-semibold rounded-full hover:bg-teal-800 transition-all mb-3">
+                      Tìm Mentor của bạn
+                    </button>
+                  </SignUpButton>
+                  <SignUpButton mode="modal">
+                    <button className="w-full px-8 py-4 bg-transparent border-2 border-teal-700 text-teal-700 font-semibold rounded-full hover:bg-teal-50 transition-all">
+                      Trở thành Mentor
+                    </button>
+                  </SignUpButton>
+                </SignedOut>
+                <SignedIn>
+                  <Link href="/discover" className="block w-full px-8 py-4 bg-teal-700 text-white font-semibold rounded-full hover:bg-teal-800 transition-all text-center mb-3">
+                    Khám phá Mentor
+                  </Link>
+                  <Link href="/dashboard" className="block w-full px-8 py-4 bg-transparent border-2 border-teal-700 text-teal-700 font-semibold rounded-full hover:bg-teal-50 transition-all text-center">
+                    Bảng điều khiển
+                  </Link>
+                </SignedIn>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

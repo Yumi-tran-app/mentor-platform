@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Card, Button } from "@/components/ui";
 import { VIETNAM_PROVINCES } from "@/lib/vietnam-locations";
+import { INDUSTRIES } from "@/lib/industries";
 
 const FOCUS_OPTIONS = [
   ["learning", "Học tập"],
@@ -252,7 +253,14 @@ export default function MentorOnboardingPage() {
                 <input type="number" className={inputCls} style={inputStyle} value={form.teamSize} min={0} onChange={(e) => set("teamSize", e.target.value)} />
                 <p className="text-xs mt-1" style={{ color: "#94A3B8" }}>Số người bạn từng trực tiếp quản lý trong tổ chức (không tính cộng tác gián tiếp).</p>
               </div>
-              <div><label className={labelCls}>Ngành nghề chính *</label><input className={inputCls} style={inputStyle} value={form.industry} onChange={(e) => set("industry", e.target.value)} /></div>
+              <div><label className={labelCls}>Ngành nghề chính *</label>
+                <select className={inputCls} style={inputStyle} value={form.industry} onChange={(e) => set("industry", e.target.value)}>
+                  <option value="">— Chọn lĩnh vực —</option>
+                  {INDUSTRIES.map((i) => (
+                    <option key={i.key} value={i.key}>{i.label}</option>
+                  ))}
+                </select>
+              </div>
               <div><label className={labelCls}>Bằng cấp cao nhất</label><input className={inputCls} style={inputStyle} value={form.degree} onChange={(e) => set("degree", e.target.value)} placeholder="VD: Thạc sĩ Quản trị" /></div>
               <div className="sm:col-span-2"><label className={labelCls}>Trường đại học tốt nghiệp *</label><input className={inputCls} style={inputStyle} value={form.school} onChange={(e) => set("school", e.target.value)} /></div>
             </div>
