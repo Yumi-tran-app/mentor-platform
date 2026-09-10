@@ -1,37 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 const ORG_NAME = "Tre Việt Mentoring";
 
-// Icon SVG đơn giản cho từng lĩnh vực (mặc định dùng icon puzzle)
-const FIELD_ICON =
-  "M11 4a4 4 0 100 8 4 4 0 000-8zM21 14a4 4 0 10-8 0 4 4 0 008 0zM3 13a2 2 0 100 4 2 2 0 000-4z";
-
-interface FieldStat {
-  key: string;
-  label: string;
-  mentorsReady: number;
-  menteesWaiting: number;
-}
-
 export default function Home() {
-  const [fieldStats, setFieldStats] = useState<FieldStat[]>([]);
-  const [totals, setTotals] = useState<{ mentorsReady: number; menteesWaiting: number } | null>(null);
-  const [selected, setSelected] = useState<FieldStat | null>(null);
-
-  useEffect(() => {
-    fetch("/api/public/field-stats")
-      .then((r) => r.json())
-      .then((d) => {
-        setFieldStats(d.groups ?? []);
-        setTotals(d.totals ?? null);
-      })
-      .catch(() => {});
-  }, []);
-
   return (
     <div className="bg-[#F5F2EC] text-stone-800 antialiased overflow-x-hidden">
       {/* NAVIGATION */}
@@ -76,14 +50,14 @@ export default function Home() {
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8 relative z-10">
             <div className="inline-block px-4 py-2 bg-teal-100 text-teal-700 font-semibold rounded-full text-sm">
-              Cộng đồng học hỏi & phát triển miễn phí
+              Cộng đồng Mentoring chuyên sâu Tâm lý &amp; Nhân sự
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-stone-800">
-              Kết Nối Tri Thức <br />
-              <span className="text-teal-700">Kiến Tạo Tương Lai.</span>
+              Chuyên gia ngành Tâm lý<br />
+              <span className="text-teal-700">&amp; Nhân sự đồng hành cùng bạn.</span>
             </h1>
             <p className="text-lg md:text-xl text-stone-600 leading-relaxed max-w-xl">
-              Nền tảng kết nối những chuyên gia giàu kinh nghiệm với những người trẻ khao khát phát triển. Đừng đi một mình, hãy tìm người dẫn đường cho sự nghiệp của bạn ngay hôm nay.
+              Tre Việt Mentoring kết nối bạn với những chuyên gia giàu kinh nghiệm trong lĩnh vực tâm lý học và quản trị nhân sự — từ tham vấn tâm lý, tâm lý lâm sàng đến tuyển dụng, đào tạo, lương thưởng và HRBP. Đừng đi một mình trên con đường nghề nghiệp.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <SignedOut>
@@ -285,93 +259,11 @@ export default function Home() {
         <div className="absolute bottom-0 left-0 -ml-40 -mb-20 w-96 h-96 bg-teal-50 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
       </section>
 
-      {/* 7. LĨNH VỰC MENTORING */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-end mb-12">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4">Khám phá các lĩnh vực</h2>
-              <p className="text-stone-600">Tìm chuyên gia trong mảng bạn quan tâm</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {fieldStats.length > 0
-              ? fieldStats.map((x, idx) => (
-                  <button
-                    key={x.key}
-                    onClick={() => setSelected(x)}
-                    className="group p-6 bg-[#F5F2EC] rounded-2xl hover:bg-teal-700 transition-colors duration-300 flex flex-col items-center text-center cursor-pointer"
-                  >
-                    <div className={`w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 ${idx % 2 === 0 ? "text-teal-700" : "text-amber-700"} group-hover:scale-110 transition-transform shadow-sm`}>
-                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={FIELD_ICON} /></svg>
-                    </div>
-                    <h3 className="font-semibold text-stone-800 group-hover:text-white transition-colors">{x.label}</h3>
-                    <p className="text-xs mt-1 text-stone-500 group-hover:text-teal-100 transition-colors">{x.mentorsReady} mentor · {x.menteesWaiting} mentee</p>
-                  </button>
-                ))
-              : null}
-          </div>
-
-          {totals && (
-            <p className="text-center text-sm text-stone-500 mt-8">
-              Hiện có <span className="font-semibold text-teal-700">{totals.mentorsReady} mentor</span> sẵn sàng kết nối và <span className="font-semibold text-teal-700">{totals.menteesWaiting} mentee</span> đang chờ được đồng hành.
-            </p>
-          )}
-
-          {/* Modal chi tiết lĩnh vực */}
-          {selected && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center px-4" onClick={() => setSelected(null)}>
-              <div className="absolute inset-0 bg-stone-900/50" />
-              <div className="relative bg-white rounded-3xl shadow-2xl max-w-md w-full p-8" onClick={(e) => e.stopPropagation()}>
-                <button
-                  onClick={() => setSelected(null)}
-                  className="absolute top-4 right-4 text-stone-400 hover:text-stone-600"
-                  aria-label="Đóng"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-                <h3 className="text-2xl font-bold text-stone-800 mb-6">{selected.label}</h3>
-                <div className="grid grid-cols-2 gap-4 mb-8">
-                  <div className="bg-teal-50 rounded-2xl p-5 text-center">
-                    <div className="text-3xl font-black text-teal-700">{selected.mentorsReady}</div>
-                    <p className="text-sm text-stone-600 mt-1">Mentor sẵn sàng kết nối</p>
-                  </div>
-                  <div className="bg-amber-50 rounded-2xl p-5 text-center">
-                    <div className="text-3xl font-black text-amber-700">{selected.menteesWaiting}</div>
-                    <p className="text-sm text-stone-600 mt-1">Mentee đang chờ kết nối</p>
-                  </div>
-                </div>
-                <SignedOut>
-                  <SignUpButton mode="modal">
-                    <button className="w-full px-8 py-4 bg-teal-700 text-white font-semibold rounded-full hover:bg-teal-800 transition-all mb-3">
-                      Tìm Mentor của bạn
-                    </button>
-                  </SignUpButton>
-                  <SignUpButton mode="modal">
-                    <button className="w-full px-8 py-4 bg-transparent border-2 border-teal-700 text-teal-700 font-semibold rounded-full hover:bg-teal-50 transition-all">
-                      Trở thành Mentor
-                    </button>
-                  </SignUpButton>
-                </SignedOut>
-                <SignedIn>
-                  <Link href="/discover" className="block w-full px-8 py-4 bg-teal-700 text-white font-semibold rounded-full hover:bg-teal-800 transition-all text-center mb-3">
-                    Khám phá Mentor
-                  </Link>
-                  <Link href="/dashboard" className="block w-full px-8 py-4 bg-transparent border-2 border-teal-700 text-teal-700 font-semibold rounded-full hover:bg-teal-50 transition-all text-center">
-                    Bảng điều khiển
-                  </Link>
-                </SignedIn>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* 8. FINAL CTA & FOOTER */}
+      {/* 7. FINAL CTA & FOOTER */}
       <footer className="bg-stone-900 pt-20 pb-10 border-t border-stone-800">
         <div className="max-w-4xl mx-auto px-4 text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Sẵn sàng cho bước tiến tiếp theo?</h2>
-          <p className="text-stone-300 text-lg mb-8 max-w-2xl mx-auto">Tham gia cộng đồng hàng ngàn người đang cùng nhau phát triển mỗi ngày. Dù bạn là Mentor hay Mentee, luôn có vị trí dành cho bạn.</p>
+          <p className="text-stone-300 text-lg mb-8 max-w-2xl mx-auto">Tham gia cộng đồng những chuyên gia và người trẻ theo đuổi con đường tâm lý học &amp; quản trị nhân sự. Dù bạn là Mentor hay Mentee, luôn có vị trí dành cho bạn.</p>
           <SignedOut>
             <SignUpButton mode="modal">
               <button className="px-8 py-4 bg-teal-700 text-white font-bold rounded-full hover:bg-teal-800 transition-all transform hover:-translate-y-1 text-lg">
