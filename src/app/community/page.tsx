@@ -29,12 +29,26 @@ function tagLabel(key: string): string {
   return INDUSTRIES.find((i) => i.key === key)?.label ?? key;
 }
 
+function statusLabel(status: string): string {
+  if (status === "approved") return "Đã duyệt";
+  if (status === "rejected") return "Từ chối";
+  return "Chờ duyệt";
+}
+
+function statusStyle(status: string): React.CSSProperties {
+  if (status === "approved") return { background: "#E4F4F1", color: "#15803D" };
+  if (status === "rejected") return { background: "#FCE8E6", color: "#C0392B" };
+  return { background: "#FEF3E2", color: "#B45309" };
+}
+
 export default function CommunityPage() {
   const user = useCurrentUser();
   const staff = isStaff(user?.role);
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [pendingPosts, setPendingPosts] = useState<Post[]>([]);
+  const [myPosts, setMyPosts] = useState<Post[]>([]);
+  const [showMine, setShowMine] = useState(false);
   const [draft, setDraft] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [posting, setPosting] = useState(false);
@@ -47,14 +61,16 @@ export default function CommunityPage() {
 
   const load = useCallback(async () => {
     try {
-      const [p, q] = await Promise.all([
+      const [p, q, m] = await Promise.all([
         fetch("/api/community/posts").then((r) => r.json()),
         staff
           ? fetch("/api/community/posts?scope=pending").then((r) => r.json())
           : Promise.resolve({ posts: [] }),
+        fetch("/api/community/posts?mine=1").then((r) => r.json()),
       ]);
       setPosts(p.posts ?? []);
       setPendingPosts(q.posts ?? []);
+      setMyPosts(m.posts ?? []);
     } catch (e) {
       console.error(e);
     }
@@ -167,6 +183,45 @@ export default function CommunityPage() {
           </p>
         )}
       </Card>
+
+      {/* Bài của tôi */}
+      <div className="mb-6">
+        <button
+          onClick={() => setShowMine((s) => !s)}
+          className="text-sm font-semibold"
+          style={{ color: "#0F766E" }}
+        >
+          {showMine ? "Ẩn bài của tôi ▲" : "Xem bài của tôi ▼"}
+        </button>
+        {showMine && (
+          <div className="mt-3 space-y-2">
+            {myPosts.length === 0 ? (
+              <p className="text-sm" style={{ color: "#94A3B8" }}>Bạn chưa đăng bài nào.</p>
+            ) : (
+              myPosts.map((p) => (
+                <div
+                  key={p.id}
+                  className="p-3 rounded-lg border flex items-center justify-between"
+                  style={{ borderColor: "#F5F2EC", background: "#fff" }}
+                >
+                  <div className="min-w-0">
+                    <p className="text-sm truncate" style={{ color: "#292524" }}>{p.content}</p>
+                    <p className="text-xs" style={{ color: "#94A3B8" }}>
+                      {new Date(p.createdAt).toLocaleDateString("vi-VN")}
+                    </p>
+                  </div>
+                  <span
+                    className="px-2 py-1 rounded-full text-[11px] font-semibold shrink-0"
+                    style={statusStyle(p.status)}
+                  >
+                    {statusLabel(p.status)}
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+      </div>
 
       {/* Hàng đợi duyệt (staff) */}
       {staff && pendingPosts.length > 0 && (

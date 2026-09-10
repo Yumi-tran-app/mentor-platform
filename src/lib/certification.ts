@@ -168,6 +168,7 @@ export async function getMentoringJourney(
   activeMatch: boolean;
   completedMatch: boolean;
   bothReportsSubmitted: boolean;
+  journeyRequirementMet: boolean;
   mentoringCert: { id: string; certificateNo: string } | null;
 }> {
   const trainingStatus = await getTrainingStatus(userId, seasonId, audience);
@@ -208,6 +209,26 @@ export async function getMentoringJourney(
     }
   }
 
+  // Điều kiện nhật ký: chỉ bắt buộc với MENTEE (mentor khuyến khích, không bắt buộc).
+  // Mentee cần đạt đủ số buổi (targetSessions) thông qua nhật ký hành trình.
+  let journeyRequirementMet = true;
+  if (audience === "mentee") {
+    const sessionCriterion = await prisma.seasonCriteria.findUnique({
+      where: { seasonId_key: { seasonId, key: "mentoring_session_target" } },
+    });
+    const targetSessions = sessionCriterion ? parseInt(sessionCriterion.value, 10) : 6;
+
+    const endedMatchIds = matches.filter((m) => m.status === "ended").map((m) => m.id);
+    if (endedMatchIds.length > 0) {
+      const entryCount = await prisma.journeyEntry.count({
+        where: { matchId: { in: endedMatchIds }, authorUserId: userId },
+      });
+      journeyRequirementMet = entryCount >= targetSessions;
+    } else {
+      journeyRequirementMet = false;
+    }
+  }
+
   const steps = [
     { key: "registered", label: "Đăng ký", done: true, active: false },
     { key: "training", label: "Tham gia đào tạo", done: trainingStatus.eligible, active: false },
@@ -227,6 +248,7 @@ export async function getMentoringJourney(
     activeMatch,
     completedMatch,
     bothReportsSubmitted,
+    journeyRequirementMet,
     mentoringCert,
   };
 }

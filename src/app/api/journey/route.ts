@@ -69,6 +69,16 @@ export const POST = withErrorHandling(async (req: Request) => {
     );
   }
 
+  if (!journey.journeyRequirementMet) {
+    return NextResponse.json(
+      {
+        error:
+          "Chưa đủ điều kiện: bạn cần hoàn thành đủ số buổi đồng hành (ghi nhật ký hành trình) để được cấp chứng nhận.",
+      },
+      { status: 400 }
+    );
+  }
+
   const cert = await issueCertificate(user.id, seasonId, user.fullName, audience, "mentoring");
   return NextResponse.json({ certificate: cert });
 });
