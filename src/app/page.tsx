@@ -53,11 +53,11 @@ export default function Home() {
               Cộng đồng Mentoring chuyên sâu Tâm lý &amp; Nhân sự
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-stone-800">
-              Chuyên gia ngành Tâm lý<br />
-              <span className="text-teal-700">&amp; Nhân sự đồng hành cùng bạn.</span>
+              Kết Nối Tri Thức <br />
+              <span className="text-teal-700">Kiến Tạo Tương Lai.</span>
             </h1>
             <p className="text-lg md:text-xl text-stone-600 leading-relaxed max-w-xl">
-              Tre Việt Mentoring kết nối bạn với những chuyên gia giàu kinh nghiệm trong lĩnh vực tâm lý học và quản trị nhân sự — từ tham vấn tâm lý, tâm lý lâm sàng đến tuyển dụng, đào tạo, lương thưởng và HRBP. Đừng đi một mình trên con đường nghề nghiệp.
+              Nền tảng kết nối chuyên biệt giữa người có kinh nghiệm với những người trẻ khao khát phát triển trong lĩnh vực phát triển con người (Nhân sự và Tâm lý học). Đừng đi một mình, hãy tìm người dẫn đường cho sự nghiệp của bạn ngay hôm nay.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <SignedOut>
@@ -147,8 +147,8 @@ export default function Home() {
             <div className="hidden md:block absolute top-12 left-[15%] right-[15%] h-0.5 bg-teal-200 z-0"></div>
             {[
               { n: "1", t: "Tạo hồ sơ cá nhân", d: "Kể cho chúng tôi nghe về mục tiêu sự nghiệp của bạn (nếu là Mentee) hoặc thế mạnh, kinh nghiệm của bạn (nếu là Mentor)." },
-              { n: "2", t: "Kết nối phù hợp", d: "Thuật toán và bộ lọc thông minh giúp bạn tìm thấy \"mảnh ghép\" hoàn hảo nhất dựa trên lĩnh vực và mong muốn." },
-              { n: "3", t: "Tương tác & Phát triển", d: "Đặt lịch hẹn 1-on-1 qua video call hoặc tin nhắn, trao đổi kinh nghiệm và bắt đầu hành trình khai phá tiềm năng." },
+              { n: "2", t: "Kết nối phù hợp", d: "Đội ngũ chuyên môn sẽ xem xét và giới thiệu người đồng hành phù hợp nhất với định hướng của bạn." },
+              { n: "3", t: "Tương tác & Phát triển", d: "Kết nối, gặp gỡ trực tiếp và trao đổi kinh nghiệm và bắt đầu hành trình đồng hành phát triển." },
             ].map((s) => (
               <div key={s.n} className="relative z-10 text-center group">
                 <div className="w-24 h-24 mx-auto bg-white border-4 border-teal-100 rounded-full flex items-center justify-center text-3xl font-bold text-teal-700 group-hover:bg-teal-700 group-hover:text-white transition-all duration-300 shadow-lg mb-6">
@@ -216,8 +216,8 @@ export default function Home() {
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                   </div>
                   <div>
-                    <h4 className="text-xl font-semibold mb-2">Rèn Luyện Kỹ Năng Coaching</h4>
-                    <p className="text-stone-300">Quá trình mentoring là cách thực tế nhất để rèn luyện kỹ năng lắng nghe, thấu cảm và quản lý con người.</p>
+                    <h4 className="text-xl font-semibold mb-2">Phát triển kỹ năng Supervision</h4>
+                    <p className="text-stone-300">Quá trình đồng hành là cơ hội thực chiến để rèn luyện kỹ năng tham vấn chuyên môn và khai vấn đội ngũ.</p>
                   </div>
                 </li>
               </ul>
@@ -237,11 +237,11 @@ export default function Home() {
               </h2>
               <div className="prose prose-lg text-stone-600 max-w-none space-y-6">
                 <p>Chào bạn,</p>
-                <p>Chúng tôi cũng từng là những người trẻ loay hoay trong những ngày đầu đi làm. Chúng tôi từng cầm trên tay chiếc CV mà không biết phải sửa từ đâu, từng mông lung khi đứng trước quyết định chuyển ngành, và từng mất rất nhiều thời gian xoay sở chỉ vì thiếu một lời khuyên đúng lúc.</p>
-                <p>Sau nhiều năm làm việc, chúng tôi nhận ra: Dù kiến thức nền tảng có vững đến đâu, những kinh nghiệm thực tế từ người đi trước vẫn luôn là điều vô giá. Ngày đó, chúng tôi vẫn thường ước <strong>giá như mình có một người anh, người chị trong nghề chỉ dẫn để bớt đi những đường vòng.</strong></p>
-                <p>Từ những trăn trở đó, <span className="font-semibold">{ORG_NAME}</span> ra đời với một mục tiêu rất rõ ràng: <span className="font-bold text-teal-700">Giúp bạn không phải tự mình loay hoay trên con đường sự nghiệp.</span></p>
-                <p>Chúng tôi tin rằng những kinh nghiệm thực tế, khi được chia sẻ đúng lúc, sẽ giúp người đi sau tiết kiệm được rất nhiều thời gian và công sức. Người đi trước dìu dắt người đi sau - đó là cách thiết thực nhất để cùng nhau phát triển.</p>
-                <p className="font-medium italic text-stone-800">Dù bạn đang cần một người hướng dẫn để tháo gỡ những khó khăn hiện tại, hay sẵn sàng chia sẻ trải nghiệm của mình để hỗ trợ các bạn trẻ hơn... Chào mừng bạn đến với cộng đồng Tre Việt.</p>
+                <p>Làm việc với &quot;con người&quot;, dù trong vai trò tham vấn tâm lý hay quản trị nhân sự, luôn là một hành trình đầy thử thách. Trường lớp cung cấp cho chúng ta hệ thống lý thuyết vững chắc, nhưng thực tế công việc lại đòi hỏi sự tinh tế trong cách xử lý các mối quan hệ, sự thấu cảm trước những tổn thương, và bản lĩnh khi đứng trước những quyết định nhạy cảm.</p>
+                <p>Trong quá trình làm nghề, chúng tôi nhận ra rằng những thực tế phức tạp nhất ít khi có sẵn lời giải trong sách vở. Sự trưởng thành của một người thực hành nghề thường được mài giũa qua những trải nghiệm thực tiễn và đặc biệt là qua quá trình được chia sẻ chuyên môn từ những chuyên gia đi trước.</p>
+                <p>Từ góc nhìn đó, nền tảng này được thiết kế không phải như một nơi dạy học, mà là một không gian an toàn để kết nối các thế hệ làm trong lĩnh vực phát triển con người. Chúng tôi hướng tới việc xây dựng một cộng đồng nơi những kinh nghiệm thực chiến được trao truyền minh bạch, giúp mỗi cá nhân vững vàng hơn trên con đường hành nghề.</p>
+                <p>Tri thức chuyên môn kết hợp cùng sự thấu cảm thực tế sẽ tạo nên những giá trị bền vững cho cả tổ chức và xã hội.</p>
+                <p className="font-medium italic text-stone-800">Chào mừng bạn đến với cộng đồng Tre Việt Mentoring, mạng lưới của những người cam kết đồng hành cùng sự phát triển của con người.</p>
                 <div className="pt-6 mt-8 border-t border-stone-100 flex items-center gap-4">
                   <div className="w-14 h-14 bg-stone-200 rounded-full overflow-hidden">
                     <img src="/images/founder.jpg" alt="Founder" className="w-full h-full object-cover" />
