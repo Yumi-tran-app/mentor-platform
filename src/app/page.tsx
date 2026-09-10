@@ -148,7 +148,7 @@ export default function Home() {
             {[
               { n: "1", t: "Tạo hồ sơ cá nhân", d: "Kể cho chúng tôi nghe về mục tiêu sự nghiệp của bạn (nếu là Mentee) hoặc thế mạnh, kinh nghiệm của bạn (nếu là Mentor)." },
               { n: "2", t: "Kết nối phù hợp", d: "Đội ngũ chuyên môn sẽ xem xét và giới thiệu người đồng hành phù hợp nhất với định hướng của bạn." },
-              { n: "3", t: "Tương tác & Phát triển", d: "Kết nối, gặp gỡ trực tiếp và trao đổi kinh nghiệm và bắt đầu hành trình đồng hành phát triển." },
+              { n: "3", t: "Tương tác & Phát triển", d: "Kết nối, gặp gỡ trực tiếp và bắt đầu hành trình đồng hành phát triển." },
             ].map((s) => (
               <div key={s.n} className="relative z-10 text-center group">
                 <div className="w-24 h-24 mx-auto bg-white border-4 border-teal-100 rounded-full flex items-center justify-center text-3xl font-bold text-teal-700 group-hover:bg-teal-700 group-hover:text-white transition-all duration-300 shadow-lg mb-6">
@@ -283,7 +283,8 @@ export default function Home() {
           <div className="space-x-6 mt-4 md:mt-0 flex justify-center">
             <a href="/privacy" className="hover:text-white transition-colors">Chính sách bảo mật</a>
             <a href="/privacy#terms" className="hover:text-white transition-colors">Điều khoản sử dụng</a>
-            <a href="mailto:team.cloudncoral@gmail.com" className="hover:text-white transition-colors">Liên hệ hỗ trợ</a>
+            <a href="mailto:team.cloudncoral@gmail.com" className="hover:text-white transition-colors">Email: team.cloudncoral@gmail.com</a>
+            <a href="tel:0866883047" className="hover:text-white transition-colors">Hotline: 0866 883 047</a>
           </div>
         </div>
       </footer>

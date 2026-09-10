@@ -109,6 +109,7 @@ export default function MatchDetailPage() {
     commit: false,
     privacy: false,
   });
+  const [showAgreement, setShowAgreement] = useState(false);
 
   const load = useCallback(async () => {
     try {
@@ -484,14 +485,23 @@ export default function MatchDetailPage() {
           <Card>
             <h3 className="font-bold mb-2 text-sm" style={{ color: "#0F766E" }}>Thoả thuận đồng hành</h3>
             {match.agreementConfirmedAt ? (
-              <p className="text-xs" style={{ color: "#15803D" }}>
-                ✅ Đã xác nhận {new Date(match.agreementConfirmedAt).toLocaleDateString("vi-VN")}
-              </p>
+              <>
+                <p className="text-xs mb-2" style={{ color: "#15803D" }}>
+                  ✅ Đã xác nhận {new Date(match.agreementConfirmedAt).toLocaleDateString("vi-VN")}
+                </p>
+                <Button onClick={() => setShowAgreement(true)} variant="secondary">
+                  Xem lại thoả thuận
+                </Button>
+              </>
             ) : (
               <>
                 <p className="text-xs mb-2" style={{ color: "#94A3B8" }}>
                   Cùng xác nhận những điều quan trọng trước khi bắt đầu.
                 </p>
+                <Button onClick={() => setShowAgreement(true)} variant="secondary">
+                  Xem lại thoả thuận
+                </Button>
+                <div style={{ height: 8 }} />
                 {AGREEMENT_ROWS.map(([key, label]) => {
                   const on = agreementItems[key];
                   return (
@@ -525,6 +535,39 @@ export default function MatchDetailPage() {
           </Card>
         </div>
       </div>
+
+      {/* Modal xem lại thoả thuận đồng hành */}
+      {showAgreement && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4" onClick={() => setShowAgreement(false)}>
+          <div className="absolute inset-0 bg-stone-900/50" />
+          <div className="relative bg-white rounded-3xl shadow-2xl max-w-lg w-full max-h-[85vh] overflow-y-auto p-8" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => setShowAgreement(false)}
+              className="absolute top-4 right-4 text-stone-400 hover:text-stone-600"
+              aria-label="Đóng"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h3 className="text-2xl font-bold mb-1" style={{ color: "#0F766E" }}>Thoả thuận đồng hành</h3>
+            <p className="text-xs mb-6" style={{ color: "#94A3B8" }}>
+              Những cam kết chung giúp quá trình đồng hành của hai bạn diễn ra trọn vẹn và an toàn.
+            </p>
+            <div className="space-y-4">
+              {AGREEMENT_ROWS.map(([key, label], i) => (
+                <div key={key} className="flex gap-3">
+                  <div className="w-6 h-6 shrink-0 rounded-full bg-teal-50 text-teal-700 flex items-center justify-center text-xs font-bold">
+                    {i + 1}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm" style={{ color: "#292524" }}>{label}</p>
+                    <p className="text-sm mt-0.5" style={{ color: "#57534E" }}>{AGREEMENT_DETAILS[key]}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </AppShell>
   );
 }
@@ -538,6 +581,24 @@ const AGREEMENT_ROWS: [string, string][] = [
   ["commit", "Báo trước 48h nếu không gặp được"],
   ["privacy", "Bảo mật thông tin"],
 ];
+
+// Mô tả chi tiết từng điều khoản (hiển thị khi xem lại thoả thuận)
+const AGREEMENT_DETAILS: Record<string, string> = {
+  purpose:
+    "Hai bên xác định rõ mục tiêu đồng hành chung, đảm bảo quá trình mentoring hướng đến kết quả cụ thể và ý nghĩa cho cả hai.",
+  freq:
+    "Thống nhất tần suất gặp định kỳ (ví dụ 2 tuần/lần) phù hợp với lịch trình của cả hai, duy trì nhịp đồng hành ổn định trong 9 tháng.",
+  contact:
+    "Thống nhất kênh liên lạc chính (tin nhắn, video call, gặp trực tiếp...) để trao đổi thuận tiện và kịp thời.",
+  journal:
+    "Ghi lại nhật ký hành trình sau mỗi buổi gặp để lưu giữ tiến độ và đúc kết bài học (đây cũng là căn cứ để cấp chứng nhận hoàn thành).",
+  boundary:
+    "Tôn trọng ranh giới cá nhân, không chia sẻ thông tin nhạy cảm ngoài phạm vi cần thiết, không xâm phạm đời tư của nhau.",
+  commit:
+    "Nếu có việc đột xuất không thể tham gia buổi gặp, báo trước tối thiểu 48 giờ để đối phương chủ động sắp xếp.",
+  privacy:
+    "Mọi thông tin trao đổi trong quá trình đồng hành được giữ bảo mật, không tiết lộ ra ngoài khi chưa được sự đồng ý của đối phương.",
+};
 
 const inputCls =
   "w-full px-3 py-2 rounded-lg border text-sm";
