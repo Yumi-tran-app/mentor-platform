@@ -239,9 +239,9 @@ export default function Home() {
                 <p>Chào bạn,</p>
                 <p>Chúng tôi cũng từng là những người trẻ loay hoay trong những ngày đầu bước ra &quot;biển lớn&quot;. Chúng tôi từng cầm trên tay một chiếc CV không biết nên điều chỉnh thế nào, từng hoang mang tột độ khi quyết định chuyển ngành, và từng vấp ngã chỉ vì thiếu một lời khuyên đúng lúc.</p>
                 <p>Sau nhiều năm đi làm, chúng tôi nhận ra một sự thật: Dù bạn có học giỏi đến đâu ở trường lớp, những bài học thực chiến từ những người đã &quot;đổ máu&quot; trên thương trường vẫn là vô giá. Ngày đó, chúng tôi từng ước: <strong>Giá như có một người anh, người chị đi trước chỉ cho mình biết nên rẽ hướng nào.</strong></p>
-                <p>Từ những trăn trở đó, <span className="font-semibold">{ORG_NAME}</span> ra đời với một khát vọng giản dị nhưng mãnh liệt: <span className="font-bold text-teal-700">Không một ai phải đi một mình trên con đường sự nghiệp.</span></p>
-                <p>Chúng tôi xây dựng cầu nối này vì niềm tin rằng: Tri thức khi được sẻ chia là tri thức nhân lên gấp bội. Thế hệ trước nâng đỡ thế hệ sau, đó là cách một cộng đồng lớn mạnh.</p>
-                <p className="font-medium italic text-stone-800">Dù bạn đang tìm kiếm ánh sáng dẫn đường, hay muốn trở thành ngọn hải đăng cho thế hệ sau... Chào mừng bạn về nhà.</p>
+                <p>Từ những trăn trở đó, <span className="font-semibold">{ORG_NAME}</span> ra đời với một mục tiêu rất rõ ràng: <span className="font-bold text-teal-700">Giúp bạn không phải tự mình loay hoay trên con đường sự nghiệp.</span></p>
+                <p>Chúng tôi tin rằng những kinh nghiệm thực tế, khi được chia sẻ đúng lúc, sẽ giúp người đi sau tiết kiệm được rất nhiều thời gian và công sức. Người đi trước dìu dắt người đi sau - đó là cách thiết thực nhất để cùng nhau phát triển.</p>
+                <p className="font-medium italic text-stone-800">Dù bạn đang cần một người hướng dẫn để tháo gỡ những khó khăn hiện tại, hay sẵn sàng chia sẻ trải nghiệm của mình để hỗ trợ các bạn trẻ hơn... Chào mừng bạn đến với cộng đồng Tre Việt.</p>
                 <div className="pt-6 mt-8 border-t border-stone-100 flex items-center gap-4">
                   <div className="w-14 h-14 bg-stone-200 rounded-full overflow-hidden">
                     <img src="/images/founder.jpg" alt="Founder" className="w-full h-full object-cover" />
