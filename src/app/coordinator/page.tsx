@@ -8,6 +8,7 @@ export default function CoordinatorPage() {
   const [matches, setMatches] = useState<any[]>([]);
   const [pauses, setPauses] = useState<any[]>([]);
   const [support, setSupport] = useState<any[]>([]);
+  const [journeyRows, setJourneyRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Form tạo buổi trao đổi cho yêu cầu tạm dừng
@@ -59,14 +60,16 @@ export default function CoordinatorPage() {
   async function load() {
     setLoading(true);
     try {
-      const [mp, ps, sp] = await Promise.all([
+      const [mp, ps, sp, js] = await Promise.all([
         fetch("/api/coordinator/queue").then((r) => r.json()),
         fetch("/api/matches/pause?status=pending_review").then((r) => r.json()),
         fetch("/api/support-requests?status=open").then((r) => r.json()),
+        fetch("/api/coordinator/journey-stats").then((r) => r.json()),
       ]);
       setMatches(mp.matches ?? []);
       setPauses(ps.pauses ?? []);
       setSupport(sp.supportRequests ?? []);
+      setJourneyRows(js.rows ?? []);
     } catch (e) {
       console.error(e);
     } finally {
@@ -244,6 +247,45 @@ export default function CoordinatorPage() {
             </div>
           </Card>
         )}
+
+        <Card>
+          <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
+            Nhật ký hành trình (các cặp bạn phụ trách)
+          </h2>
+          {journeyRows.length === 0 ? (
+            <p className="text-sm" style={{ color: "#94A3B8" }}>
+              Chưa có cặp nào được phân công cho bạn.
+            </p>
+          ) : (
+            <div className="space-y-2">
+              {journeyRows.map((r) => (
+                <div
+                  key={r.matchId}
+                  className="p-3 rounded-lg border flex items-center justify-between"
+                  style={{ borderColor: "#F5F2EC" }}
+                >
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold truncate" style={{ color: "#292524" }}>
+                      {r.menteeName} ↔ {r.mentorName}
+                    </p>
+                    <p className="text-xs" style={{ color: "#94A3B8" }}>
+                      Match #{r.matchId.slice(0, 8)}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3 text-right">
+                    <span className="text-xs" style={{ color: "#0F766E" }}>
+                      Mentee: <b>{r.menteeEntries}</b>
+                    </span>
+                    <span className="text-xs" style={{ color: "#B45309" }}>
+                      Mentor: <b>{r.mentorEntries}</b>
+                    </span>
+                    <Badge color="#F2A93B">Tổng {r.total}</Badge>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
 
         <Card>
           <h2 className="font-bold mb-4" style={{ color: "#B45309" }}>

@@ -11,6 +11,7 @@ type Entry = {
   category: string;
   content: string;
   tags: string[] | null;
+  visibility?: string;
   createdAt: string;
   author: { fullName: string };
 };
@@ -26,6 +27,7 @@ export default function JourneyPage() {
   const [addingTag, setAddingTag] = useState(false);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
+  const [visibility, setVisibility] = useState<"shared" | "private">("shared");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -72,11 +74,12 @@ export default function JourneyPage() {
       await fetch("/api/journey-entries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ matchId, content, tags: selectedTags }),
+        body: JSON.stringify({ matchId, content, tags: selectedTags, visibility }),
       });
       setContent("");
       setSelectedTags([]);
       setCustomTags([]);
+      setVisibility("shared");
       await load();
     } finally {
       setSending(false);
@@ -215,6 +218,20 @@ export default function JourneyPage() {
               </div>
             </div>
 
+            {/* Chế độ hiển thị */}
+            <div className="flex items-start gap-3 p-3 rounded-lg" style={{ background: "#F5F2EC" }}>
+              <input
+                type="checkbox"
+                id="jv-private"
+                className="mt-1"
+                checked={visibility === "private"}
+                onChange={(e) => setVisibility(e.target.checked ? "private" : "shared")}
+              />
+              <label htmlFor="jv-private" className="text-sm" style={{ color: "#292524" }}>
+                Chỉ mình tôi (và điều phối viên) xem — ẩn với người đồng hành
+              </label>
+            </div>
+
             {/* Nút */}
             <div className="flex justify-end gap-2 pt-1">
               <button
@@ -255,6 +272,11 @@ export default function JourneyPage() {
                     >
                       <p className="text-xs font-semibold" style={{ color: "#0F766E" }}>
                         {formatDay(item.createdAt)} · {sessionLabel}
+                        {item.visibility === "private" && (
+                          <span className="ml-2 px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-700">
+                            Riêng tư
+                          </span>
+                        )}
                       </p>
                       <p className="text-sm mt-2 whitespace-pre-wrap" style={{ color: "#292524" }}>
                         {item.content}

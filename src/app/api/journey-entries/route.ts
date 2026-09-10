@@ -9,6 +9,7 @@ const EntrySchema = z.object({
   matchId: z.string().uuid(),
   content: z.string().min(1),
   tags: z.array(z.string()).default([]),
+  visibility: z.enum(["shared", "private"]).default("shared"),
 });
 
 /**
@@ -40,7 +41,13 @@ export const GET = withErrorHandling(async (req: Request) => {
   }
 
   const entries = await prisma.journeyEntry.findMany({
-    where: { matchId },
+    where: {
+      matchId,
+      // Private chỉ hiện với tác giả hoặc ĐPV/admin; người đồng hành không thấy
+      OR: isStaff
+        ? undefined
+        : [{ visibility: "shared" }, { authorUserId: user.id }],
+    },
     orderBy: { createdAt: "desc" },
     include: { author: { select: { fullName: true } } },
   });
@@ -57,7 +64,7 @@ export const POST = withErrorHandling(async (req: Request) => {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const { matchId, content, tags } = EntrySchema.parse(body);
+  const { matchId, content, tags, visibility } = EntrySchema.parse(body);
 
   const match = await prisma.match.findUnique({
     where: { id: matchId },
@@ -84,6 +91,7 @@ export const POST = withErrorHandling(async (req: Request) => {
       content,
       category: category as any,
       tags: cleanTags,
+      visibility,
     },
   });
 

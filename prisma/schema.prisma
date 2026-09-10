@@ -721,16 +721,22 @@ enum JourneyCategory {
   next
 }
 
+enum JourneyVisibility {
+  shared
+  private
+}
+
 model JourneyEntry {
-  id           String          @id @default(uuid()) @db.Uuid
-  matchId      String          @map("match_id") @db.Uuid
-  match        Match           @relation(fields: [matchId], references: [id])
-  authorUserId String          @map("author_user_id") @db.Uuid
-  author       User            @relation(fields: [authorUserId], references: [id])
+  id           String            @id @default(uuid()) @db.Uuid
+  matchId      String            @map("match_id") @db.Uuid
+  match        Match             @relation(fields: [matchId], references: [id])
+  authorUserId String            @map("author_user_id") @db.Uuid
+  author       User              @relation(fields: [authorUserId], references: [id])
   category     JourneyCategory
   content      String
   tags         Json?   // mảng nhãn theo 3 giai đoạn phản tư (thực tế / nhận thức / hành động)
-  createdAt    DateTime        @default(now()) @map("created_at")
+  visibility   JourneyVisibility @default(shared)
+  createdAt    DateTime          @default(now()) @map("created_at")
 
   @@index([matchId, category])
   @@map("journey_entries")
