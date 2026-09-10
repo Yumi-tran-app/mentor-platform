@@ -102,12 +102,14 @@ export default function MatchDetailPage() {
   // agreement items
   const [agreementItems, setAgreementItems] = useState<Record<string, boolean>>({
     purpose: false,
-    freq: false,
-    contact: false,
+    confidentiality: false,
+    schedule: false,
+    proactive: false,
+    punctuality: false,
     journal: false,
-    boundary: false,
-    commit: false,
-    privacy: false,
+    quarterly: false,
+    nonprofit: false,
+    exit: false,
   });
   const [showAgreement, setShowAgreement] = useState(false);
 
@@ -246,7 +248,7 @@ export default function MatchDetailPage() {
       <div className="mt-3 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold" style={{ color: "#0F766E" }}>
-            {match.mentorApplication.user.fullName} ↔ {match.menteeApplication.user.fullName}
+            {match.mentorApplication.user.fullName} & {match.menteeApplication.user.fullName}
           </h1>
           <Badge color={statusColor[match.status] ?? "#94A3B8"}>
             {statusLabel[match.status] ?? match.status}
@@ -550,17 +552,19 @@ export default function MatchDetailPage() {
             </button>
             <h3 className="text-2xl font-bold mb-1" style={{ color: "#0F766E" }}>Thoả thuận đồng hành</h3>
             <p className="text-xs mb-6" style={{ color: "#94A3B8" }}>
-              Những cam kết chung giúp quá trình đồng hành của hai bạn diễn ra trọn vẹn và an toàn.
+              Khung nguyên tắc chung dành cho Mentor &amp; Mentee.
             </p>
-            <div className="space-y-4">
+            <div className="space-y-5">
               {AGREEMENT_ROWS.map(([key, label], i) => (
                 <div key={key} className="flex gap-3">
                   <div className="w-6 h-6 shrink-0 rounded-full bg-teal-50 text-teal-700 flex items-center justify-center text-xs font-bold">
                     {i + 1}
                   </div>
-                  <div>
-                    <p className="font-semibold text-sm" style={{ color: "#292524" }}>{label}</p>
-                    <p className="text-sm mt-0.5" style={{ color: "#57534E" }}>{AGREEMENT_DETAILS[key]}</p>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-sm mb-1" style={{ color: "#292524" }}>{label}</p>
+                    {(AGREEMENT_DETAILS[key] ?? []).map((d, j) => (
+                      <p key={j} className="text-sm mb-1.5 leading-relaxed" style={{ color: "#57534E" }}>{d}</p>
+                    ))}
                   </div>
                 </div>
               ))}
@@ -573,31 +577,54 @@ export default function MatchDetailPage() {
 }
 
 const AGREEMENT_ROWS: [string, string][] = [
-  ["purpose", "Mục đích đồng hành"],
-  ["freq", "Tần suất gặp định kỳ"],
-  ["contact", "Cách liên lạc"],
-  ["journal", "Ghi nhật ký sau mỗi buổi"],
-  ["boundary", "Ranh giới chia sẻ"],
-  ["commit", "Báo trước 48h nếu không gặp được"],
-  ["privacy", "Bảo mật thông tin"],
+  ["purpose", "Mục đích & Ranh giới chuyên môn"],
+  ["confidentiality", "Bảo mật & Đạo đức chia sẻ tình huống"],
+  ["schedule", "Tần suất & Hình thức đồng hành"],
+  ["proactive", "Tính chủ động & Chuẩn bị trước buổi gặp"],
+  ["punctuality", "Đúng giờ & Văn hoá báo hủy"],
+  ["journal", "Phản tư & Nhật ký đồng hành"],
+  ["quarterly", "Đánh giá định kỳ (Quarterly Review)"],
+  ["nonprofit", "Tinh thần Phi lợi nhuận & Tôn trọng cộng đồng"],
+  ["exit", "Chuyển giao an toàn & Rút lui nhân văn"],
 ];
 
 // Mô tả chi tiết từng điều khoản (hiển thị khi xem lại thoả thuận)
-const AGREEMENT_DETAILS: Record<string, string> = {
-  purpose:
-    "Hai bên xác định rõ mục tiêu đồng hành chung, đảm bảo quá trình mentoring hướng đến kết quả cụ thể và ý nghĩa cho cả hai.",
-  freq:
-    "Thống nhất tần suất gặp định kỳ (ví dụ 2 tuần/lần) phù hợp với lịch trình của cả hai, duy trì nhịp đồng hành ổn định trong 9 tháng.",
-  contact:
-    "Thống nhất kênh liên lạc chính (tin nhắn, video call, gặp trực tiếp...) để trao đổi thuận tiện và kịp thời.",
-  journal:
-    "Ghi lại nhật ký hành trình sau mỗi buổi gặp để lưu giữ tiến độ và đúc kết bài học (đây cũng là căn cứ để cấp chứng nhận hoàn thành).",
-  boundary:
-    "Tôn trọng ranh giới cá nhân, không chia sẻ thông tin nhạy cảm ngoài phạm vi cần thiết, không xâm phạm đời tư của nhau.",
-  commit:
-    "Nếu có việc đột xuất không thể tham gia buổi gặp, báo trước tối thiểu 48 giờ để đối phương chủ động sắp xếp.",
-  privacy:
-    "Mọi thông tin trao đổi trong quá trình đồng hành được giữ bảo mật, không tiết lộ ra ngoài khi chưa được sự đồng ý của đối phương.",
+const AGREEMENT_DETAILS: Record<string, string[]> = {
+  purpose: [
+    "Định hướng phát triển: Quá trình đồng hành tập trung vào việc chia sẻ trải nghiệm thực tế, mở rộng góc nhìn chuyên môn và định hướng sự nghiệp.",
+    "Ranh giới rõ ràng: Mối quan hệ mentoring không phải là phiên Trị liệu / Tham vấn tâm lý cá nhân, cũng không phải dịch vụ Tư vấn Nhân sự / Phát triển doanh nghiệp. Mentor đóng vai trò gợi mở và dẫn dắt; Mentee là người hoàn toàn chịu trách nhiệm cho các quyết định và hành động của mình.",
+  ],
+  confidentiality: [
+    "Bảo mật nội bộ: Mọi thông tin cá nhân và chia sẻ trong các buổi gặp đều được giữ kín tuyệt đối giữa hai bên.",
+    "Ẩn danh bên thứ ba: Khi thảo luận các tình huống thực tế (ca tham vấn tâm lý, vụ việc nhân sự, khủng hoảng nội bộ), hai bên cam kết ẩn danh hoàn toàn thông tin của thân chủ, nhân viên hoặc doanh nghiệp liên quan để đảm bảo đạo đức nghề nghiệp.",
+  ],
+  schedule: [
+    "Nhịp độ: Duy trì tần suất gặp định kỳ (khuyên dùng: 1 tháng/lần, mỗi buổi 60–90 phút) trong suốt hành trình 9 tháng.",
+    "Hình thức: Thống nhất kênh tương tác chính (Ưu tiên gặp trực tiếp / Offline hoặc Video call) ngay từ buổi đầu tiên.",
+  ],
+  proactive: [
+    "Mentee giữ thế chủ động: Mentee là người đặt lịch và gửi trước chủ đề/câu hỏi cần gỡ rối (Agenda) cho Mentor trước tối thiểu 24–48 giờ.",
+    "Mentor lắng nghe & Chuẩn bị: Mentor xem trước agenda để định hình cấu trúc chia sẻ phù hợp cho buổi gặp.",
+  ],
+  punctuality: [
+    "Báo trước 48h: Nếu có việc đột xuất không thể tham gia, cần thông báo cho đối phương trước tối thiểu 48 giờ để chủ động sắp xếp lại lịch.",
+    "Thời gian chờ: Thời gian chờ trễ tối đa là 15 phút. Nếu quá thời gian này mà không có lý do chính đáng, buổi gặp sẽ tự động hủy.",
+  ],
+  journal: [
+    "Mentee có trách nhiệm hoàn thành Nhật ký đồng hành sau mỗi buổi gặp.",
+    "Đây vừa là công cụ đúc kết bài học cá nhân, giúp Mentor theo dõi tiến độ, vừa là căn cứ để Ban Tổ Chức (BTC) cấp chứng nhận hoàn thành.",
+  ],
+  quarterly: [
+    "Mỗi 3 tháng, hai bên dành 15–20 phút để cùng nhìn lại tiến độ: đánh giá mức độ phù hợp, đo lường sự phát triển và điều chỉnh lại mục tiêu (nếu thực tế thay đổi).",
+  ],
+  nonprofit: [
+    "Mối quan hệ dựa trên sự tự nguyện và trao giá trị.",
+    "Cam kết không sử dụng không gian này cho mục đích chèo kéo nhân sự (headhunting), kinh doanh thương mại hoặc bán dịch vụ cá nhân khi chưa có sự đồng ý từ hai bên và BTC.",
+  ],
+  exit: [
+    "Chuyển giao an toàn: Trong ngành Tâm lý, nếu Mentee xuất hiện các dấu hiệu kiệt sức hoặc khủng hoảng vượt quá phạm vi mentoring, Mentor sẽ chủ động thông báo với BTC để hỗ trợ chuyển giao sang kênh tham vấn/trị liệu chuyên nghiệp.",
+    "Kết thúc sớm: Nếu nhận thấy không còn phù hợp hoặc không đủ điều kiện tiếp tục cam kết, một trong hai bên có quyền đề xuất dừng hành trình thông qua BTC trong tinh thần tôn trọng và văn minh.",
+  ],
 };
 
 const inputCls =

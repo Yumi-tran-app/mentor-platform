@@ -163,7 +163,7 @@ export default function Home() {
       </section>
 
       {/* 4 & 5. LỢI ÍCH MENTEE & MENTOR */}
-      <section className="py-20 bg-stone-900 text-white rounded-[3rem] mx-4 sm:mx-8 my-8 shadow-2xl overflow-hidden">
+      <section className="py-20 text-white rounded-[3rem] mx-4 sm:mx-8 my-8 shadow-2xl overflow-hidden" style={{ background: "#134E4A" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16">
             {/* Mentee */}
@@ -260,7 +260,7 @@ export default function Home() {
       </section>
 
       {/* 7. FINAL CTA & FOOTER */}
-      <footer className="bg-stone-900 pt-20 pb-10 border-t border-stone-800">
+      <footer className="pt-20 pb-10 border-t border-stone-800" style={{ background: "#134E4A" }}>
         <div className="max-w-4xl mx-auto px-4 text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Sẵn sàng cho bước tiến tiếp theo?</h2>
           <p className="text-stone-300 text-lg mb-8 max-w-2xl mx-auto">Tham gia cộng đồng những chuyên gia và người trẻ theo đuổi con đường tâm lý học &amp; quản trị nhân sự. Dù bạn là Mentor hay Mentee, luôn có vị trí dành cho bạn.</p>
