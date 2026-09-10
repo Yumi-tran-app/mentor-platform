@@ -22,7 +22,8 @@ export default function Home() {
   const [fieldStats, setFieldStats] = useState<FieldStat[]>([]);
   const [totals, setTotals] = useState<{ mentorsReady: number; menteesWaiting: number } | null>(null);
   const [selected, setSelected] = useState<FieldStat | null>(null);
-  const [visibleCount, setVisibleCount] = useState(4);
+  const [page, setPage] = useState(0);
+  const PAGE_SIZE = 4;
 
   useEffect(() => {
     fetch("/api/public/field-stats")
@@ -296,9 +297,9 @@ export default function Home() {
               <p className="text-stone-600">Tìm chuyên gia trong mảng bạn quan tâm</p>
             </div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 transition-transform duration-500">
             {fieldStats.length > 0
-              ? fieldStats.slice(0, visibleCount).map((x, idx) => (
+              ? fieldStats.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE).map((x, idx) => (
                   <button
                     key={x.key}
                     onClick={() => setSelected(x)}
@@ -311,7 +312,7 @@ export default function Home() {
                     <p className="text-xs mt-1 text-stone-500 group-hover:text-teal-100 transition-colors">{x.mentorsReady} mentor · {x.menteesWaiting} mentee</p>
                   </button>
                 ))
-              : INDUSTRIES.slice(0, visibleCount).map((x, idx) => (
+              : INDUSTRIES.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE).map((x, idx) => (
                   <div
                     key={x.key}
                     className="group p-6 bg-[#F5F2EC] rounded-2xl flex flex-col items-center text-center"
@@ -324,16 +325,24 @@ export default function Home() {
                 ))}
           </div>
 
-          {fieldStats.length > visibleCount && (
-            <div className="flex justify-center mt-10">
+          <div className="flex justify-center items-center gap-4 mt-10">
+            {page > 0 && (
               <button
-                onClick={() => setVisibleCount((c) => c + 4)}
+                onClick={() => setPage((p) => p - 1)}
+                className="px-6 py-3 bg-white border-2 border-stone-300 text-stone-600 font-semibold rounded-full hover:border-teal-700 hover:text-teal-700 transition-all shadow-sm"
+              >
+                ‹ Quay lại
+              </button>
+            )}
+            {fieldStats.length > (page + 1) * PAGE_SIZE && (
+              <button
+                onClick={() => setPage((p) => p + 1)}
                 className="px-8 py-3 bg-white border-2 border-teal-700 text-teal-700 font-semibold rounded-full hover:bg-teal-700 hover:text-white transition-all shadow-sm"
               >
-                Xem thêm lĩnh vực »
+                Xem thêm »
               </button>
-            </div>
-          )}
+            )}
+          </div>
 
           {totals && (
             <p className="text-center text-sm text-stone-500 mt-8">
