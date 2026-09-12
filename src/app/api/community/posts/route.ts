@@ -6,7 +6,11 @@ import { withErrorHandling } from "@/lib/api-helpers";
 
 const CreateSchema = z.object({
   content: z.string().min(1),
+  title: z.string().optional(),
+  excerpt: z.string().optional(),
+  imageUrl: z.string().url().optional().or(z.literal("")),
   tags: z.array(z.string()).default([]),
+  isOfficial: z.boolean().optional().default(false),
 });
 
 /**
@@ -64,22 +68,34 @@ export const GET = withErrorHandling(async (req: Request) => {
 /**
  * POST /api/community/posts
  * Tạo bài mới — mặc định pending, chờ staff duyệt.
+ * Nếu isOfficial=true (chỉ staff) → tự động approved, commentsLocked=true.
  */
 export const POST = withErrorHandling(async (req: Request) => {
   const user = await getOrCreateCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const { content, tags } = CreateSchema.parse(body);
+  const { content, title, excerpt, imageUrl, tags, isOfficial } = CreateSchema.parse(body);
 
   const cleanTags = [...new Set(tags.map((t) => t.trim()).filter(Boolean))];
+
+  const isStaff = user.role === "admin" || user.role === "dpv";
+  const official = isOfficial && isStaff;
+  if (isOfficial && !isStaff) {
+    return NextResponse.json({ error: "Chỉ điều phối viên mới đăng hoạt động chính thức" }, { status: 403 });
+  }
 
   const post = await prisma.communityPost.create({
     data: {
       authorUserId: user.id,
       content,
+      title: title?.trim() || null,
+      excerpt: excerpt?.trim() || null,
+      imageUrl: imageUrl || null,
       tags: cleanTags,
-      status: "pending",
+      isOfficial: official,
+      status: official ? "approved" : "pending",
+      commentsLocked: official ? true : false,
     },
   });
 

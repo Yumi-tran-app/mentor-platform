@@ -41,6 +41,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { href: "/coordinator", icon: "target", label: "Quản lý điều phối" },
       { href: "/coordinator/matchmaking", icon: "link", label: "Ghép cặp (Matching)" },
+      { href: "/coordinator/announcements", icon: "megaphone", label: "Hoạt động cộng đồng" },
     ],
   },
   {
@@ -236,7 +237,8 @@ type IconName =
   | "arrowRight"
   | "graduation"
   | "spark"
-  | "shield";
+  | "shield"
+  | "megaphone";
 
 const ICON_PATHS: Record<IconName, string> = {
   home: "M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3v-6h6v6h3a1 1 0 001-1V10",
@@ -280,6 +282,7 @@ const ICON_PATHS: Record<IconName, string> = {
   graduation: "M22 10L12 5 2 10l10 5 10-5zM6 12v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5",
   spark: "M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z",
   shield: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z",
+  megaphone: "M3 11l18-7v16L3 13v-2zm0 0v4a4 4 0 004-4M7 11v2a4 4 0 004 4h5",
 };
 
 export function LineIcon({ name, size = 18 }: { name: IconName; size?: number }) {

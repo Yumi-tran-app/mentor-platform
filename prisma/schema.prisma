@@ -909,9 +909,13 @@ model CommunityPost {
   authorUserId     String              @map("author_user_id") @db.Uuid
   author           User                @relation(fields: [authorUserId], references: [id])
   content          String
+  title            String?             @map("title") // tiêu đề bài hoạt động (bài chính thức)
+  excerpt          String?             @map("excerpt") // tóm tắt hiển thị trên news grid
+  imageUrl         String?             @map("image_url") // ảnh cover
   tags             Json? // mảng nhãn lĩnh vực (key) — dùng INDUSTRIES
+  isOfficial       Boolean             @default(false) @map("is_official") // bài do ĐPV/BTC đăng (hoạt động cộng đồng)
   status           CommunityPostStatus @default(pending)
-  commentsLocked   Boolean             @default(false) @map("comments_locked")
+  commentsLocked   Boolean             @default(true) @map("comments_locked")
   reviewedByUserId String?             @map("reviewed_by_user_id") @db.Uuid
   reviewedBy       User?               @relation("CommunityPostReviewer", fields: [reviewedByUserId], references: [id])
   reviewedAt       DateTime?           @map("reviewed_at")
@@ -923,6 +927,7 @@ model CommunityPost {
 
   @@index([status, createdAt])
   @@index([authorUserId])
+  @@index([isOfficial, status, createdAt])
   @@map("community_posts")
 }
 

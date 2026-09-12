@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
@@ -259,7 +260,10 @@ export default function Home() {
         <div className="absolute bottom-0 left-0 -ml-40 -mb-20 w-96 h-96 bg-teal-50 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
       </section>
 
-      {/* 7. FINAL CTA & FOOTER */}
+      {/* 7. HOẠT ĐỘNG CỘNG ĐỒNG (trang tin) */}
+      <CommunityActivities />
+
+      {/* 8. FINAL CTA & FOOTER */}
       <footer className="pt-20 pb-10 border-t border-stone-800" style={{ background: "#134E4A" }}>
         <div className="max-w-4xl mx-auto px-4 text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Sẵn sàng cho bước tiến tiếp theo?</h2>
@@ -297,5 +301,86 @@ export default function Home() {
         }
       `}</style>
     </div>
+  );
+}
+
+function CommunityActivities() {
+  const [posts, setPosts] = useState<any[]>([]);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/community/announcements")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d?.posts) setPosts(d.posts);
+      })
+      .catch(() => {})
+      .finally(() => setLoaded(true));
+  }, []);
+
+  if (!loaded || posts.length === 0) return null;
+
+  return (
+    <section id="activities" className="py-20 bg-white/50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <div className="inline-block px-4 py-2 bg-teal-100 text-teal-700 font-semibold rounded-full text-sm mb-4">
+            HOẠT ĐỘNG CỘNG ĐỒNG
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold text-stone-800">Bài mới từ cộng đồng</h2>
+          <div className="w-24 h-1 bg-teal-700 mx-auto rounded-full mt-4"></div>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {posts.slice(0, 6).map((p) => (
+            <Link
+              key={p.id}
+              href={`/activities/${p.id}`}
+              className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow border border-stone-100 flex flex-col"
+            >
+              <div className="h-44 bg-stone-200 overflow-hidden">
+                {p.imageUrl ? (
+                  <img
+                    src={p.imageUrl}
+                    alt={p.title ?? ""}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-teal-700">
+                    <svg className="w-12 h-12 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l4 4v10a2 2 0 01-2 2zm-2 0V8h-4V4H5v16h12z" />
+                    </svg>
+                  </div>
+                )}
+              </div>
+              <div className="p-5 flex flex-col flex-1">
+                {(p.tags ?? []).length > 0 && (
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    {(p.tags as string[]).slice(0, 3).map((t) => (
+                      <span
+                        key={t}
+                        className="px-2 py-0.5 rounded-full text-[11px] font-semibold text-teal-700 bg-teal-50"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <h3 className="text-lg font-bold text-stone-800 mb-2 line-clamp-2 group-hover:text-teal-700 transition-colors">
+                  {p.title || "Hoạt động cộng đồng"}
+                </h3>
+                {p.excerpt && (
+                  <p className="text-sm text-stone-600 line-clamp-2 mb-3">{p.excerpt}</p>
+                )}
+                <div className="mt-auto pt-3 text-xs text-stone-400 flex items-center justify-between">
+                  <span>{new Date(p.createdAt).toLocaleDateString("vi-VN")}</span>
+                  <span className="text-teal-700 font-semibold">Đọc tiếp →</span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
