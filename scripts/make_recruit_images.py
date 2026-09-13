@@ -105,36 +105,38 @@ def make_mentor():
     h = H_MENTOR
     img, d = base(h)
     logo(d)
-    y = 128
-    y = pill(d, "TUYỂN MENTOR", W//2, y, bg=TEAL, fg=WHITE, sz=30)
+    y = 112
+    y = pill(d, "TUYỂN MENTOR · MÙA 1", W//2, y, bg=TEAL, fg=WHITE, sz=28)
+    # tiêu đề chính
     d.multiline_text(
-        (W//2, y), "Dẫn dắt thế hệ kế tiếp\n\"Tre già măng mọc\"",
-        font=font(52, True), fill=WHITE, anchor="ma", align="center", spacing=6)
-    y += 150
-    d.multiline_text(
-        (W//2, y), "Dành cho chuyên gia Tâm lý & Nhân sự\ntừ 5 năm kinh nghiệm",
-        font=font(28, False), fill=MUTED, anchor="ma", align="center", spacing=4)
-    y += 108
-    items = ["Đồng hành 1-1 cùng mentee trong 9 tháng",
-             "Trao truyền kinh nghiệm thực chiến",
+        (W//2, y), "Kiến tạo di sản nghề nghiệp\nDẫn dắt thế hệ phát triển và\ngắn kết con người trong tương lai",
+        font=font(46, True), fill=WHITE, anchor="ma", align="center", spacing=8)
+    y += 196
+    # dòng phụ (truyền cảm hứng)
+    sub = "Lời mời dành riêng cho các anh chị đang làm việc\ntrong ngành Tâm lý & Nhân sự: Rèn luyện kỹ năng\nđồng hành và chia sẻ giá trị chuyên môn"
+    d.multiline_text((W//2, y), sub, font=font(26, False), fill=MUTED,
+                     anchor="ma", align="center", spacing=6)
+    y += 138
+    # điểm chính (canh giữa cụm bullet + text)
+    items = ["Kết nối mạng lưới chuyên gia cùng ngành",
+             "Đồng hành cùng mentee trong 9 tháng",
              "Hạn đăng ký: 05/10/2026"]
     f_it = font(25, False)
     for it in items:
         tw = d.textlength(it, font=f_it)
-        # canh giữa cụm bullet + text
         total = 22 + tw
         start_x = (W - total) / 2
         cy = y
-        d.ellipse([start_x, cy-19, start_x+12, cy-7], fill=TEAL_BRIGHT)
-        d.text((start_x+22, cy-13), it, font=f_it, fill=WHITE, anchor="lm")
-        y += 48
-    y += 6
-    btn = "Đăng ký trở thành Mentor"
+        d.ellipse([start_x, cy-21, start_x+12, cy-9], fill=TEAL_BRIGHT)
+        d.text((start_x+22, cy-15), it, font=f_it, fill=WHITE, anchor="lm")
+        y += 50
+    # nút CTA
+    btn = "Trở thành Người đồng hành"
     fb = font(30, True)
     bw = d.textlength(btn, font=fb)
-    box = [W//2 - bw/2 - 30, h-118, W//2 + bw/2 + 30, h-52]
-    rounded(d, box, 33, fill=GOLD)
-    d.text((W//2, h-85), btn, font=fb, fill=GREEN_DARK, anchor="mm")
+    box = [W//2 - bw/2 - 34, h-108, W//2 + bw/2 + 34, h-44]
+    rounded(d, box, 32, fill=GOLD)
+    d.text((W//2, h-76), btn, font=fb, fill=GREEN_DARK, anchor="mm")
     return img
 
 out_dir = os.path.join(os.path.dirname(__file__), "assets")
