@@ -75,19 +75,23 @@ def make_mentee():
         (W//2, y), "Từ lý thuyết giảng đường\nđến nghệ thuật\nlàm việc với con người",
         font=font(46, True), fill=WHITE, anchor="ma", align="center", spacing=8)
     y += 200
-    # dòng phụ (truyền cảm hứng)
-    sub = "Dành riêng cho sinh viên Nhân sự & Tâm lý:\nNơi những trăn trở nghề nghiệp được chia sẻ\ncùng người đi trước."
-    d.multiline_text((W//2, y), sub, font=font(24, False), fill=MUTED,
-                     anchor="ma", align="center", spacing=5)
-    y += 132
-    # 2 điểm chính
+    # dòng phụ (truyền cảm hứng) - chia 2 dòng cân đối, choán đều chiều ngang
+    sub = "Dành riêng cho sinh viên Nhân sự & Tâm lý:\nNơi những trăn trở nghề nghiệp được chia sẻ cùng người đi trước"
+    d.multiline_text((W//2, y), sub, font=font(29, False), fill=MUTED,
+                     anchor="ma", align="center", spacing=8)
+    y += 122
+    # 2 điểm chính (canh giữa cụm bullet + text)
     items = ["Bạn sẽ có 9 tháng mài giũa thêm kỹ năng",
              "Sở hữu chứng nhận hoàn thành chương trình"]
+    f_it = font(25, False)
     for it in items:
+        tw = d.textlength(it, font=f_it)
+        total = 22 + tw
+        start_x = (W - total) / 2
         cy = y
-        d.ellipse([W//2-310, cy-24, W//2-290, cy-4], fill=TEAL_BRIGHT)
-        d.text((W//2-268, cy-14), it, font=font(24, False), fill=WHITE, anchor="lm")
-        y += 46
+        d.ellipse([start_x, cy-21, start_x+12, cy-9], fill=TEAL_BRIGHT)
+        d.text((start_x+22, cy-15), it, font=f_it, fill=WHITE, anchor="lm")
+        y += 50
     # nút CTA (màu đặc) - đặt sát đáy, tách khỏi nội dung
     btn = "Tìm Mentor Của Bạn"
     fb = font(30, True)
