@@ -25,6 +25,7 @@ export default function Home() {
               <a href="#about" className="hover:text-teal-700 transition-colors">Về chúng tôi</a>
               <a href="#stats" className="hover:text-teal-700 transition-colors">Lợi ích</a>
               <a href="#how-it-works" className="hover:text-teal-700 transition-colors">Cách hoạt động</a>
+              <Link href="/activities" className="hover:text-teal-700 transition-colors">Trang tin</Link>
               <SignedOut>
                 <SignInButton mode="modal">
                   <button className="px-5 py-2.5 bg-teal-700 text-white rounded-full hover:bg-teal-800 transition-all shadow-md">
@@ -379,6 +380,15 @@ function CommunityActivities() {
               </div>
             </Link>
           ))}
+        </div>
+
+        <div className="text-center mt-12">
+          <Link
+            href="/activities"
+            className="inline-block px-6 py-3 bg-teal-700 text-white font-semibold rounded-full hover:bg-teal-800 transition-colors"
+          >
+            Xem tất cả hoạt động →
+          </Link>
         </div>
       </div>
     </section>
