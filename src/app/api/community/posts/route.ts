@@ -104,12 +104,18 @@ export const POST = withErrorHandling(async (req: Request) => {
 
 /**
  * PATCH /api/community/posts
- * (staff) Kiểm duyệt/đóng bình luận/xoá bài.
- * body: { id, action: approve|reject|lock|unlock|delete }
+ * (staff) Kiểm duyệt/đóng bình luận/xoá/chỉnh sửa bài.
+ * body: { id, action: approve|reject|lock|unlock|delete|edit }
+ * Khi action=edit: kèm thêm các trường tuỳ chọn title/excerpt/imageUrl/content/tags.
  */
 const ModerationSchema = z.object({
   id: z.string().uuid(),
-  action: z.enum(["approve", "reject", "lock", "unlock", "delete"]),
+  action: z.enum(["approve", "reject", "lock", "unlock", "delete", "edit"]),
+  title: z.string().optional(),
+  excerpt: z.string().optional(),
+  imageUrl: z.string().url().optional().or(z.literal("")),
+  content: z.string().optional(),
+  tags: z.array(z.string()).optional(),
 });
 
 export const PATCH = withErrorHandling(async (req: Request) => {
@@ -159,6 +165,21 @@ export const PATCH = withErrorHandling(async (req: Request) => {
         data: { deletedAt: new Date() },
       });
       break;
+    case "edit": {
+      const data: Record<string, unknown> = {};
+      if (body.title !== undefined) data.title = body.title.trim() || null;
+      if (body.excerpt !== undefined) data.excerpt = body.excerpt.trim() || null;
+      if (body.imageUrl !== undefined) data.imageUrl = body.imageUrl || null;
+      if (body.content !== undefined) data.content = body.content;
+      if (body.tags !== undefined) {
+        data.tags = [...new Set(body.tags.map((t: string) => t.trim()).filter(Boolean))];
+      }
+      if (Object.keys(data).length === 0) {
+        return NextResponse.json({ error: "Không có trường nào để cập nhật" }, { status: 400 });
+      }
+      await prisma.communityPost.update({ where: { id }, data });
+      break;
+    }
   }
 
   return NextResponse.json({ ok: true });

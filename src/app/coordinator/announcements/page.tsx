@@ -35,6 +35,7 @@ export default function CoordinatorAnnouncements() {
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [msgType, setMsgType] = useState<"ok" | "err">("ok");
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   async function load() {
     setLoading(true);
@@ -69,31 +70,79 @@ export default function CoordinatorAnnouncements() {
     setSaving(true);
     setMsg(null);
     try {
-      const res = await fetch("/api/community/posts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: form.title,
-          excerpt: form.excerpt,
-          imageUrl: form.imageUrl,
-          content: form.content,
-          tags: form.tags,
-          isOfficial: true,
-        }),
-      });
-      const d = await res.json();
-      if (res.ok) {
-        setMsg("✅ Đã đăng hoạt động thành công (tự động công khai).");
-        setMsgType("ok");
-        setForm({ title: "", excerpt: "", imageUrl: "", content: "", tags: [] });
-        await load();
+      if (editingId) {
+        // Chỉnh sửa bài đã có
+        const res = await fetch("/api/community/posts", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: editingId,
+            action: "edit",
+            title: form.title,
+            excerpt: form.excerpt,
+            imageUrl: form.imageUrl,
+            content: form.content,
+            tags: form.tags,
+          }),
+        });
+        const d = await res.json();
+        if (res.ok) {
+          setMsg("✅ Đã cập nhật hoạt động.");
+          setMsgType("ok");
+          setForm({ title: "", excerpt: "", imageUrl: "", content: "", tags: [] });
+          setEditingId(null);
+          await load();
+        } else {
+          setMsg(d.error ?? "Có lỗi khi cập nhật.");
+          setMsgType("err");
+        }
       } else {
-        setMsg(d.error ?? "Có lỗi khi đăng.");
-        setMsgType("err");
+        // Đăng mới
+        const res = await fetch("/api/community/posts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: form.title,
+            excerpt: form.excerpt,
+            imageUrl: form.imageUrl,
+            content: form.content,
+            tags: form.tags,
+            isOfficial: true,
+          }),
+        });
+        const d = await res.json();
+        if (res.ok) {
+          setMsg("✅ Đã đăng hoạt động thành công (tự động công khai).");
+          setMsgType("ok");
+          setForm({ title: "", excerpt: "", imageUrl: "", content: "", tags: [] });
+          await load();
+        } else {
+          setMsg(d.error ?? "Có lỗi khi đăng.");
+          setMsgType("err");
+        }
       }
     } finally {
       setSaving(false);
     }
+  }
+
+  function startEdit(p: Announcement) {
+    setEditingId(p.id);
+    setForm({
+      title: p.title ?? "",
+      excerpt: p.excerpt ?? "",
+      imageUrl: p.imageUrl ?? "",
+      content: p.content ?? "",
+      tags: p.tags ?? [],
+    });
+    setMsg(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function cancelEdit() {
+    setEditingId(null);
+    setForm({ title: "", excerpt: "", imageUrl: "", content: "", tags: [] });
+    setMsg(null);
   }
 
   async function remove(id: string) {
@@ -119,7 +168,7 @@ export default function CoordinatorAnnouncements() {
       {/* Form đăng bài */}
       <Card className="mb-8">
         <h2 className="font-bold mb-4" style={{ color: "#0F766E" }}>
-          Đăng hoạt động mới
+          {editingId ? "Chỉnh sửa hoạt động" : "Đăng hoạt động mới"}
         </h2>
         <div className="space-y-3">
           <div>
@@ -215,8 +264,13 @@ export default function CoordinatorAnnouncements() {
           )}
 
           <div className="flex justify-end gap-2">
+            {editingId && (
+              <Button onClick={cancelEdit} variant="secondary">
+                Huỷ
+              </Button>
+            )}
             <Button onClick={submit} disabled={saving}>
-              {saving ? "Đang đăng..." : "Đăng hoạt động"}
+              {saving ? (editingId ? "Đang lưu..." : "Đang đăng...") : editingId ? "Lưu thay đổi" : "Đăng hoạt động"}
             </Button>
           </div>
         </div>
@@ -265,6 +319,13 @@ export default function CoordinatorAnnouncements() {
                     </span>
                   </div>
                 </div>
+                <button
+                  onClick={() => startEdit(p)}
+                  className="text-xs font-semibold px-3 py-1.5 rounded-full shrink-0"
+                  style={{ color: "#0F766E", border: "1px solid #E5E0D5" }}
+                >
+                  Chỉnh sửa
+                </button>
                 <button
                   onClick={() => remove(p.id)}
                   className="text-xs font-semibold px-3 py-1.5 rounded-full shrink-0"
