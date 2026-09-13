@@ -112,8 +112,8 @@ def make_mentor():
         (W//2, y), "Kiến tạo di sản nghề nghiệp",
         font=font(54, True), fill=WHITE, anchor="ma", align="center")
     y += 138
-    # dòng phụ (lời mời) - 2 dòng cân đối
-    sub = "Lời mời dành riêng cho các anh chị đang làm việc\ntrong ngành Tâm lý & Nhân sự: dẫn dắt thế hệ phát triển và gắn kết con người trong tương lai."
+    # dòng phụ (lời mời) - 2 dòng, ngắt đúng sau dấu hai chấm
+    sub = "Lời mời đến các anh chị đang làm việc trong ngành Tâm lý & Nhân sự:\ndẫn dắt thế hệ gắn kết và phát triển con người trong tương lai."
     d.multiline_text((W//2, y), sub, font=font(27, False), fill=MUTED,
                      anchor="ma", align="center", spacing=8)
     y += 116
