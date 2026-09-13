@@ -33,7 +33,10 @@ const NAV_GROUPS: NavGroup[] = [
   },
   {
     title: "Cá nhân",
-    items: [{ href: "/profile", icon: "user", label: "Hồ sơ" }],
+    items: [
+      { href: "/profile", icon: "user", label: "Hồ sơ" },
+      { href: "/guide", icon: "bulb", label: "Hướng dẫn sử dụng" },
+    ],
   },
   {
     title: "Điều phối viên",
