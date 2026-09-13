@@ -3,7 +3,9 @@
 from PIL import Image, ImageDraw, ImageFont
 import os
 
-W, H = 1200, 630  # tỉ lệ news card ~ 1.9:1
+W = 1200
+H_MENTEE = 700
+H_MENTOR = 700
 
 # Brand Tre Việt Mentoring (khớp landing page)
 GREEN_DARK = "#134E4A"   # xanh rêu đậm (nền)
@@ -14,22 +16,17 @@ WHITE = "#FFFFFF"
 GOLD = "#F2A93B"         # nhấn amber (dùng tiết chế)
 MUTED = "#D7E5E2"        # chữ phụ trên nền tối
 
-FONT_DIR = "/usr/share/fonts/truetype"
+FONT_DIR = "/usr/share/fonts"
 def find_font(names):
     for root, _, files in os.walk(FONT_DIR):
         for f in files:
             if f.lower() in names:
                 return os.path.join(root, f)
-    for root, _, files in os.walk(FONT_DIR):
-        for f in files:
-            if f.lower().endswith((".ttf", ".otf")):
-                # fallback: ưu tiên DejaVu
-                if "dejavu" in f.lower():
-                    return os.path.join(root, f)
     return None
 
-BOLD = find_font({"dejavusans-bold.ttf", "dejavusans-bold.obf"})
-REG  = find_font({"dejavusans.ttf", "dejavusans.obf"})
+# Ưu tiên font Noto Sans CJK (hỗ trợ đầy đủ tiếng Việt), fallback DejaVu
+BOLD = find_font({"notosanscjk-bold.ttc"}) or find_font({"notosanscjk-regular.ttc"}) or find_font({"dejavusans-bold.ttf"})
+REG  = find_font({"notosanscjk-regular.ttc"}) or find_font({"dejavusans.ttf"})
 print("BOLD:", BOLD)
 print("REG:", REG)
 
@@ -42,13 +39,13 @@ def rounded(draw, xy, r, fill):
     except TypeError:
         draw.rectangle(xy, fill=fill)
 
-def base():
-    img = Image.new("RGB", (W, H), GREEN_DARK)
+def base(h):
+    img = Image.new("RGB", (W, h), GREEN_DARK)
     d = ImageDraw.Draw(img, "RGBA")
     # lớp trang trí: vòng tròn mờ teal
     d.ellipse([W-260, -160, W+120, 220], fill=(21,181,176, 40))
-    d.ellipse([-180, H-260, 120, H+40], fill=(21,181,176, 28))
-    d.ellipse([W-320, H-120, W-60, H+140], fill=(21,181,176, 20))
+    d.ellipse([-180, h-260, 120, h+40], fill=(21,181,176, 28))
+    d.ellipse([W-320, h-120, W-60, h+140], fill=(21,181,176, 20))
     return img, d
 
 def pill(d, text, cx, y, bg=TEAL, fg=WHITE, sz=30):
@@ -68,40 +65,41 @@ def logo(d):
     d.text((112, 70), "Tre Việt Mentoring", font=f, fill=WHITE, anchor="lm")
 
 def make_mentee():
-    img, d = base()
+    h = H_MENTEE
+    img, d = base(h)
     logo(d)
-    y = 128
-    y = pill(d, "TUYỂN MENTEE · MÙA 1", W//2, y, bg=TEAL, fg=WHITE, sz=30)
+    y = 108
+    y = pill(d, "TUYỂN MENTEE · MÙA 1", W//2, y, bg=TEAL, fg=WHITE, sz=27)
     # tiêu đề chính
     d.multiline_text(
-        (W//2, y), "Tìm người dẫn đường\ncho sự nghiệp của bạn",
-        font=font(52, True), fill=WHITE, anchor="ma", align="center", spacing=6)
-    y += 150
-    # dòng phụ
-    d.text((W//2, y), "Dành cho sinh viên ngành Tâm lý học & Nhân sự",
-           font=font(30, False), fill=MUTED, anchor="ma")
-    y += 50
-    # 3 điểm chính (xếp dọc để không chồng lấn)
-    items = ["Đồng hành 1-1 cùng mentor giàu kinh nghiệm",
-             "Lộ trình 9 tháng có cấu trúc",
-             "Hạn đăng ký: 05/10/2026"]
+        (W//2, y), "Từ lý thuyết giảng đường\nđến nghệ thuật\nlàm việc với con người",
+        font=font(46, True), fill=WHITE, anchor="ma", align="center", spacing=8)
+    y += 200
+    # dòng phụ (truyền cảm hứng)
+    sub = "Dành riêng cho sinh viên Nhân sự & Tâm lý:\nNơi những trăn trở nghề nghiệp được chia sẻ\ncùng người đi trước."
+    d.multiline_text((W//2, y), sub, font=font(24, False), fill=MUTED,
+                     anchor="ma", align="center", spacing=5)
+    y += 132
+    # 2 điểm chính
+    items = ["Bạn sẽ có 9 tháng mài giũa thêm kỹ năng",
+             "Sở hữu chứng nhận hoàn thành chương trình"]
     for it in items:
         cy = y
-        d.ellipse([W//2-300, cy-18, W//2-288, cy-6], fill=TEAL_BRIGHT)
-        d.text((W//2-262, cy-12), it, font=font(25, False), fill=WHITE, anchor="lm")
-        y += 44
-    y += 4
-    # nút CTA (màu đặc)
-    btn = "Đăng ký trở thành Mentee"
+        d.ellipse([W//2-310, cy-24, W//2-290, cy-4], fill=TEAL_BRIGHT)
+        d.text((W//2-268, cy-14), it, font=font(24, False), fill=WHITE, anchor="lm")
+        y += 46
+    # nút CTA (màu đặc) - đặt sát đáy, tách khỏi nội dung
+    btn = "Tìm Mentor Của Bạn"
     fb = font(30, True)
     bw = d.textlength(btn, font=fb)
-    box = [W//2 - bw/2 - 30, H-118, W//2 + bw/2 + 30, H-52]
-    rounded(d, box, 33, fill=GOLD)
-    d.text((W//2, H-85), btn, font=fb, fill=GREEN_DARK, anchor="mm")
+    box = [W//2 - bw/2 - 34, h-104, W//2 + bw/2 + 34, h-40]
+    rounded(d, box, 32, fill=GOLD)
+    d.text((W//2, h-72), btn, font=fb, fill=GREEN_DARK, anchor="mm")
     return img
 
 def make_mentor():
-    img, d = base()
+    h = H_MENTOR
+    img, d = base(h)
     logo(d)
     y = 128
     y = pill(d, "TUYỂN MENTOR", W//2, y, bg=TEAL, fg=WHITE, sz=30)
@@ -109,24 +107,30 @@ def make_mentor():
         (W//2, y), "Dẫn dắt thế hệ kế tiếp\n\"Tre già măng mọc\"",
         font=font(52, True), fill=WHITE, anchor="ma", align="center", spacing=6)
     y += 150
-    d.text((W//2, y), "Dành cho chuyên gia Tâm lý & Nhân sự từ 5 năm kinh nghiệm",
-           font=font(30, False), fill=MUTED, anchor="ma")
-    y += 50
+    d.multiline_text(
+        (W//2, y), "Dành cho chuyên gia Tâm lý & Nhân sự\ntừ 5 năm kinh nghiệm",
+        font=font(28, False), fill=MUTED, anchor="ma", align="center", spacing=4)
+    y += 108
     items = ["Đồng hành 1-1 cùng mentee trong 9 tháng",
              "Trao truyền kinh nghiệm thực chiến",
              "Hạn đăng ký: 05/10/2026"]
+    f_it = font(25, False)
     for it in items:
+        tw = d.textlength(it, font=f_it)
+        # canh giữa cụm bullet + text
+        total = 22 + tw
+        start_x = (W - total) / 2
         cy = y
-        d.ellipse([W//2-300, cy-18, W//2-288, cy-6], fill=TEAL_BRIGHT)
-        d.text((W//2-262, cy-12), it, font=font(25, False), fill=WHITE, anchor="lm")
-        y += 44
-    y += 4
+        d.ellipse([start_x, cy-19, start_x+12, cy-7], fill=TEAL_BRIGHT)
+        d.text((start_x+22, cy-13), it, font=f_it, fill=WHITE, anchor="lm")
+        y += 48
+    y += 6
     btn = "Đăng ký trở thành Mentor"
     fb = font(30, True)
     bw = d.textlength(btn, font=fb)
-    box = [W//2 - bw/2 - 30, H-118, W//2 + bw/2 + 30, H-52]
+    box = [W//2 - bw/2 - 30, h-118, W//2 + bw/2 + 30, h-52]
     rounded(d, box, 33, fill=GOLD)
-    d.text((W//2, H-85), btn, font=fb, fill=GREEN_DARK, anchor="mm")
+    d.text((W//2, h-85), btn, font=fb, fill=GREEN_DARK, anchor="mm")
     return img
 
 out_dir = os.path.join(os.path.dirname(__file__), "assets")
