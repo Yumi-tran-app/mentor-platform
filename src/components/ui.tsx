@@ -42,6 +42,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: "/coordinator", icon: "target", label: "Quản lý điều phối" },
       { href: "/coordinator/matchmaking", icon: "link", label: "Ghép cặp (Matching)" },
       { href: "/coordinator/announcements", icon: "megaphone", label: "Hoạt động cộng đồng" },
+      { href: "/coordinator/reflections", icon: "chart", label: "Thống kê phản tư" },
     ],
   },
   {
