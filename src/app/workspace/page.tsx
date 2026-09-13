@@ -135,7 +135,7 @@ export default function WorkspacePage() {
                     className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-stone-100"
                     title="Tuỳ chọn"
                   >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style={{ color: "#57534E" }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" style={{ color: "#57534E" }}>
                       <circle cx="5" cy="12" r="1.6" />
                       <circle cx="12" cy="12" r="1.6" />
                       <circle cx="19" cy="12" r="1.6" />
