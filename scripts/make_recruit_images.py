@@ -112,12 +112,12 @@ def make_mentor():
         (W//2, y), "Kiến tạo di sản nghề nghiệp",
         font=font(54, True), fill=WHITE, anchor="ma", align="center")
     y += 138
-    # dòng phụ
-    sub = "Lời mời dành riêng cho các anh chị đang làm việc\ntrong ngành Tâm lý & Nhân sự: dẫn dắt thế hệ\nphát triển và gắn kết con người trong tương lai."
-    d.multiline_text((W//2, y), sub, font=font(28, False), fill=MUTED,
-                     anchor="ma", align="center", spacing=7)
-    y += 152
-    # điểm chính (canh giữa cụm bullet + text)
+    # dòng phụ (lời mời) - 2 dòng cân đối
+    sub = "Lời mời dành riêng cho các anh chị đang làm việc\ntrong ngành Tâm lý & Nhân sự: dẫn dắt thế hệ phát triển và gắn kết con người trong tương lai."
+    d.multiline_text((W//2, y), sub, font=font(27, False), fill=MUTED,
+                     anchor="ma", align="center", spacing=8)
+    y += 116
+    # điểm chính (canh giữa cụm bullet + text), nhịp dòng đều với lời mời
     items = ["Rèn luyện kỹ năng đồng hành và chia sẻ giá trị chuyên môn",
              "Kết nối mạng lưới chuyên gia cùng ngành"]
     f_it = font(26, False)
@@ -128,7 +128,7 @@ def make_mentor():
         cy = y
         d.ellipse([start_x, cy-22, start_x+13, cy-9], fill=TEAL_BRIGHT)
         d.text((start_x+23, cy-16), it, font=f_it, fill=WHITE, anchor="lm")
-        y += 56
+        y += 58
     # nút CTA
     btn = "Trở thành Người đồng hành"
     fb = font(30, True)
