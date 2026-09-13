@@ -131,7 +131,7 @@ export default function CoordinatorAnnouncements() {
               style={{ borderColor: "#E5E0D5", color: "#292524" }}
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
-              placeholder="VD: Trà Chiều Nghề Nghiệp — Buổi 3"
+              placeholder="VD: Trà Chiều Nghề Nghiệp - Buổi 3"
             />
           </div>
 

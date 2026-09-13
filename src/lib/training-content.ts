@@ -119,7 +119,7 @@ export const TRAINING_CONTENT: TrainingModuleContent[] = [
         title: "Chương trình mentoring cộng đồng là gì?",
         bullets: [
           "Lộ trình đồng hành 9 tháng có cấu trúc giữa mentor (người dẫn dắt) và mentee (người được đồng hành).",
-          "Không phải cố vấn rời rạc — mà là một hành trình có mục tiêu, có điểm chạm, có đo lường.",
+          "Không phải cố vấn rời rạc - mà là một hành trình có mục tiêu, có điểm chạm, có đo lường.",
           "Được hỗ trợ xuyên suốt bởi Điều phối viên (ĐPV).",
         ],
       },
@@ -134,9 +134,9 @@ export const TRAINING_CONTENT: TrainingModuleContent[] = [
       {
         title: "3 giá trị cốt lõi",
         bullets: [
-          "Tôn trọng & Lắng nghe thật — không phán xét, đặt mình vào vị trí người kia.",
-          "Cam kết & Trách nhiệm — giữ lịch hẹn, đồng hành trọn vẹn, không bỏ ngang.",
-          "Cởi mở & Trung thực — chia sẻ thật, sẵn sàng nhận góp ý.",
+          "Tôn trọng & Lắng nghe thật - không phán xét, đặt mình vào vị trí người kia.",
+          "Cam kết & Trách nhiệm - giữ lịch hẹn, đồng hành trọn vẹn, không bỏ ngang.",
+          "Cởi mở & Trung thực - chia sẻ thật, sẵn sàng nhận góp ý.",
         ],
       },
       {
@@ -208,11 +208,11 @@ export const TRAINING_CONTENT: TrainingModuleContent[] = [
       {
         title: "Mô hình SMART",
         bullets: [
-          "Specific — cụ thể, rõ ràng.",
-          "Measurable — đo lường được.",
-          "Achievable — khả thi.",
-          "Relevant — liên quan đến mục tiêu lớn của mentee.",
-          "Time-bound — có mốc thời gian.",
+          "Specific - cụ thể, rõ ràng.",
+          "Measurable - đo lường được.",
+          "Achievable - khả thi.",
+          "Relevant - liên quan đến mục tiêu lớn của mentee.",
+          "Time-bound - có mốc thời gian.",
         ],
       },
       {
@@ -238,13 +238,13 @@ export const TRAINING_CONTENT: TrainingModuleContent[] = [
     title: "Phản tư & phát triển liên tục",
     description: "Cách sử dụng phản tư hằng tháng để cải thiện.",
     summary:
-      "Phản tư là trái tim của chương trình — giúp cặp đồng hành nhìn lại, điều chỉnh và trưởng thành hơn mỗi tháng.",
+      "Phản tư là trái tim của chương trình - giúp cặp đồng hành nhìn lại, điều chỉnh và trưởng thành hơn mỗi tháng.",
     slides: [
       {
         title: "Phản tư là gì?",
         bullets: [
           "Khoảng dừng có chủ đích mỗi tháng để nhìn lại hành trình.",
-          "Không phải đánh giá đúng/sai — mà là nhận diện điều đang diễn ra.",
+          "Không phải đánh giá đúng/sai - mà là nhận diện điều đang diễn ra.",
           "Gồm 4 trạng thái cảm nhận: kết nối tốt, tìm nhịp, chưa ổn, cần hỗ trợ.",
         ],
       },

@@ -12,7 +12,7 @@ import { withErrorHandling } from "@/lib/api-helpers";
 
 /**
  * GET /api/journey?seasonId=...
- * Lộ trình mentoring V2 — tách Mùa vs từng Mentee + timeline + lọc lịch sử.
+ * Lộ trình mentoring V2 - tách Mùa vs từng Mentee + timeline + lọc lịch sử.
  */
 export const GET = withErrorHandling(async (req: Request) => {
   const user = await getOrCreateCurrentUser();

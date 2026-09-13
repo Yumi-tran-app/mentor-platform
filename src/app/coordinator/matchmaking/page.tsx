@@ -171,7 +171,7 @@ export default function MatchmakingPage() {
   }
 
   function ph(json: any, key: string): string {
-    return json?.[key] ?? "—";
+    return json?.[key] ?? " - ";
   }
 
   return (

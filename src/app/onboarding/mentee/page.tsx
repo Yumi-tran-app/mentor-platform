@@ -221,21 +221,21 @@ export default function MenteeOnboardingPage() {
               <div>
                 <label className={labelCls}>Năm học</label>
                 <select className={inputCls} style={inputStyle} value={form.yearOfStudy} onChange={(e) => set("yearOfStudy", e.target.value)}>
-                  <option value="">— Chọn —</option>
+                  <option value="">- Chọn -</option>
                   {[1, 2, 3, 4, 5, 6].map((n) => <option key={n} value={n}>Năm {n}</option>)}
                 </select>
               </div>
               <div>
                 <label className={labelCls}>Thành phố</label>
                 <select className={inputCls} style={inputStyle} value={form.city} onChange={(e) => set("city", e.target.value)}>
-                  <option value="">— Chọn tỉnh/thành —</option>
+                  <option value="">- Chọn tỉnh/thành -</option>
                   {VIETNAM_PROVINCES.map((c) => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div className="sm:col-span-2">
                 <label className={labelCls}>Lĩnh vực quan tâm *</label>
                 <select className={inputCls} style={inputStyle} value={form.industry} onChange={(e) => set("industry", e.target.value)}>
-                  <option value="">— Chọn chuyên ngành —</option>
+                  <option value="">- Chọn chuyên ngành -</option>
                   {INDUSTRY_GROUPS.map((g) => (
                     <optgroup key={g.group} label={g.group}>
                       {g.options.map((i) => <option key={i.key} value={i.key}>{i.label}</option>)}

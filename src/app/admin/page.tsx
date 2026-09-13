@@ -104,7 +104,7 @@ export default function AdminPage() {
         Bảng quản trị (Admin)
       </h1>
       <p className="text-sm mb-6" style={{ color: "#94A3B8" }}>
-        Mùa hiện tại: {stats.season ? `${stats.season.name} (${stats.season.status})` : "—"}
+        Mùa hiện tại: {stats.season ? `${stats.season.name} (${stats.season.status})` : " - "}
       </p>
 
       {/* Dashboard số liệu */}

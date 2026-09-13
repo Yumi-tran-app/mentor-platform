@@ -126,7 +126,7 @@ export const POST = withErrorHandling(async (req: Request) => {
 });
 
 /**
- * GET /api/admin/interviews — danh sách buổi định hướng/phỏng vấn + số người xác nhận.
+ * GET /api/admin/interviews - danh sách buổi định hướng/phỏng vấn + số người xác nhận.
  */
 export const GET = withErrorHandling(async (req: Request) => {
   await requireStaff();

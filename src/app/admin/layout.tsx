@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getOrCreateCurrentUser } from "@/lib/auth";
 
 /**
- * Layout guard cho /admin/* — CHỈ admin mới truy cập được (kể cả dpv bị chặn).
+ * Layout guard cho /admin/* - CHỈ admin mới truy cập được (kể cả dpv bị chặn).
  */
 export default async function AdminLayout({
   children,

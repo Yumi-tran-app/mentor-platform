@@ -7,7 +7,7 @@ export const maxDuration = 60;
 export const dynamic = "force-dynamic";
 
 /**
- * Cron job SLA — chạy định kỳ (Vercel Cron / Supabase scheduled function).
+ * Cron job SLA - chạy định kỳ (Vercel Cron / Supabase scheduled function).
  * Quét coordinator_assignments quá hạn -> reassign cho ĐPV khác + ghi KPI breach.
  * POST /api/cron/sla-check
  *

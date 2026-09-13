@@ -48,7 +48,7 @@ type JourneyV2 = {
 };
 
 const fmtDate = (s: string | null) =>
-  s ? new Date(s).toLocaleDateString("vi-VN") : "—";
+  s ? new Date(s).toLocaleDateString("vi-VN") : " - ";
 
 function daysRemaining(endDate: string): number {
   const diff = new Date(endDate).getTime() - Date.now();
@@ -116,7 +116,7 @@ export default function JourneyPage() {
 
   return (
     <AppShell title="Lộ trình mentoring">
-      {/* TOP BAR — Bộ lọc mùa + thời gian */}
+      {/* TOP BAR - Bộ lọc mùa + thời gian */}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-bold flex items-center gap-2" style={{ color: "#0F766E" }}>
@@ -161,7 +161,7 @@ export default function JourneyPage() {
         </div>
       </Card>
 
-      {/* KHUNG A — Tiến độ chung của Mùa */}
+      {/* KHUNG A - Tiến độ chung của Mùa */}
       <Card className="mb-6">
         <h2 className="font-bold mb-4 flex items-center gap-2" style={{ color: "#0F766E" }}>
           <LineIcon name="calendar" size={18} /> Tiến độ chung của Mùa
@@ -191,7 +191,7 @@ export default function JourneyPage() {
         </div>
       </Card>
 
-      {/* KHUNG B — Tiến độ theo từng Mentee */}
+      {/* KHUNG B - Tiến độ theo từng Mentee */}
       <Card>
         <h2 className="font-bold mb-4 flex items-center gap-2" style={{ color: "#0F766E" }}>
           <LineIcon name="users" size={18} /> Tiến độ đồng hành theo Mentee

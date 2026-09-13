@@ -1,4 +1,4 @@
-// Danh mục chuyên ngành chuẩn (Tâm lý + Nhân sự) — dùng chung cho:
+// Danh mục chuyên ngành chuẩn (Tâm lý + Nhân sự) - dùng chung cho:
 // - Dropdown "Ngành nghề chính" trong đăng ký Mentor
 // - Dropdown "Lĩnh vực quan tâm" trong đăng ký Mentee
 // Không dùng cho feed cộng đồng (đã bỏ tag lĩnh vực ở feed).
@@ -46,7 +46,7 @@ export const INDUSTRY_GROUPS: IndustryGroup[] = [
   },
 ];
 
-// Danh sách phẳng (flatten) — dùng khi chỉ cần lặp 1 chiều
+// Danh sách phẳng (flatten) - dùng khi chỉ cần lặp 1 chiều
 export const INDUSTRIES: IndustryOption[] = INDUSTRY_GROUPS.flatMap(
   (g) => g.options
 );

@@ -7,7 +7,7 @@ import { withErrorHandling } from "@/lib/api-helpers";
  * GET /api/coordinator/journey-stats
  * Thống kê nhật ký hành trình cho ĐPV:
  * - Danh sách cặp mà ĐPV phụ trách (qua CoordinatorAssignment)
- * - Số nhật ký của mentor + mentee trong từng cặp (đếm cả private — ĐPV được thấy)
+ * - Số nhật ký của mentor + mentee trong từng cặp (đếm cả private - ĐPV được thấy)
  * - Có lọc theo mùa (optional ?seasonId=)
  */
 export const GET = withErrorHandling(async (req: Request) => {
@@ -81,8 +81,8 @@ export const GET = withErrorHandling(async (req: Request) => {
     rows.push({
       matchId,
       status: match?.status ?? null,
-      mentorName: match?.mentorApplication.user.fullName ?? "—",
-      menteeName: match?.menteeApplication.user.fullName ?? "—",
+      mentorName: match?.mentorApplication.user.fullName ?? "-",
+      menteeName: match?.menteeApplication.user.fullName ?? "-",
       mentorEntries: mentorCount,
       menteeEntries: menteeCount,
       total: matchEntries.length,

@@ -6,7 +6,7 @@ import { resolveApplicantAudience } from "@/lib/certification";
 import { withErrorHandling } from "@/lib/api-helpers";
 
 /**
- * GET /api/events — danh sách workshop/training (event) cho mentor/mentee.
+ * GET /api/events - danh sách workshop/training (event) cho mentor/mentee.
  * Chỉ hiển thị event audience phù hợp (all hoặc audience của user).
  */
 export const GET = withErrorHandling(async (req: Request) => {
@@ -47,7 +47,7 @@ export const GET = withErrorHandling(async (req: Request) => {
 });
 
 /**
- * POST /api/events — đăng ký tham dự event.
+ * POST /api/events - đăng ký tham dự event.
  * body: { eventId }
  */
 export const POST = withErrorHandling(async (req: Request) => {

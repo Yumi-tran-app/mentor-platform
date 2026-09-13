@@ -26,7 +26,7 @@ function genCheckInCode(): string {
 }
 
 /**
- * GET /api/admin/events?status=&q= — danh sách event/workshop (admin), kèm thống kê.
+ * GET /api/admin/events?status=&q= - danh sách event/workshop (admin), kèm thống kê.
  */
 export const GET = withErrorHandling(async (req: Request) => {
   const user = await requireStaff();
@@ -69,7 +69,7 @@ export const GET = withErrorHandling(async (req: Request) => {
 });
 
 /**
- * POST /api/admin/events — tạo mới event/workshop.
+ * POST /api/admin/events - tạo mới event/workshop.
  * body: { ..., action: "draft" | "publish" }
  */
 export const POST = withErrorHandling(async (req: Request) => {

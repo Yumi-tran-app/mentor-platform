@@ -1,10 +1,10 @@
-// Bộ câu hỏi kiểm tra cho MENTEE — thể hiện cam kết với chương trình.
+// Bộ câu hỏi kiểm tra cho MENTEE - thể hiện cam kết với chương trình.
 // Soạn từ 3 module đào tạo bắt buộc của mentee.
 // 10 câu trắc nghiệm + 1 câu tự luận.
 
 import type { TestQuestion } from "./training-test-content";
 
-export const MENTEE_TEST_TITLE = "Bài kiểm tra mentee — Cam kết đồng hành";
+export const MENTEE_TEST_TITLE = "Bài kiểm tra mentee - Cam kết đồng hành";
 
 export const MENTEE_PASS_SCORE = 70;
 

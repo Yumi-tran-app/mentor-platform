@@ -24,7 +24,7 @@ const PatchSchema = z.object({
 });
 
 /**
- * GET /api/admin/events/[id] — chi tiết event: học viên đăng ký + tiến độ check-in.
+ * GET /api/admin/events/[id] - chi tiết event: học viên đăng ký + tiến độ check-in.
  */
 export const GET = withErrorHandling(async (req: Request, ctx: any) => {
   const user = await requireStaff();
@@ -51,7 +51,7 @@ export const GET = withErrorHandling(async (req: Request, ctx: any) => {
 });
 
 /**
- * PATCH /api/admin/events/[id] — cập nhật thông tin hoặc chuyển trạng thái.
+ * PATCH /api/admin/events/[id] - cập nhật thông tin hoặc chuyển trạng thái.
  * body: { ..., action?: "save" | "publish" | "close" }
  */
 export const PATCH = withErrorHandling(async (req: Request, ctx: any) => {
@@ -90,7 +90,7 @@ export const PATCH = withErrorHandling(async (req: Request, ctx: any) => {
 });
 
 /**
- * DELETE /api/admin/events/[id] — xóa event.
+ * DELETE /api/admin/events/[id] - xóa event.
  */
 export const DELETE = withErrorHandling(async (req: Request, ctx: any) => {
   const user = await requireStaff();

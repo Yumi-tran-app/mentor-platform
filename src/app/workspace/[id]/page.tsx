@@ -258,7 +258,7 @@ export default function MatchDetailPage() {
 
       {/* Layout 2 cột bất đối xứng 7:3 */}
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-10 gap-6">
-        {/* CỘT CHÍNH (70%) — Timeline */}
+        {/* CỘT CHÍNH (70%) - Timeline */}
         <div className="lg:col-span-7 space-y-4">
           {/* Khung Post bài */}
           <Card>
@@ -438,7 +438,7 @@ export default function MatchDetailPage() {
           )}
         </div>
 
-        {/* CỘT PHỤ (30%) — Thông tin & Quản trị */}
+        {/* CỘT PHỤ (30%) - Thông tin & Quản trị */}
         <div className="lg:col-span-3 space-y-4">
           {/* Điều hướng phản tư / nhật ký */}
           <Card className="space-y-2">

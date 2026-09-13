@@ -16,7 +16,7 @@ const CreateSchema = z.object({
 /**
  * GET /api/community/posts
  * - Mặc định (không scope): bài đã duyệt (approved, chưa xoá), mới nhất trước.
- * - ?scope=pending&mine=1 : bài của tôi (mọi trạng thái) — để người dùng xem trạng thái.
+ * - ?scope=pending&mine=1 : bài của tôi (mọi trạng thái) - để người dùng xem trạng thái.
  * - ?scope=pending (staff): bài chờ duyệt.
  */
 export const GET = withErrorHandling(async (req: Request) => {
@@ -67,7 +67,7 @@ export const GET = withErrorHandling(async (req: Request) => {
 
 /**
  * POST /api/community/posts
- * Tạo bài mới — mặc định pending, chờ staff duyệt.
+ * Tạo bài mới - mặc định pending, chờ staff duyệt.
  * Nếu isOfficial=true (chỉ staff) → tự động approved, commentsLocked=true.
  */
 export const POST = withErrorHandling(async (req: Request) => {

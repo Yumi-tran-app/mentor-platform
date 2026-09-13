@@ -14,7 +14,7 @@ const ModuleSchema = z.object({
 });
 
 /**
- * GET /api/admin/training-modules — danh sách module đào tạo (admin).
+ * GET /api/admin/training-modules - danh sách module đào tạo (admin).
  */
 export const GET = withErrorHandling(async (req: Request) => {
   const user = await requireStaff();
@@ -30,7 +30,7 @@ export const GET = withErrorHandling(async (req: Request) => {
 });
 
 /**
- * POST /api/admin/training-modules — thêm module đào tạo.
+ * POST /api/admin/training-modules - thêm module đào tạo.
  */
 export const POST = withErrorHandling(async (req: Request) => {
   const user = await requireStaff();
@@ -51,7 +51,7 @@ export const POST = withErrorHandling(async (req: Request) => {
 });
 
 /**
- * DELETE /api/admin/training-modules?id=... — xóa module.
+ * DELETE /api/admin/training-modules?id=... - xóa module.
  */
 export const DELETE = withErrorHandling(async (req: Request) => {
   const user = await requireStaff();

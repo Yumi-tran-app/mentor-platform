@@ -85,7 +85,7 @@ export default function ReviewApplicationsPage() {
   }
 
   function ph(json: any, key: string): string {
-    return json?.[key] ?? "—";
+    return json?.[key] ?? " - ";
   }
 
   const mentorCount = mentors.length;

@@ -124,7 +124,7 @@ export default function JourneyPage() {
           Nhật ký hành trình
         </h1>
         <p className="text-sm mb-6" style={{ color: "#292524" }}>
-          Ghi lại hành trình của hai bạn như một dòng thời gian — kéo xuống để đọc lại toàn bộ câu chuyện.
+          Ghi lại hành trình của hai bạn như một dòng thời gian - kéo xuống để đọc lại toàn bộ câu chuyện.
         </p>
 
         {/* Form tạo mới */}
@@ -228,7 +228,7 @@ export default function JourneyPage() {
                 onChange={(e) => setVisibility(e.target.checked ? "private" : "shared")}
               />
               <label htmlFor="jv-private" className="text-sm" style={{ color: "#292524" }}>
-                Chỉ mình tôi (và điều phối viên) xem — ẩn với người đồng hành
+                Chỉ mình tôi (và điều phối viên) xem - ẩn với người đồng hành
               </label>
             </div>
 

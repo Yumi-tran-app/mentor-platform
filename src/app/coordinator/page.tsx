@@ -131,7 +131,7 @@ export default function CoordinatorPage() {
                   style={{ borderColor: "#F5F2EC" }}
                 >
                   <span className="text-sm" style={{ color: "#292524" }}>
-                    Fit: {m.fitScore?.toFixed(2) ?? "—"} · #{m.id.slice(0, 8)}
+                    Fit: {m.fitScore?.toFixed(2) ?? " - "} · #{m.id.slice(0, 8)}
                   </span>
                   <Badge color="#F2A93B">{m.status}</Badge>
                 </div>
@@ -307,7 +307,7 @@ export default function CoordinatorPage() {
                     {s.message}
                   </p>
                   <span className="text-xs" style={{ color: "#94A3B8" }}>
-                    Match #{s.matchId?.slice(0, 8) ?? "—"}
+                    Match #{s.matchId?.slice(0, 8) ?? " - "}
                   </span>
                 </div>
               ))}

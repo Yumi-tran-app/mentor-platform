@@ -15,7 +15,7 @@ export type EmailPayload = {
 
 /**
  * Gửi email qua Resend. Nếu chưa cấu hình RESEND_API_KEY thì
- * chỉ log ra console (không gửi thật) — để dev không bị lỗi.
+ * chỉ log ra console (không gửi thật) - để dev không bị lỗi.
  */
 export async function sendEmail({ to, subject, text, html }: EmailPayload) {
   if (!resend) {
@@ -75,13 +75,13 @@ export function lateRegistrationEmailHtml(params: {
       </p>
       <p>
         Trong thời gian chờ đợi, bạn đừng bỏ lỡ cơ hội tham gia các hoạt động <strong>đào tạo (training)</strong> và
-        <strong> workshop</strong> do chương trình tổ chức — để trang bị trước kiến thức, mở rộng mạng lưới và sẵn sàng cho
+        <strong> workshop</strong> do chương trình tổ chức - để trang bị trước kiến thức, mở rộng mạng lưới và sẵn sàng cho
         hành trình đồng hành sắp tới.
       </p>
       <p style="margin-top:20px">
         Một lần nữa, cảm ơn sự nhiệt huyết của bạn. Chúng tôi rất mong được gặp bạn trong mùa mentoring tiếp theo!
       </p>
-      <p style="margin-top:24px;color:#94A3B8;font-size:12px">— Ban tổ chức Tre Việt Mentoring</p>
+      <p style="margin-top:24px;color:#94A3B8;font-size:12px"> - Ban tổ chức Tre Việt Mentoring</p>
     </div>
   `;
 }

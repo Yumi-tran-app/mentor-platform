@@ -112,7 +112,7 @@ export default function CalendarPage() {
                 onChange={(e) => setMatchId(e.target.value)}
                 required
               >
-                <option value="">— Chọn cặp —</option>
+                <option value="">- Chọn cặp -</option>
                 {matches.map((m) => (
                   <option key={m.id} value={m.id}>
                     {m.mentorApplication.user.fullName} ↔ {m.menteeApplication.user.fullName}

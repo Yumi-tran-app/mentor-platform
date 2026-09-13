@@ -70,7 +70,7 @@ export default function AdminSeasonsPage() {
     await load();
   }
 
-  const fmt = (s: string | null) => (s ? new Date(s).toLocaleDateString("vi-VN") : "—");
+  const fmt = (s: string | null) => (s ? new Date(s).toLocaleDateString("vi-VN") : " - ");
   const inputCls = "w-full px-3 py-2 rounded-lg border text-sm";
   const inputStyle = { borderColor: "#E5E0D5", color: "#292524" };
 

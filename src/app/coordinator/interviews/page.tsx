@@ -185,7 +185,7 @@ export default function InterviewsPage() {
           </h2>
           <div className="space-y-3">
             <Field label="Tên buổi *">
-              <input className={inputCls} value={title} onChange={(e) => setTitle(e.target.value)} placeholder="VD: Buổi định hướng chương trình — Mùa 2" />
+              <input className={inputCls} value={title} onChange={(e) => setTitle(e.target.value)} placeholder="VD: Buổi định hướng chương trình - Mùa 2" />
             </Field>
             <Field label="Mô tả">
               <textarea className={inputCls} rows={2} value={description} onChange={(e) => setDescription(e.target.value)} />

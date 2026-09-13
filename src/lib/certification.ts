@@ -148,7 +148,7 @@ export async function resolveApplicantAudience(
 }
 
 /**
- * Lộ trình MENTORING (quá trình đồng hành) — cho cả mentor & mentee.
+ * Lộ trình MENTORING (quá trình đồng hành) - cho cả mentor & mentee.
  * Flow: Đăng ký → Tham gia đào tạo → Tham gia mentoring → Hoàn thành mentoring → Cấp chứng nhận.
  */
 export async function getMentoringJourney(
@@ -254,7 +254,7 @@ export async function getMentoringJourney(
 }
 
 /**
- * Lộ trình mentoring V2 — tách Mùa (Cohort) vs từng Mentee + timeline.
+ * Lộ trình mentoring V2 - tách Mùa (Cohort) vs từng Mentee + timeline.
  * Dùng cho trang /journey tái cấu trúc IA.
  */
 export async function getJourneyV2(
@@ -323,7 +323,7 @@ export async function getJourneyV2(
     : await prisma.menteeApplication.findMany({ where: { userId, seasonId }, select: { submittedAt: true } });
   const registeredAt = myApplications.find((a) => a.submittedAt)?.submittedAt ?? null;
 
-  // Số buổi mục tiêu theo mùa (SeasonCriteria) — fallback 6
+  // Số buổi mục tiêu theo mùa (SeasonCriteria) - fallback 6
   const sessionCriterion = await prisma.seasonCriteria.findUnique({
     where: { seasonId_key: { seasonId, key: "mentoring_session_target" } },
   });
@@ -336,7 +336,7 @@ export async function getJourneyV2(
       if (ms.key === "registration" && registeredAt) { done = true; doneAt = registeredAt; }
       else if (ms.key === "training" && trainingStatus.eligible) { done = true; doneAt = null; }
       else if (ms.key === "mentoring" || ms.key === "matching") {
-        // Giai đoạn mentoring 9 tháng — chỉ hoàn thành khi match đã kết thúc (ended)
+        // Giai đoạn mentoring 9 tháng - chỉ hoàn thành khi match đã kết thúc (ended)
         const anyEnded = matches.some((m) => m.status === "ended");
         if (anyEnded) {
           done = true;

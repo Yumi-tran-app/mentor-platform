@@ -127,7 +127,7 @@ export default function DashboardPage() {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <StatItem
                 label="Đã tham gia"
-                value={stats.stats.joinedAt ? formatDate(stats.stats.joinedAt) : "—"}
+                value={stats.stats.joinedAt ? formatDate(stats.stats.joinedAt) : " - "}
               />
               <StatItem label="Hoàn thành (nhật ký hành trình)" value={stats.stats.journeys ?? 0} />
               <StatItem label="Tham gia (khoá đào tạo)" value={stats.stats.trainingCourses ?? 0} />
@@ -147,7 +147,7 @@ export default function DashboardPage() {
 
         {staff ? (
           <p className="text-sm" style={{ color: "#94A3B8" }}>
-            Bạn là {roleGreeting} — không cần đăng ký vai trò mentor/mentee.
+            Bạn là {roleGreeting} - không cần đăng ký vai trò mentor/mentee.
           </p>
         ) : !hasMentorApp && !hasMenteeApp ? (
           <p className="text-sm" style={{ color: "#94A3B8" }}>
@@ -212,7 +212,7 @@ function StatusRow({
       <div className="flex items-center gap-3">
         <Badge color={color}>{roleLabel}</Badge>
         <div>
-          <p className="text-sm font-medium" style={{ color: "#292524" }}>{season ?? "—"}</p>
+          <p className="text-sm font-medium" style={{ color: "#292524" }}>{season ?? "-"}</p>
           <p className="text-xs" style={{ color: "#94A3B8" }}>
             {submittedAt ? `Nộp ${new Date(submittedAt).toLocaleDateString("vi-VN")}` : "Chưa nộp"}
           </p>

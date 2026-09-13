@@ -224,14 +224,14 @@ export default function MentorOnboardingPage() {
               <div>
                 <label className={labelCls}>Giới tính</label>
                 <select className={inputCls} style={inputStyle} value={form.gender} onChange={(e) => set("gender", e.target.value)}>
-                  <option value="">— Chọn —</option>
+                  <option value="">- Chọn -</option>
                   <option value="nam">Nam</option>
                   <option value="nữ">Nữ</option>
                   <option value="khác">Khác</option>
                 </select>
               </div>
               <div><label className={labelCls}>Năm sinh</label><input type="number" className={inputCls} style={inputStyle} value={form.birthYear} min={1950} max={2010} onChange={(e) => set("birthYear", e.target.value)} placeholder="VD: 1985" /></div>
-              <div><label className={labelCls}>Thành phố hiện tại</label><select className={inputCls} style={inputStyle} value={form.city} onChange={(e) => set("city", e.target.value)}><option value="">— Chọn tỉnh/thành —</option>{VIETNAM_PROVINCES.map((c) => <option key={c} value={c}>{c}</option>)}</select></div>
+              <div><label className={labelCls}>Thành phố hiện tại</label><select className={inputCls} style={inputStyle} value={form.city} onChange={(e) => set("city", e.target.value)}><option value="">- Chọn tỉnh/thành -</option>{VIETNAM_PROVINCES.map((c) => <option key={c} value={c}>{c}</option>)}</select></div>
               <div><label className={labelCls}>Email *</label><input type="email" className={inputCls} style={inputStyle} value={form.email} onChange={(e) => set("email", e.target.value)} /></div>
               <div><label className={labelCls}>Số điện thoại *</label><input className={inputCls} style={inputStyle} value={form.phone} onChange={(e) => set("phone", e.target.value)} /></div>
               <div className="sm:col-span-2"><label className={labelCls}>LinkedIn URL</label><input className={inputCls} style={inputStyle} value={form.linkedin} onChange={(e) => set("linkedin", e.target.value)} placeholder="https://linkedin.com/in/..." /></div>
@@ -255,7 +255,7 @@ export default function MentorOnboardingPage() {
               </div>
               <div><label className={labelCls}>Ngành nghề chính *</label>
                 <select className={inputCls} style={inputStyle} value={form.industry} onChange={(e) => set("industry", e.target.value)}>
-                  <option value="">— Chọn chuyên ngành —</option>
+                  <option value="">- Chọn chuyên ngành -</option>
                   {INDUSTRY_GROUPS.map((g) => (
                     <optgroup key={g.group} label={g.group}>
                       {g.options.map((i) => (

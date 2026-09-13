@@ -10,7 +10,7 @@ import {
 } from "@/lib/roster";
 
 /**
- * GET /api/admin/roster — danh sách mentor/mentee (JSON) để hiển thị bảng.
+ * GET /api/admin/roster - danh sách mentor/mentee (JSON) để hiển thị bảng.
  * Query: ?type=mentor|mentee (mặc định mentor)
  */
 export const GET = withErrorHandling(async (req: Request) => {

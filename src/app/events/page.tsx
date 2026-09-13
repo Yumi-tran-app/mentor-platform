@@ -73,7 +73,7 @@ export default function EventsPage() {
   }
 
   const money = (n: number) => (n > 0 ? n.toLocaleString("vi-VN") + "đ" : "Miễn phí");
-  const fmt = (s: string | null) => (s ? new Date(s).toLocaleString("vi-VN") : "—");
+  const fmt = (s: string | null) => (s ? new Date(s).toLocaleString("vi-VN") : " - ");
 
   return (
     <AppShell title="Workshop / Training">

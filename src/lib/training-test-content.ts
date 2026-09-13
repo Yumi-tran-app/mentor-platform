@@ -12,7 +12,7 @@ export type TestQuestion = {
   sampleAnswer?: string; // tự luận: gợi ý chấm
 };
 
-export const MENTOR_TEST_TITLE = "Bài kiểm tra mentor — Kiểm tra & chứng nhận";
+export const MENTOR_TEST_TITLE = "Bài kiểm tra mentor - Kiểm tra & chứng nhận";
 
 export const MENTOR_PASS_SCORE = 70; // % đạt tối thiểu
 

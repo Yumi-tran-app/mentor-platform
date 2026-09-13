@@ -56,7 +56,7 @@ export async function POST(
       return NextResponse.json({ match: { status: "ended" } });
     }
 
-    // Chấp nhận — đúng thứ tự state machine:
+    // Chấp nhận - đúng thứ tự state machine:
     // proposed_to_parties -> (mentor) -> mentor_accepted -> (mentee) -> mutual_accepted
     if (match.status === "proposed_to_parties") {
       if (isMentor) {

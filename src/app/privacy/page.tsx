@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Chính sách bảo mật & Điều khoản — Tre Việt Mentoring",
+  title: "Chính sách bảo mật & Điều khoản - Tre Việt Mentoring",
   description:
     "Chính sách bảo vệ dữ liệu cá nhân và điều khoản sử dụng của Tre Việt Mentoring.",
 };
@@ -29,7 +29,7 @@ export default function PrivacyPage() {
           </p>
           <p>
             Chương trình (bao gồm nền tảng website, diễn đàn cộng đồng và mọi hoạt động liên quan) được
-            vận hành bởi <b>Công ty TNHH Cloud &amp; Coral</b> — mã số thuế <b>0318906357</b>, địa chỉ 191 Hai Bà Trưng,
+            vận hành bởi <b>Công ty TNHH Cloud &amp; Coral</b> - mã số thuế <b>0318906357</b>, địa chỉ 191 Hai Bà Trưng,
             Phường Xuân Hoà, TP. Hồ Chí Minh. Cloud &amp; Coral là chủ thể pháp lý chịu trách nhiệm về việc thu thập,
             xử lý và bảo vệ dữ liệu cá nhân trên nền tảng này.
           </p>

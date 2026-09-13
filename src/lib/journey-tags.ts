@@ -1,5 +1,5 @@
 /**
- * Nhật ký hành trình — hệ thống nhãn (tags).
+ * Nhật ký hành trình - hệ thống nhãn (tags).
  * Người dùng viết tự do, sau đó gắn 1 hoặc nhiều nhãn trước khi lưu.
  * Có 3 nhãn gợi ý + cho phép thêm nhãn tuỳ chỉnh.
  */

@@ -83,7 +83,7 @@ export default function DiscoverPage() {
   }, []);
 
   function ph(json: any, key: string): string {
-    return json?.[key] ?? "—";
+    return json?.[key] ?? " - ";
   }
 
   async function requestConnect(targetId: string) {
@@ -187,7 +187,7 @@ export default function DiscoverPage() {
                   </div>
                 </div>
                 <div className="space-y-1 text-sm" style={{ color: "#292524" }}>
-                  <p className="flex items-center gap-1.5"><LineIcon name="pin" size={14} /> {m.city || ph(m.profileJson, "city") || "—"}</p>
+                  <p className="flex items-center gap-1.5"><LineIcon name="pin" size={14} /> {m.city || ph(m.profileJson, "city") || " - "}</p>
                 </div>
                 {m.needs?.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-2">
@@ -223,10 +223,10 @@ export default function DiscoverPage() {
               <div className="space-y-1 text-sm" style={{ color: "#292524" }}>
                 <p className="flex items-center gap-1.5"><LineIcon name="briefcase" size={14} /> {ph(m.professionalJson, "company")}</p>
                 <p className="flex items-center gap-1.5"><LineIcon name="clock" size={14} /> {ph(m.professionalJson, "yearsExperience")} năm KN</p>
-                <p className="flex items-center gap-1.5"><LineIcon name="pin" size={14} /> {m.city || ph(m.identityJson, "city") || "—"}</p>
+                <p className="flex items-center gap-1.5"><LineIcon name="pin" size={14} /> {m.city || ph(m.identityJson, "city") || " - "}</p>
                 <p>
                   <span className="inline-flex items-center gap-1"><LineIcon name="users" size={14} /> Slot:</span> {m.connected ?? 0} đã kết nối /{" "}
-                  {m.capacityMax} · còn {m.slotsLeft ?? "—"} chỗ
+                  {m.capacityMax} · còn {m.slotsLeft ?? " - "} chỗ
                   {m.pendingCount ? ` · ${m.pendingCount} đang chờ` : ""}
                 </p>
                 {m.certified === false && (
@@ -278,9 +278,9 @@ export default function DiscoverPage() {
           </div>
           <div className="space-y-2 text-sm" style={{ color: "#292524" }}>
             <p><b>Kinh nghiệm:</b> {ph(selectedMentor.professionalJson, "yearsExperience")} năm · Quản lý {ph(selectedMentor.professionalJson, "yearsManagement")} năm</p>
-            <p><b>Ngành:</b> {selectedMentor.industry ?? "—"}</p>
-            <p><b>Thành phố:</b> {selectedMentor.city || ph(selectedMentor.identityJson, "city") || "—"}</p>
-            <p><b>Bằng cấp:</b> {ph(selectedMentor.professionalJson, "degree") || "—"}</p>
+            <p><b>Ngành:</b> {selectedMentor.industry ?? " - "}</p>
+            <p><b>Thành phố:</b> {selectedMentor.city || ph(selectedMentor.identityJson, "city") || " - "}</p>
+            <p><b>Bằng cấp:</b> {ph(selectedMentor.professionalJson, "degree") || " - "}</p>
           </div>
           {selectedMentor.readinessJson?.reason && (
             <div className="mt-3 p-3 rounded-lg italic text-sm" style={{ background: "#F2F9F4", color: "#292524" }}>
@@ -308,8 +308,8 @@ export default function DiscoverPage() {
             </div>
           </div>
           <div className="space-y-2 text-sm" style={{ color: "#292524" }}>
-            <p><b>Thành phố:</b> {selectedMentee.city || ph(selectedMentee.profileJson, "city") || "—"}</p>
-            <p><b>Năm học:</b> {ph(selectedMentee.profileJson, "yearOfStudy") || "—"}</p>
+            <p><b>Thành phố:</b> {selectedMentee.city || ph(selectedMentee.profileJson, "city") || " - "}</p>
+            <p><b>Năm học:</b> {ph(selectedMentee.profileJson, "yearOfStudy") || " - "}</p>
           </div>
           {selectedMentee.needs?.length > 0 && (
             <div className="mt-2 flex flex-wrap gap-2">

@@ -39,7 +39,7 @@ export default function TrainingPage() {
     await load();
   }
 
-  // Lấy trạng thái bài test (cho mentor & mentee) — hiển thị bên trong module "Kiểm tra & chứng nhận"
+  // Lấy trạng thái bài test (cho mentor & mentee) - hiển thị bên trong module "Kiểm tra & chứng nhận"
   useEffect(() => {
     if (!audience) return;
     fetch("/api/training/test")
@@ -269,7 +269,7 @@ function EventsTab() {
   }
 
   const money = (n: number) => (n > 0 ? n.toLocaleString("vi-VN") + "đ" : "Miễn phí");
-  const fmt = (s: string | null) => (s ? new Date(s).toLocaleString("vi-VN") : "—");
+  const fmt = (s: string | null) => (s ? new Date(s).toLocaleString("vi-VN") : " - ");
 
   return (
     <div>

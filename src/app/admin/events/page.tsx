@@ -166,7 +166,7 @@ export default function AdminEventsPage() {
     load();
   }
 
-  const fmt = (s: string | null) => (s ? new Date(s).toLocaleString("vi-VN") : "—");
+  const fmt = (s: string | null) => (s ? new Date(s).toLocaleString("vi-VN") : " - ");
   const money = (n: number) => (n > 0 ? n.toLocaleString("vi-VN") + "đ" : "Miễn phí");
 
   return (
@@ -306,7 +306,7 @@ export default function AdminEventsPage() {
             <p><b>Tên:</b> {detail.event.title}</p>
             <p><b>Trạng thái:</b> <Badge color={STATUS_COLOR[detail.event.status]}>{STATUS_LABEL[detail.event.status]}</Badge></p>
             <p><b>Thời gian:</b> {fmt(detail.event.startAt)} → {fmt(detail.event.endAt)}</p>
-            <p><b>Địa điểm:</b> {detail.event.location || "—"} · <b>Zoom:</b> {detail.event.zoomLink || "—"}</p>
+            <p><b>Địa điểm:</b> {detail.event.location || " - "} · <b>Zoom:</b> {detail.event.zoomLink || " - "}</p>
             <p><b>Giá:</b> {money(detail.event.price)}</p>
             <p><b>Đăng ký:</b> {detail.filled} · <b>Check-in:</b> {detail.checkedIn}/{detail.checkedTotal}</p>
             {detail.event.checkInCode && (
@@ -341,7 +341,7 @@ export default function AdminEventsPage() {
                   className="flex-1 px-3 py-1.5 rounded-lg border text-xs"
                   style={{ borderColor: "#E5E0D5", color: "#292524" }}
                 >
-                  <option value="">— Chọn mentor làm diễn giả —</option>
+                  <option value="">- Chọn mentor làm diễn giả -</option>
                   {mentors.map((m) => (
                     <option key={m.userId} value={m.userId}>
                       {m.fullName} ({m.email})

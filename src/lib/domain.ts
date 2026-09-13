@@ -7,7 +7,7 @@ import type {
 } from "@prisma/client";
 
 /**
- * Tầng domain service — mọi transition trạng thái đều đi qua đây,
+ * Tầng domain service - mọi transition trạng thái đều đi qua đây,
  * KHÔNG update trực tiếp từ nhiều nơi, để đảm bảo side-effect luôn chạy đủ:
  * - requeue mentee khi match kết thúc
  * - giải phóng capacity của mentor
@@ -328,7 +328,7 @@ export function computeFitScore(
     life_transition: ["life_transition", "career"],
   };
   if (mentorIndustry && needs.length > 0) {
-    // Nhu cầu nào "hợp" với ngành mentor (map thô) — nếu mentor ghi rõ ngành
+    // Nhu cầu nào "hợp" với ngành mentor (map thô) - nếu mentor ghi rõ ngành
     // khớp với need category thì tính điểm; về bản chất đây là heuristic.
     const needSet = new Set(needs.map((n) => n.toLowerCase()));
     const relevant = needs.filter((n) => {

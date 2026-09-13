@@ -26,7 +26,7 @@ const SeasonSchema = z.object({
 });
 
 /**
- * GET /api/admin/seasons — danh sách mùa (quản trị).
+ * GET /api/admin/seasons - danh sách mùa (quản trị).
  */
 export const GET = withErrorHandling(async (req: Request) => {
   await requireStaff();
@@ -38,7 +38,7 @@ export const GET = withErrorHandling(async (req: Request) => {
 });
 
 /**
- * POST /api/admin/seasons — tạo mùa mới + deadline + auto sinh milestones chuẩn.
+ * POST /api/admin/seasons - tạo mùa mới + deadline + auto sinh milestones chuẩn.
  */
 export const POST = withErrorHandling(async (req: Request) => {
   const user = await requireStaff();
