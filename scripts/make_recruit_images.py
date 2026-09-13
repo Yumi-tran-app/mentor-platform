@@ -105,30 +105,57 @@ def make_mentor():
     h = H_MENTOR
     img, d = base(h)
     logo(d)
-    y = 128
+    y = 112
     y = pill(d, "TUYỂN MENTOR · MÙA 1", W//2, y, bg=TEAL, fg=WHITE, sz=28)
-    # tiêu đề chính (gọn 1 dòng)
-    d.multiline_text(
-        (W//2, y), "Kiến tạo di sản nghề nghiệp",
-        font=font(54, True), fill=WHITE, anchor="ma", align="center")
-    y += 138
-    # dòng phụ (lời mời) - 2 dòng, ngắt đúng sau dấu hai chấm
-    sub = "Lời mời đến các anh chị đang làm việc trong ngành Tâm lý & Nhân sự:\ndẫn dắt thế hệ gắn kết và phát triển con người trong tương lai."
-    d.multiline_text((W//2, y), sub, font=font(27, False), fill=MUTED,
-                     anchor="ma", align="center", spacing=8)
-    y += 116
-    # điểm chính (canh giữa cụm bullet + text), nhịp dòng đều với lời mời
+
+    # đo chiều cao thật các khối để canh đều khoảng cách
+    f_title = font(54, True)
+    f_sub = font(27, False)
+    f_it = font(26, False)
+    title_lines = ["Kiến tạo di sản nghề nghiệp"]
+    sub_lines = ["Lời mời đến các anh chị đang làm việc trong ngành Tâm lý & Nhân sự:",
+                 "dẫn dắt thế hệ gắn kết và phát triển con người trong tương lai."]
     items = ["Rèn luyện kỹ năng đồng hành và chia sẻ giá trị chuyên môn",
              "Kết nối mạng lưới chuyên gia cùng ngành"]
-    f_it = font(26, False)
+
+    def block_h(lines, f, spacing):
+        total = 0
+        for ln in lines:
+            _, top, _, bottom = d.textbbox((0, 0), ln, font=f)
+            total += bottom - top
+        return total + spacing * (len(lines) - 1)
+
+    title_h = block_h(title_lines, f_title, 0)
+    sub_h = block_h(sub_lines, f_sub, 8)
+    items_h = block_h(items, f_it, 22)  # 22 = khoảng bullet
+
+    # vùng khả dụng giữa pill và CTA
+    cta_top = h - 100
+    gap_avail = cta_top - y - 24  # 24 = khoảng hở an toàn trên CTA
+    total_content = title_h + sub_h + items_h
+    # 4 khoảng cách đều: trên-title, title-sub, sub-items, items-cta
+    n_gaps = 4
+    gap = max(24, (gap_avail - total_content) / n_gaps)
+
+    cy = y + gap
+    d.multiline_text((W//2, cy), "\n".join(title_lines), font=f_title,
+                     fill=WHITE, anchor="ma", align="center")
+    cy += title_h + gap
+
+    d.multiline_text((W//2, cy), "\n".join(sub_lines), font=f_sub,
+                     fill=MUTED, anchor="ma", align="center", spacing=8)
+    cy += sub_h + gap
+
+    # điểm chính (canh giữa cụm bullet + text)
     for it in items:
         tw = d.textlength(it, font=f_it)
         total = 22 + tw
         start_x = (W - total) / 2
-        cy = y
-        d.ellipse([start_x, cy-22, start_x+13, cy-9], fill=TEAL_BRIGHT)
-        d.text((start_x+23, cy-16), it, font=f_it, fill=WHITE, anchor="lm")
-        y += 58
+        _, top, _, bottom = d.textbbox((0, 0), it, font=f_it)
+        d.ellipse([start_x, cy - 22, start_x + 13, cy - 9], fill=TEAL_BRIGHT)
+        d.text((start_x + 23, cy - ((bottom-top)//2) - 6), it, font=f_it, fill=WHITE, anchor="lm")
+        cy += (bottom - top) + 22
+
     # nút CTA
     btn = "Trở thành Người đồng hành"
     fb = font(30, True)
