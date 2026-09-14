@@ -77,13 +77,35 @@ export default function PrivacyPage() {
             <li>Khi bạn đồng ý (ví dụ: chia sẻ thông tin với Mentor/Mentee trong cặp được ghép).</li>
             <li>Khi có yêu cầu của cơ quan nhà nước có thẩm quyền theo quy định pháp luật.</li>
           </ul>
+          <p>
+            Để vận hành nền tảng, chúng tôi sử dụng các đơn vị xử lý dữ liệu (Data Processor) sau:
+          </p>
+          <ul>
+            <li><b>Clerk</b> – xác thực và quản lý tài khoản người dùng.</li>
+            <li><b>Vercel</b> – lưu trữ và phân phối nền tảng web.</li>
+            <li><b>Neon (PostgreSQL)</b> – cơ sở dữ liệu lưu trữ hồ sơ và nội dung chương trình.</li>
+            <li><b>Resend</b> – dịch vụ gửi email thông báo.</li>
+          </ul>
+          <p>
+            Các bên xử lý này chỉ được phép xử lý dữ liệu theo chỉ đạo của chúng tôi, cho đúng mục đích đã nêu,
+            và có nghĩa vụ bảo vệ dữ liệu cá nhân theo hợp đồng/thỏa thuận tương ứng.
+          </p>
         </Section>
 
         <Section title="6. Bảo mật & lưu trữ dữ liệu">
           <p>
             Chúng tôi áp dụng các biện pháp kỹ thuật và tổ chức phù hợp để bảo vệ dữ liệu, bao gồm mã hóa
-            khi truyền tải, kiểm soát truy cập theo vai trò, và hạn chế tối đa việc tiếp cận dữ liệu nhạy cảm.
-            Dữ liệu được lưu trữ trong thời gian cần thiết cho mục đích đã nêu và theo quy định pháp luật.
+            khi truyền tải, kiểm soát truy cập theo vai trò, và hạn chế tối đa việc tiếp cận dữ liệu.
+          </p>
+          <p>
+            Dữ liệu cá nhân được lưu trữ trong suốt thời gian bạn tham gia chương trình và được xóa hoặc ẩn danh
+            trong vòng <b>12 tháng</b> kể từ khi bạn ngừng tham gia, trừ khi pháp luật yêu cầu lưu giữ lâu hơn.
+          </p>
+          <p>
+            Nền tảng được thiết kế cho mục đích định hướng nghề nghiệp và đồng hành cộng đồng. Chúng tôi <b>không
+            yêu cầu</b> bạn cung cấp dữ liệu cá nhân nhạy cảm (như quan điểm chính trị, tôn giáo, tình trạng sức khỏe,
+            hay đời sống tình dục). Nếu bạn tự nguyện chia sẻ các nội dung này trong nhật ký, phản tư hoặc tin nhắn,
+            chúng tôi sẽ bảo vệ chúng với mức độ bảo mật cao nhất và chỉ xử lý trong phạm vi tối thiểu cần thiết.
           </p>
         </Section>
 
