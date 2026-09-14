@@ -203,7 +203,7 @@ export default function Home() {
               <div className="inline-block px-4 py-1.5 bg-amber-500/20 rounded-full text-amber-400 font-medium tracking-wide text-sm border border-amber-500/30">
                 DÀNH CHO MENTOR
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold">Để lại di sản,<br />Nâng tầm lãnh đạo.</h2>
+              <h2 className="text-3xl md:text-4xl font-bold">Chia sẻ chuyên môn,<br />Nâng tầm bản lĩnh.</h2>
               <ul className="space-y-6">
                 <li className="flex items-start gap-4">
                   <div className="mt-1 bg-amber-500/20 p-2 rounded-lg text-amber-400">
