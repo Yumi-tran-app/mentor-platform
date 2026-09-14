@@ -45,7 +45,7 @@ const SECTIONS: Record<Role, { title: string; intro: string; steps: { h: string;
       { h: "1. Quản lý điều phối", body: "Mục Quản lý điều phối là bảng tổng quan: danh sách ghép cặp, các yêu cầu tạm dừng, yêu cầu hỗ trợ đang chờ xử lý." },
       { h: "2. Ghép cặp (Matching)", body: "Dùng mục Ghép cặp để xem hàng đợi mentee và đề xuất mentor phù hợp dựa trên nhu cầu và chuyên ngành." },
       { h: "3. Duyệt đơn đăng ký", body: "Xem và duyệt các đơn đăng ký mentor/mentee trong từng mùa tuyển sinh." },
-      { h: "4. Đăng & chỉnh hoạt động cộng đồng", body: "Mục Hoạt động cộng đồng để đăng tin chính thức cho trang tin (tuyển sinh, sự kiện, workshop). Bạn có thể chỉnh sửa hoặc gỡ bài đã đăng." },
+      { h: "4. Đăng & chỉnh hoạt động cộng đồng", body: "Mục Hoạt động cộng đồng để đăng tin chính thức (tuyển sinh, sự kiện, workshop). Bạn có thể chỉnh sửa hoặc gỡ bài đã đăng." },
       { h: "5. Thống kê phản tư", body: "Mục Thống kê phản tư cho thấy sức khoẻ các cặp theo từng tháng: bao nhiêu cặp đang kết nối tốt, bao nhiêu cần hỗ trợ. Ưu tiên xử lý cặp 'Cần hỗ trợ'." },
       { h: "6. Xử lý yêu cầu hỗ trợ & tạm dừng", body: "Khi mentee/mentor phản tư 'Cần hỗ trợ' hoặc yêu cầu tạm dừng, hệ thống gửi thông báo. Hãy liên hệ và tạo buổi trao đổi kịp thời." },
       { h: "7. Quản lý phỏng vấn & buổi định hướng", body: "Tạo buổi trao đổi/định hướng cho các cặp gặp khó khăn, gửi lời mời qua email từ hệ thống." },

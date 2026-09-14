@@ -52,7 +52,7 @@ export default function ActivityDetail() {
             <span className="font-bold text-teal-700 leading-tight">{ORG_NAME}</span>
           </Link>
           <Link href="/activities" className="text-sm font-semibold text-teal-700 hover:opacity-80">
-            ← Trang tin
+            ← Hoạt động cộng đồng
           </Link>
         </div>
       </header>
@@ -69,7 +69,7 @@ export default function ActivityDetail() {
               href="/activities"
               className="inline-block mt-6 text-teal-700 font-semibold hover:opacity-80"
             >
-              ← Quay lại Trang tin
+              ← Quay lại Hoạt động cộng đồng
             </Link>
           </div>
         ) : (

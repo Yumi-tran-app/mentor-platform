@@ -67,7 +67,7 @@ export default function ActivitiesIndex() {
         {/* HEADING */}
         <div className="mb-10">
           <div className="inline-block px-4 py-2 bg-teal-100 text-teal-700 font-semibold rounded-full text-sm mb-4">
-            TRANG TIN
+            HOẠT ĐỘNG CỘNG ĐỒNG
           </div>
           <h1 className="text-3xl md:text-4xl font-extrabold text-stone-900">
             Hoạt động cộng đồng

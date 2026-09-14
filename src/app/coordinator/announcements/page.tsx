@@ -186,7 +186,7 @@ export default function CoordinatorAnnouncements() {
 
           <div>
             <label className="block text-sm font-medium mb-1" style={{ color: "#292524" }}>
-              Tóm tắt (hiển thị trên trang tin)
+              Tóm tắt (hiển thị trên hoạt động cộng đồng)
             </label>
             <textarea
               className="w-full px-3 py-2 rounded-lg border text-sm"
