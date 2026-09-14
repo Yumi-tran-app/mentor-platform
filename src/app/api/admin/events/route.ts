@@ -16,6 +16,7 @@ const EventSchema = z.object({
   zoomLink: z.string().optional().nullable(),
   price: z.number().int().min(0).default(0),
   capacity: z.number().int().min(0).default(0),
+  imageUrl: z.string().url().optional().nullable().or(z.literal("")),
 });
 
 function genCheckInCode(): string {
@@ -30,9 +31,7 @@ function genCheckInCode(): string {
  */
 export const GET = withErrorHandling(async (req: Request) => {
   const user = await requireStaff();
-  if (user.role !== "admin") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
+  void user;
   const seasonId = await getActiveSeasonId();
   const url = new URL(req.url);
   const status = url.searchParams.get("status");
@@ -73,10 +72,7 @@ export const GET = withErrorHandling(async (req: Request) => {
  * body: { ..., action: "draft" | "publish" }
  */
 export const POST = withErrorHandling(async (req: Request) => {
-  const user = await requireStaff();
-  if (user.role !== "admin") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
+  await requireStaff();
   const seasonId = await getActiveSeasonId();
   if (!seasonId) return NextResponse.json({ error: "No active season" }, { status: 400 });
 
@@ -98,6 +94,7 @@ export const POST = withErrorHandling(async (req: Request) => {
       zoomLink: parsed.zoomLink,
       price: parsed.price,
       capacity: parsed.capacity,
+      imageUrl: parsed.imageUrl || null,
       required: false,
       // tự sinh mã check-in/QR khi publish
       checkInCode: publish ? genCheckInCode() : null,

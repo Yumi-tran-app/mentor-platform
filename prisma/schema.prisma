@@ -632,6 +632,7 @@ model TrainingModule {
   price       Int       @default(0) // giá vé (VND), 0 = miễn phí
   capacity    Int       @default(0) @map("capacity") // 0 = không giới hạn
   checkInCode String?   @unique @map("check_in_code") // mã check-in / QR cho event
+  imageUrl    String?   @map("image_url") // ảnh thiết kế / banner cho workshop
 
   progress      TrainingProgress[]
   registrations TrainingRegistration[]

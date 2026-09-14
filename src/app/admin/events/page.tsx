@@ -15,6 +15,7 @@ type EventItem = {
   zoomLink: string | null;
   price: number;
   capacity: number;
+  imageUrl: string | null;
   checkInCode: string | null;
   createdAt: string;
   _count: { registrations: number };
@@ -43,7 +44,7 @@ export default function AdminEventsPage() {
   // form state
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<EventItem | null>(null);
-  const [form, setForm] = useState({ title: "", description: "", audience: "all", startAt: "", endAt: "", location: "", zoomLink: "", price: 0, capacity: 0 });
+  const [form, setForm] = useState({ title: "", description: "", audience: "all", startAt: "", endAt: "", location: "", zoomLink: "", price: 0, capacity: 0, imageUrl: "" });
 
   // detail modal
   const [detail, setDetail] = useState<any>(null);
@@ -71,7 +72,7 @@ export default function AdminEventsPage() {
 
   function openCreate() {
     setEditing(null);
-    setForm({ title: "", description: "", audience: "all", startAt: "", endAt: "", location: "", zoomLink: "", price: 0, capacity: 0 });
+    setForm({ title: "", description: "", audience: "all", startAt: "", endAt: "", location: "", zoomLink: "", price: 0, capacity: 0, imageUrl: "" });
     setShowForm(true);
   }
 
@@ -87,6 +88,7 @@ export default function AdminEventsPage() {
       zoomLink: e.zoomLink ?? "",
       price: e.price,
       capacity: e.capacity,
+      imageUrl: e.imageUrl ?? "",
     });
     setShowForm(true);
   }
@@ -291,6 +293,14 @@ export default function AdminEventsPage() {
             <Field label="Giới hạn số lượng đăng ký (0 = không giới hạn)">
               <input type="number" className={inputCls} value={form.capacity} onChange={(e) => setForm({ ...form, capacity: Number(e.target.value) })} />
             </Field>
+            <Field label="Ảnh thiết kế / banner (URL)">
+              <input className={inputCls} value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} placeholder="https://..." />
+            </Field>
+            {form.imageUrl && (
+              <div className="rounded-lg overflow-hidden border" style={{ borderColor: "#E5E0D5" }}>
+                <img src={form.imageUrl} alt="Ảnh workshop" className="w-full h-40 object-cover" />
+              </div>
+            )}
             <div className="flex gap-3 pt-2">
               <Button variant="secondary" onClick={() => save("draft")}>Lưu nháp</Button>
               <Button onClick={() => save("publish")}>Xuất bản / Đăng</Button>
@@ -304,6 +314,11 @@ export default function AdminEventsPage() {
         <Modal title="Chi tiết Workshop/Training" onClose={() => setDetail(null)}>
           <div className="space-y-3 text-sm" style={{ color: "#292524" }}>
             <p><b>Tên:</b> {detail.event.title}</p>
+            {detail.event.imageUrl && (
+              <div className="rounded-lg overflow-hidden border" style={{ borderColor: "#E5E0D5" }}>
+                <img src={detail.event.imageUrl} alt={detail.event.title} className="w-full h-44 object-cover" />
+              </div>
+            )}
             <p><b>Trạng thái:</b> <Badge color={STATUS_COLOR[detail.event.status]}>{STATUS_LABEL[detail.event.status]}</Badge></p>
             <p><b>Thời gian:</b> {fmt(detail.event.startAt)} → {fmt(detail.event.endAt)}</p>
             <p><b>Địa điểm:</b> {detail.event.location || " - "} · <b>Zoom:</b> {detail.event.zoomLink || " - "}</p>

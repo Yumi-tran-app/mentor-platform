@@ -21,16 +21,14 @@ const PatchSchema = z.object({
   zoomLink: z.string().optional().nullable(),
   price: z.number().int().min(0).optional(),
   capacity: z.number().int().min(0).optional(),
+  imageUrl: z.string().url().optional().nullable().or(z.literal("")),
 });
 
 /**
  * GET /api/admin/events/[id] - chi tiết event: học viên đăng ký + tiến độ check-in.
  */
 export const GET = withErrorHandling(async (req: Request, ctx: any) => {
-  const user = await requireStaff();
-  if (user.role !== "admin") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
+  await requireStaff();
   const { id } = await ctx.params;
 
   const event = await prisma.trainingModule.findUnique({
@@ -55,10 +53,7 @@ export const GET = withErrorHandling(async (req: Request, ctx: any) => {
  * body: { ..., action?: "save" | "publish" | "close" }
  */
 export const PATCH = withErrorHandling(async (req: Request, ctx: any) => {
-  const user = await requireStaff();
-  if (user.role !== "admin") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
+  await requireStaff();
   const { id } = await ctx.params;
   const body = await req.json();
   const parsed = PatchSchema.parse(body);
@@ -76,6 +71,7 @@ export const PATCH = withErrorHandling(async (req: Request, ctx: any) => {
     ...(parsed.zoomLink !== undefined ? { zoomLink: parsed.zoomLink } : {}),
     ...(parsed.price !== undefined ? { price: parsed.price } : {}),
     ...(parsed.capacity !== undefined ? { capacity: parsed.capacity } : {}),
+    ...(parsed.imageUrl !== undefined ? { imageUrl: parsed.imageUrl || null } : {}),
   };
 
   if (body.action === "publish") {
@@ -93,10 +89,7 @@ export const PATCH = withErrorHandling(async (req: Request, ctx: any) => {
  * DELETE /api/admin/events/[id] - xóa event.
  */
 export const DELETE = withErrorHandling(async (req: Request, ctx: any) => {
-  const user = await requireStaff();
-  if (user.role !== "admin") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
+  await requireStaff();
   const { id } = await ctx.params;
   await prisma.trainingModule.delete({ where: { id } });
   return NextResponse.json({ ok: true });

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/auth";
+import { requireStaff } from "@/lib/auth";
 import { withErrorHandling } from "@/lib/api-helpers";
 
 const SpeakerSchema = z.object({
@@ -15,7 +15,7 @@ const SpeakerSchema = z.object({
  * Danh sách diễn giả của một khoá đào tạo/workshop.
  */
 export const GET = withErrorHandling(async (req: Request) => {
-  await requireAdmin();
+  await requireStaff();
   const url = new URL(req.url);
   const moduleId = url.searchParams.get("moduleId");
   if (!moduleId) {
@@ -36,7 +36,7 @@ export const GET = withErrorHandling(async (req: Request) => {
  * Gán một mentor làm diễn giả cho một khoá đào tạo.
  */
 export const POST = withErrorHandling(async (req: Request) => {
-  await requireAdmin();
+  await requireStaff();
   const body = await req.json();
   const { moduleId, userId, role } = SpeakerSchema.parse(body);
 
@@ -65,7 +65,7 @@ export const POST = withErrorHandling(async (req: Request) => {
  * Gỡ diễn giả khỏi khoá đào tạo.
  */
 export const DELETE = withErrorHandling(async (req: Request) => {
-  await requireAdmin();
+  await requireStaff();
   const url = new URL(req.url);
   const moduleId = url.searchParams.get("moduleId");
   const userId = url.searchParams.get("userId");
