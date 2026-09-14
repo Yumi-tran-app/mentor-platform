@@ -43,9 +43,19 @@ export default async function CertificateViewPage({
       : "đã hoàn thành xuất sắc Chương trình đào tạo & kiểm tra năng lực đồng hành, đủ điều kiện tham gia chương trình mentoring cộng đồng.";
 
   return (
-    <div style={{ minHeight: "100vh", background: "#134E4A", padding: 40, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 24 }}>
+    <>
+      <style>{`
+        @page { size: A4 portrait; margin: 0; }
+        @media print {
+          .cert-backdrop { background: #fff !important; padding: 0 !important; min-height: 100vh; }
+          .cert-back-link { display: none !important; }
+          .cert-card { width: 210mm !important; min-height: 297mm; border-radius: 0 !important; box-shadow: none !important; }
+        }
+      `}</style>
+      <div className="cert-backdrop" style={{ minHeight: "100vh", background: "#134E4A", padding: 40, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 24 }}>
       <Link
         href="/dashboard"
+        className="cert-back-link"
         style={{
           display: "inline-flex",
           alignItems: "center",
@@ -62,14 +72,18 @@ export default async function CertificateViewPage({
         ← Quay lại Tổng quan
       </Link>
       <div
+        className="cert-card"
         style={{
-          width: 1050,
+          width: 794,
+          minHeight: 1123,
           maxWidth: "100%",
-          borderRadius: 20,
-          overflow: "hidden",
-          boxShadow: "0 30px 60px rgba(0,0,0,.35)",
           background: "#F6F1E9",
           position: "relative",
+          overflow: "hidden",
+          boxShadow: "0 30px 60px rgba(0,0,0,.35)",
+          borderRadius: 20,
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         {/* Viền trang trí */}
@@ -82,7 +96,7 @@ export default async function CertificateViewPage({
             pointerEvents: "none",
           }}
         />
-        <div style={{ padding: "64px 48px 96px", textAlign: "center" }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", padding: "72px 64px 96px", textAlign: "center" }}>
           <img
             src="/images/logo-green-transparent.png"
             alt={cert.orgName}
@@ -139,5 +153,6 @@ export default async function CertificateViewPage({
         </div>
       </div>
     </div>
+    </>
   );
 }
