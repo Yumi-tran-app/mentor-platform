@@ -44,9 +44,11 @@ export default function ActivityDetail() {
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-full bg-teal-700 flex items-center justify-center text-white font-bold text-sm">
-              TVM
-            </div>
+            <img
+              src="/images/logo-green-transparent.png"
+              alt="Tre Việt Mentoring"
+              className="w-9 h-9 object-contain"
+            />
             <span className="font-bold text-teal-700 leading-tight">{ORG_NAME}</span>
           </Link>
           <Link href="/activities" className="text-sm font-semibold text-teal-700 hover:opacity-80">

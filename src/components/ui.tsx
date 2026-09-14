@@ -100,9 +100,11 @@ export function AppShell({
         <div className="px-5 py-6 border-b" style={{ borderColor: "rgba(255,255,255,.1)" }}>
           <Link href="/" className="block hover:opacity-80">
             <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white font-bold text-sm">
-                TVM
-              </div>
+              <img
+                src="/images/logo-white-transparent.png"
+                alt="Tre Việt Mentoring"
+                className="w-9 h-9 object-contain"
+              />
               <span className="font-bold text-sm leading-tight text-white">
                 Tre Việt
                 <br />

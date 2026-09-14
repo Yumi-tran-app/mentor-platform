@@ -14,9 +14,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <Link href="/" className="flex items-center gap-2 cursor-pointer">
-              <div className="w-10 h-10 rounded-full bg-teal-700 flex items-center justify-center text-white font-bold text-lg">
-                TVM
-              </div>
+              <img
+                src="/images/logo-green-transparent.png"
+                alt="Tre Việt Mentoring"
+                className="w-10 h-10 object-contain"
+              />
               <span className="font-bold text-lg tracking-tight text-teal-700 leading-tight">
                 {ORG_NAME}
               </span>
@@ -266,6 +268,13 @@ export default function Home() {
 
       {/* 8. FINAL CTA & FOOTER */}
       <footer className="pt-20 pb-10 border-t border-stone-800" style={{ background: "#134E4A" }}>
+        <div className="max-w-4xl mx-auto px-4 text-center mb-12">
+          <img
+            src="/images/logo-white-transparent.png"
+            alt="Tre Việt Mentoring"
+            className="h-12 w-auto mx-auto mb-4"
+          />
+        </div>
         <div className="max-w-4xl mx-auto px-4 text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Sẵn sàng cho bước tiến tiếp theo?</h2>
           <p className="text-stone-300 text-lg mb-8 max-w-2xl mx-auto">Tham gia cộng đồng những chuyên gia và người trẻ theo đuổi con đường tâm lý học &amp; quản trị nhân sự. Dù bạn là Mentor hay Mentee, luôn có vị trí dành cho bạn.</p>

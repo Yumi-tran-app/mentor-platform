@@ -5,6 +5,10 @@ import { ClerkProvider } from "@clerk/nextjs";
 export const metadata: Metadata = {
   title: "Tre Việt Mentoring",
   description: "Nền tảng mentoring cộng đồng - Tre Việt Mentoring",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/icon.png",
+  },
 };
 
 export default function RootLayout({

@@ -861,7 +861,7 @@ model Certificate {
   seasonId      String          @map("season_id") @db.Uuid
   season        Season          @relation(fields: [seasonId], references: [id])
   type          CertificateType @default(training)
-  orgName       String          @default("Mentoring for Vietnamese Student") @map("org_name")
+  orgName       String          @default("Tre Viet Mentoring") @map("org_name")
   recipientName String          @map("recipient_name")
   role          String          @default("mentor") // "mentor" | "mentee"
   issuedAt      DateTime        @default(now()) @map("issued_at")
