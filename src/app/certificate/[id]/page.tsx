@@ -45,11 +45,11 @@ export default async function CertificateViewPage({
   return (
     <>
       <style>{`
-        @page { size: A4 portrait; margin: 0; }
+        @page { size: A4 landscape; margin: 0; }
         @media print {
           .cert-backdrop { background: #fff !important; padding: 0 !important; min-height: 100vh; }
           .cert-back-link { display: none !important; }
-          .cert-card { width: 210mm !important; min-height: 297mm; border-radius: 0 !important; box-shadow: none !important; }
+          .cert-card { width: 297mm !important; min-height: 210mm; border-radius: 0 !important; box-shadow: none !important; }
         }
       `}</style>
       <div className="cert-backdrop" style={{ minHeight: "100vh", background: "#134E4A", padding: 40, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 24 }}>
@@ -74,8 +74,8 @@ export default async function CertificateViewPage({
       <div
         className="cert-card"
         style={{
-          width: 794,
-          minHeight: 1123,
+          width: 1123,
+          minHeight: 794,
           maxWidth: "100%",
           background: "#F6F1E9",
           position: "relative",
@@ -96,7 +96,7 @@ export default async function CertificateViewPage({
             pointerEvents: "none",
           }}
         />
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", padding: "72px 64px 96px", textAlign: "center" }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", padding: "56px 72px 72px", textAlign: "center" }}>
           <img
             src="/images/logo-green-transparent.png"
             alt={cert.orgName}
