@@ -136,9 +136,6 @@ export default async function CertificateViewPage({
               <p style={{ margin: 0, fontSize: 12, letterSpacing: 1, color: "#5B564A" }}>BAN TỔ CHỨC</p>
             </div>
           </div>
-          <div style={{ marginTop: 48, fontSize: 12, letterSpacing: 1, color: "#8A8173", fontStyle: "italic" }}>
-            (Ký tên &amp; đóng dấu)
-          </div>
         </div>
       </div>
     </div>
