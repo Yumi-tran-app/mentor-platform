@@ -23,6 +23,12 @@ export async function PATCH(
 
     const updated = await transitionMentorApplication(id, "submitted", user.id);
 
+    // Lưu thời điểm đồng thuận (bước 6 consent) khi submit
+    await prisma.mentorApplication.update({
+      where: { id },
+      data: { consentedAt: new Date() },
+    });
+
     // Ghi nhận sự đồng ý bảo vệ dữ liệu cá nhân (PDPD)
     await prisma.consent.create({
       data: {

@@ -314,6 +314,7 @@ model MentorApplication {
   commitText      String? @map("commit_text")
   commitmentsJson Json?   @map("commitments_json")
 
+  consentedAt DateTime? @map("consented_at")
   submittedAt DateTime? @map("submitted_at")
   createdAt   DateTime  @default(now()) @map("created_at")
 
