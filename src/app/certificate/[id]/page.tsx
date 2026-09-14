@@ -82,7 +82,12 @@ export default async function CertificateViewPage({
             pointerEvents: "none",
           }}
         />
-        <div style={{ padding: "64px 48px", textAlign: "center" }}>
+        <div style={{ padding: "64px 48px 96px", textAlign: "center" }}>
+          <img
+            src="/images/logo-green-transparent.png"
+            alt={cert.orgName}
+            style={{ display: "block", margin: "0 auto 20px", height: 72, width: "auto" }}
+          />
           <p style={{ margin: 0, fontSize: 14, letterSpacing: 4, textTransform: "uppercase", color: "#F2A93B", fontWeight: 700 }}>
             {headingText}
           </p>
@@ -116,7 +121,7 @@ export default async function CertificateViewPage({
             {descText}
           </p>
 
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: 64, gap: 24 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: 72, gap: 24 }}>
             <div style={{ textAlign: "center", flex: 1 }}>
               <div style={{ height: 1, background: "#C9C0B0", marginBottom: 8 }} />
               <p style={{ margin: 0, fontSize: 12, letterSpacing: 1, color: "#5B564A" }}>NGÀY CẤP · {dateStr}</p>
@@ -126,9 +131,13 @@ export default async function CertificateViewPage({
               <p style={{ margin: 0, fontSize: 12, letterSpacing: 1, color: "#5B564A" }}>MRC · {cert.certificateNo}</p>
             </div>
             <div style={{ textAlign: "center", flex: 1 }}>
+              <div style={{ height: 64 }} />
               <div style={{ height: 1, background: "#C9C0B0", marginBottom: 8 }} />
               <p style={{ margin: 0, fontSize: 12, letterSpacing: 1, color: "#5B564A" }}>BAN TỔ CHỨC</p>
             </div>
+          </div>
+          <div style={{ marginTop: 48, fontSize: 12, letterSpacing: 1, color: "#8A8173", fontStyle: "italic" }}>
+            (Ký tên &amp; đóng dấu)
           </div>
         </div>
       </div>
