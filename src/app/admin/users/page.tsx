@@ -16,13 +16,12 @@ type AdminUser = {
 const ROLE_COLOR: Record<string, string> = {
   admin: "#B45309",
   dpv: "#0F766E",
-  mentor: "#15B5B0",
+  mentor: "#94A3B8",
   mentee: "#94A3B8",
 };
 
 const ROLE_OPTIONS = [
-  { value: "mentee", label: "Mentee" },
-  { value: "mentor", label: "Mentor" },
+  { value: "mentee", label: "Người dùng" },
   { value: "dpv", label: "Điều phối viên (DPV)" },
   { value: "admin", label: "Admin" },
 ];
@@ -83,7 +82,9 @@ export default function AdminUsersPage() {
             Người dùng &amp; vai trò
           </h1>
           <p className="text-sm mt-1" style={{ color: "#94A3B8" }}>
-            Chỉ định vai trò hệ thống: Admin, Điều phối viên (DPV), Mentor, Mentee.
+            Chỉ định vai trò hệ thống: Người dùng, Điều phối viên (DPV), Admin.
+            <br />
+            (Vai trò Mentor/Mentee do duyệt đơn quyết định, không đặt ở đây.)
           </p>
         </div>
         <Badge color="#0F766E">{users.length} người dùng</Badge>

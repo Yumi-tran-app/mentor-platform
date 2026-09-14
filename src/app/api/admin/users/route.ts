@@ -7,8 +7,8 @@ import { withErrorHandling } from "@/lib/api-helpers";
 const ROLE_LABEL: Record<string, string> = {
   admin: "Admin",
   dpv: "Điều phối viên",
-  mentor: "Mentor",
-  mentee: "Mentee",
+  mentor: "Người dùng",
+  mentee: "Người dùng",
 };
 
 const UpdateRoleSchema = z.object({
